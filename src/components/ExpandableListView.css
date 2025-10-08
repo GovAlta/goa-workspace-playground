@@ -1,0 +1,151 @@
+/* ============================================================================
+   EXPANDABLE LIST VIEW - Accordion-style rows with expand/collapse
+   ============================================================================ */
+
+.expandable-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-xs);
+}
+
+.expandable-list__item {
+  background: white;
+  border: var(--goa-border-width-s) solid var(--goa-color-greyscale-200);
+  border-radius: var(--goa-border-radius-xl);
+}
+
+.expandable-list__header {
+  display: flex;
+  align-items: flex-start;
+  padding: var(--goa-space-xs) var(--goa-space-l) var(--goa-space-xs) var(--goa-space-s);
+  gap: var(--goa-space-2xs);
+  background-color: var(--goa-color-greyscale-100);
+  border-radius: var(--goa-border-radius-xl);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.expandable-list__header:hover {
+  background-color: var(--goa-color-greyscale-200);
+}
+
+/* When expanded, only round top corners of header */
+.expandable-list__item--expanded .expandable-list__header {
+  border-radius: var(--goa-border-radius-xl) var(--goa-border-radius-xl) 0 0;
+}
+
+.expandable-list__toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--goa-space-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--goa-border-radius-s);
+  transition: background-color 0.15s ease;
+}
+
+/* Toggle hover removed - header has hover state now */
+
+.expandable-list__toggle:focus-visible {
+  outline: var(--goa-border-width-l) solid var(--goa-color-interactive-focus);
+  outline-offset: 2px;
+}
+
+.expandable-list__heading-group {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-m);
+  flex-wrap: wrap;
+  padding: var(--goa-space-xs) 0;
+}
+
+.expandable-list__title {
+  font-weight: var(--goa-font-weight-bold);
+  flex-shrink: 0;
+}
+
+.expandable-list__name {
+  font: var(--goa-typography-heading-xs);
+}
+
+/* Responsive: stack badge under name on small screens */
+@media (max-width: 623px) {
+  .expandable-list__heading-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--goa-space-xs);
+  }
+}
+
+.expandable-list__right-group {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-s);
+}
+
+.expandable-list__secondary {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-s);
+}
+
+.expandable-list__actions {
+  flex-shrink: 0;
+}
+
+.expandable-list__header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-m);
+}
+
+.expandable-list__header-actions goa-link {
+  white-space: nowrap;
+}
+
+.expandable-list__content {
+  padding: var(--goa-space-m) var(--goa-space-l) var(--goa-space-l) var(--goa-space-l);
+  border-top: var(--goa-border-width-s) solid var(--goa-color-greyscale-200);
+}
+
+.expandable-list__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-m);
+}
+
+.expandable-list__detail-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--goa-space-l);
+}
+
+.expandable-list__detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-2xs);
+}
+
+.expandable-list__detail-label {
+  font: var(--goa-typography-body-xs);
+  color: var(--goa-color-text-secondary);
+}
+
+.expandable-list__detail-value {
+  font: var(--goa-typography-body-s);
+  color: var(--goa-color-text-default);
+}
+
+.expandable-list__note {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-xs);
+  padding: var(--goa-space-s) var(--goa-space-m);
+  background-color: var(--goa-color-warning-100);
+  border-radius: var(--goa-border-radius-s);
+  color: var(--goa-color-text-default);
+  font: var(--goa-typography-body-s);
+}

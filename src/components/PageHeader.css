@@ -1,0 +1,445 @@
+/* ============================================================================
+   PAGE HEADER
+   ============================================================================ */
+
+/* Header container base styles */
+.page-header {
+  position: relative; /* Required for ::after pseudo-element positioning */
+  background-color: white;
+  border-bottom: none; /* Explicit default - no border */
+  transition:
+    padding 0.15s ease-out,
+    box-shadow 0.15s ease-out,
+    border-bottom 0.1s ease-out;
+}
+
+/* Desktop: Header states based on scroll position */
+@media (min-width: 624px) {
+  .desktop-card-container .page-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: white;
+  }
+
+  /* Expanded state - at top or no scroll */
+  .desktop-card-container .page-header--expanded {
+    padding: var(--goa-space-l) var(--goa-space-xl) var(--goa-space-m) var(--goa-space-xl);
+    border-bottom: none;
+  }
+
+  /* Collapsed state - middle or bottom scroll */
+  .desktop-card-container .page-header--collapsed {
+    padding: var(--goa-space-s) var(--goa-space-xl);
+    border-bottom: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
+  }
+
+  /* With tabs - no bottom padding */
+  .desktop-card-container .page-header--with-tabs.page-header--expanded {
+    padding-bottom: 0;
+  }
+
+  .desktop-card-container .page-header--with-tabs.page-header--collapsed {
+    padding-bottom: 0;
+  }
+
+  /* With toolbar expanded - spacing below header */
+  .desktop-card-container .page-header--with-toolbar.page-header--expanded {
+    padding-bottom: var(--goa-space-m);
+  }
+
+  /* Collapsed header with toolbar - keep equal padding (sticky header) */
+  /* The default collapsed padding (12px 32px) provides equal spacing */
+}
+
+/* Page header scroll shadow - gradient fade when content scrolls behind */
+.page-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 8px;
+  transform: translateY(100%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.08), transparent);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden; /* Fully remove when not visible */
+  transition:
+    opacity 0.1s ease-out,
+    visibility 0.1s ease-out;
+}
+
+/* Shadow visible when content scrolls behind header */
+.page-header--middle::after,
+.page-header--atbottom::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Explicitly hide shadow when at top or no scroll */
+.page-header--attop::after,
+.page-header--noscroll::after {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Mobile header styles */
+@media (max-width: 623px) {
+  .page-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: white;
+    padding: var(--goa-space-m) 16px;
+    margin-bottom: 0;
+    border-bottom: none;
+    transition:
+      padding 0.15s ease-out,
+      box-shadow 0.15s ease-out;
+  }
+
+  /* Collapsed state on mobile - smaller padding */
+  .page-header--collapsed {
+    padding: var(--goa-space-s) var(--goa-space-m);
+    border-bottom: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
+  }
+
+  /* Collapsed header with toolbar - 12px gap below */
+  .page-header--collapsed.page-header--with-toolbar {
+    padding-bottom: var(--goa-space-s);
+  }
+}
+
+/* Header content container */
+.page-header__content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--goa-space-s);
+}
+
+@media (min-width: 624px) {
+  .page-header__content {
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+}
+
+/* Title container with menu button */
+.page-header__title-container {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-xs);
+}
+
+/* Align menu icon to content edge on mobile by compensating for button's internal padding */
+@media (max-width: 623px) {
+  .page-header__title-container > goa-icon-button:first-child {
+    margin-left: -12px;
+  }
+}
+
+/* Spacer element - pushes actions to the right in desktop mode */
+.page-header__spacer {
+  flex: 1;
+  min-width: var(--goa-space-m);
+}
+
+/* Hide spacer when actions contain expandable search */
+.page-header__content:has(.page-header-search) .page-header__spacer,
+.page-header__content:has(.search-header-filters) .page-header__spacer {
+  display: none;
+}
+
+/* Gap between title and search input */
+.page-header__content:has(.page-header-search),
+.page-header__content:has(.search-header-filters) {
+  gap: var(--goa-space-xl);
+}
+
+@media (min-width: 624px) {
+  .page-header__content:has(.page-header-search),
+  .page-header__content:has(.search-header-filters) {
+    gap: var(--goa-space-2xl);
+  }
+}
+
+/* ============================================================================
+   SEARCH PAGE HEADER
+   Desktop: inline [Search] [Dropdowns]
+   Tablet (624-700px): wrapped, search below title row
+   Mobile expanded: 3 rows - title, search, dropdowns
+   Mobile collapsed: single row - menu, search, dropdowns inline
+   ============================================================================ */
+
+/* Desktop: Search input and dropdowns inline */
+.search-header-filters {
+  display: flex;
+  gap: var(--goa-space-s);
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.search-header-filters__dropdowns {
+  display: flex;
+  gap: var(--goa-space-s);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.search-header-filters__search {
+  flex: 1;
+  min-width: 150px;
+}
+
+.page-header__actions:has(.search-header-filters) {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Tablet (624-880px): Search drops below title row */
+@media (max-width: 880px) {
+  .page-header__content:has(.search-header-filters) {
+    flex-wrap: wrap;
+    row-gap: var(--goa-space-m);
+  }
+
+  .page-header__content:has(.search-header-filters) .page-header__spacer {
+    display: none;
+  }
+
+  .page-header__actions:has(.search-header-filters) {
+    flex: 1 0 100%;
+  }
+
+  .search-header-filters {
+    flex-wrap: wrap;
+    row-gap: var(--goa-space-s);
+  }
+
+  .search-header-filters__dropdowns {
+    flex: 0 0 auto;
+  }
+
+  .search-header-filters__search {
+    flex: 1 0 100%;
+  }
+}
+
+/* All sizes: Hide title text when collapsed, remove gap */
+.page-header--collapsed
+  .page-header__content:has(.search-header-filters)
+  .page-header__title-container
+  goa-text {
+  display: none;
+}
+
+.page-header--collapsed .page-header__content:has(.search-header-filters) {
+  gap: 0;
+}
+
+/* Mobile (623px and below) */
+@media (max-width: 623px) {
+  /* Expanded: 3-row grid layout */
+  .page-header__content:has(.search-header-filters) {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: var(--goa-space-s);
+    align-items: center;
+  }
+
+  .page-header__content:has(.search-header-filters) .page-header__title-container {
+    grid-row: 1;
+  }
+
+  .page-header__actions:has(.search-header-filters) {
+    display: contents;
+  }
+
+  .search-header-filters {
+    display: contents;
+  }
+
+  .search-header-filters__search {
+    grid-row: 2;
+  }
+
+  .search-header-filters__dropdowns {
+    grid-row: 3;
+    display: flex;
+    gap: var(--goa-space-s);
+  }
+
+  /* Collapsed: 2-row layout - search on top, dropdowns below */
+  .page-header--collapsed .page-header__content:has(.search-header-filters) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: var(--goa-space-xs);
+    align-items: center;
+  }
+
+  .page-header--collapsed
+    .page-header__content:has(.search-header-filters)
+    .page-header__title-container {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .page-header--collapsed .page-header__actions:has(.search-header-filters) {
+    display: contents;
+  }
+
+  .page-header--collapsed .search-header-filters {
+    display: contents;
+  }
+
+  .page-header--collapsed .search-header-filters__search {
+    grid-row: 1;
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  .page-header--collapsed .search-header-filters__dropdowns {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    display: flex;
+    gap: var(--goa-space-xs);
+    justify-content: flex-start;
+  }
+}
+
+/* Actions container */
+.page-header__actions {
+  display: flex;
+  gap: var(--goa-space-s);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Allow actions to expand (e.g., search input in header) */
+.page-header__actions:has(.page-header-search) {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Page header tabs section */
+.page-header__tabs {
+  padding: 0;
+}
+
+.page-header--expanded .page-header__tabs {
+  margin-top: 8px;
+}
+
+.page-header--with-tabs {
+  padding-bottom: 0;
+}
+
+/* Page header toolbar section (search/sort/filter) */
+.page-header__toolbar {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--goa-space-s);
+  flex: 1;
+  min-width: 0;
+}
+
+.page-header__toolbar--expanded {
+  margin-top: var(--goa-space-m);
+  margin-bottom: 0;
+  padding: 0;
+}
+
+/* Toolbar search row in header */
+.page-header__toolbar .cases-search-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: var(--goa-space-m);
+  width: 100%;
+}
+
+.page-header__toolbar .cases-search-group {
+  flex: 1;
+  min-width: 120px;
+}
+
+.page-header__toolbar .cases-actions-group {
+  flex-shrink: 0;
+}
+
+/* Collapsed header with toolbar - hide title, tabs, actions */
+.page-header--collapsed.page-header--with-toolbar .page-header__title-container goa-text,
+.page-header--collapsed.page-header--with-toolbar .page-header__spacer,
+.page-header--collapsed.page-header--with-toolbar .page-header__actions,
+.page-header--collapsed.page-header--with-toolbar .page-header__tabs {
+  display: none;
+}
+
+/* Hide title on scroll option - rearranges to single row with tabs left, actions right */
+.page-header--collapsed.page-header--hide-title-on-scroll {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--goa-space-m);
+}
+
+.desktop-card-container .page-header--collapsed.page-header--hide-title-on-scroll,
+.desktop-card-container
+  .page-header--with-tabs.page-header--collapsed.page-header--hide-title-on-scroll {
+  padding-bottom: var(--goa-space-xs);
+}
+
+/* Hide title and spacer, keep actions */
+.page-header--collapsed.page-header--hide-title-on-scroll .page-header__title-container,
+.page-header--collapsed.page-header--hide-title-on-scroll .page-header__spacer {
+  display: none;
+}
+
+/* Content container just holds actions now */
+.page-header--collapsed.page-header--hide-title-on-scroll .page-header__content {
+  order: 2;
+  flex-shrink: 0;
+}
+
+/* Tabs take left side */
+.page-header--collapsed.page-header--hide-title-on-scroll .page-header__tabs {
+  order: 1;
+  flex: 1;
+}
+
+/* Toolbar adjustments when collapsed */
+.page-header--collapsed.page-header--with-toolbar .page-header__toolbar {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Mobile collapsed: menu icon and toolbar on same row */
+@media (max-width: 623px) {
+  .page-header--collapsed.page-header--with-toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--goa-space-m);
+  }
+
+  .page-header--collapsed.page-header--with-toolbar .page-header__content {
+    flex-shrink: 0;
+  }
+
+  .page-header--collapsed.page-header--with-toolbar .page-header__toolbar {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* Hide tabs in sticky/collapsed header */
+.page-header--collapsed .cases-toolbar-tabs {
+  display: none;
+}

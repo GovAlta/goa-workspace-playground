@@ -1,0 +1,281 @@
+/* ============================================================================
+   CASES PAGE STYLES
+   ============================================================================
+   Styles specific to the Cases page and its components.
+   Using GoA Design System spacing tokens for consistent spacing.
+   Mobile breakpoint: 624px (matches the app's isMobile logic)
+   ============================================================================ */
+
+/* Content padding and card styles moved to index.css as shared utilities */
+
+/* ============================================================================
+   FILTER SECTION
+   ============================================================================ */
+
+/* Filter section - contains search input and filter button */
+.cases-filter-section {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: var(--goa-space-xs);
+  margin-bottom: var(--goa-space-m);
+  gap: var(--goa-space-xl);
+}
+
+/* Container query: Stack search above tabs when container is narrow */
+@container (max-width: 960px) {
+  .cases-filter-section {
+    flex-direction: column-reverse;
+    gap: var(--goa-space-s);
+  }
+
+  .cases-filter-section goa-form-item {
+    max-width: none !important;
+    width: 100%;
+  }
+
+  .cases-filter-section goa-tabs {
+    width: 100%;
+  }
+}
+
+/* Mobile: Fix spacing when in mobile viewport */
+@media (max-width: 623px) {
+  .cases-filter-section {
+    margin-top: var(--goa-space-xs);
+    margin-bottom: var(--goa-space-xs);
+    gap: var(--goa-space-m);
+  }
+}
+
+.cases-filter-section goa-form-item {
+  flex: 1;
+  max-width: 80ch;
+}
+
+/* Tabs in filter section - remove bottom margin from shadow DOM */
+.cases-filter-section goa-tabs {
+  margin-bottom: -2rem; /* Counteract the internal 2rem margin */
+}
+
+/* ============================================================================
+   TOOLBAR
+   ============================================================================ */
+
+/* Toolbar row - tabs on left, search on right */
+.cases-toolbar-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--goa-space-l);
+  width: 100%;
+}
+
+/* Tabs wrapper for horizontal scrolling */
+.cases-toolbar-tabs {
+  display: flex;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+
+.cases-toolbar-tabs::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.cases-toolbar-tabs goa-tabs {
+  flex-shrink: 0;
+  --goa-tabs-margin-bottom: 0;
+}
+
+/* Spacer element at end of tabs for scroll padding */
+.cases-toolbar-tabs__spacer {
+  display: none;
+}
+
+/* When stacked, extend tabs to screen edge with negative margin */
+@media (max-width: 1200px) {
+  .cases-toolbar-tabs {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+  }
+
+  .cases-toolbar-tabs__spacer {
+    display: block;
+    flex-shrink: 0;
+    width: 1rem;
+  }
+}
+
+/* Fix missing left border on segmented tabs on mobile */
+@media (max-width: 623px) {
+  .cases-toolbar-tabs goa-tabs[variant="segmented"] {
+    border-left: 1px solid var(--goa-color-greyscale-200);
+    border-radius: var(--goa-border-radius-m);
+  }
+}
+
+@media (min-width: 624px) and (max-width: 1200px) {
+  .cases-toolbar-tabs {
+    margin-left: -2rem;
+    margin-right: -2rem;
+    padding-left: 2rem;
+  }
+
+  .cases-toolbar-tabs__spacer {
+    width: 2rem;
+  }
+}
+
+.cases-toolbar-row .cases-search-row {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Wrap to stacked layout when viewport is narrow */
+@media (max-width: 1200px) {
+  .cases-toolbar-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--goa-space-m);
+  }
+}
+
+.cases-search-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: var(--goa-space-m);
+  width: 100%;
+}
+
+.cases-search-group {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 120px; /* minimum search field width */
+  gap: var(--goa-space-xs);
+}
+
+.cases-search-group goa-form-item {
+  flex: 1;
+  min-width: 0; /* allow form-item to shrink below content size */
+}
+
+.cases-actions-group {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--goa-space-s);
+}
+
+/* ============================================================================
+   FILTER CHIPS
+   ============================================================================ */
+
+/* Filter chips - uses shared .chips-container from index.css */
+
+/* ============================================================================
+   LOADING STATE
+   ============================================================================ */
+
+/* Loading state - shown while data is being fetched */
+.cases-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px var(--goa-space-m);
+  background-color: var(--goa-color-greyscale-white, #ffffff);
+}
+
+/* ============================================================================
+   CARD VIEW
+   ============================================================================ */
+
+/* Card grid, data-card styles - uses shared classes from index.css */
+
+/* ============================================================================
+   GROUPED VIEW
+   ============================================================================ */
+
+.cases-grouped-view {
+  display: flex;
+  flex-direction: column;
+}
+
+.cases-group__header {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-s);
+  width: 100%;
+  padding: var(--goa-space-s) 0;
+  margin-bottom: var(--goa-space-m);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--goa-color-greyscale-200);
+  cursor: pointer;
+  text-align: left;
+}
+
+.cases-group__header:hover {
+  background-color: var(--goa-color-greyscale-100);
+}
+
+.cases-group__header:focus-visible {
+  outline: 2px solid var(--goa-color-interactive-focus);
+  outline-offset: 2px;
+  border-radius: var(--goa-border-radius-s);
+}
+
+.cases-group__label {
+  font: var(--goa-typography-heading-xs);
+  color: var(--goa-color-text-default);
+}
+
+.cases-group .card-grid,
+.cases-group__table,
+.cases-group__list {
+  margin-bottom: var(--goa-space-xl);
+}
+
+/* Table group row styling */
+.table-group-row td {
+  background-color: var(--goa-color-greyscale-150) !important;
+  padding: var(--goa-space-s) var(--goa-space-m) !important;
+  border-bottom: 1px solid var(--goa-color-greyscale-200) !important;
+}
+
+.table-group-row:hover td {
+  background-color: var(--goa-color-greyscale-200) !important;
+}
+
+.table-group-row__content {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-s);
+}
+
+.table-group-row__label {
+  font: var(--goa-typography-body-m);
+  font-weight: 600;
+  color: var(--goa-color-text-default);
+}
+
+/* ============================================================================
+   FILTER DRAWER
+   ============================================================================ */
+
+.case-filter-drawer__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-l);
+}
+
+.case-filter-drawer__checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-xs);
+}

@@ -1,0 +1,51 @@
+/* Error pages (404, 401, 500) */
+.error-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  padding: var(--goa-space-3xl) var(--goa-space-xl) 128px;
+}
+
+@media (max-width: 1024px) {
+  .error-page {
+    padding: var(--goa-space-2xl) var(--goa-space-xl) 112px;
+  }
+}
+
+@media (max-width: 623px) {
+  .error-page {
+    /* Subtract approximate header height (icon button ~44px + padding 32px) to prevent unnecessary scroll */
+    min-height: calc(100% - 76px);
+    padding: var(--goa-space-xl) var(--goa-space-m) 96px;
+  }
+}
+
+.error-page-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.error-page-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: var(--goa-color-greyscale-100);
+}
+
+.error-page-description {
+  max-width: 500px;
+  text-align: center;
+}
+
+.error-page-underline {
+  width: 110px;
+  height: 8px;
+  background-color: var(--goa-color-brand-default);
+  margin-top: var(--goa-space-m);
+}

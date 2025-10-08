@@ -1,0 +1,81 @@
+/* ============================================================================
+   DESKTOP CARD CONTAINER - Adaptive chrome based on vertical scroll state
+   ============================================================================
+   The content card "floats" on the grey background. Margins, borders, and
+   border-radius appear/disappear based on scroll position:
+   - no-scroll: All chrome visible (content fits in viewport)
+   - at-top: Top chrome visible, bottom bleeds off
+   - middle: No chrome, content edge-to-edge
+   - at-bottom: Bottom chrome visible, top bleeds off
+
+   IMPORTANT: Height stays constant to prevent layout jitter. We use padding
+   on the wrapper (.card-container) to create space, not height changes.
+   ============================================================================ */
+
+/* Wrapper - provides the spacing around the card */
+.card-container {
+  flex: 1;
+  overflow: hidden;
+  transition: padding 0.15s ease-out;
+}
+
+.card-container:has([data-scroll-state="no-scroll"]) {
+  padding: 20px 20px 20px 0;
+}
+
+.card-container:has([data-scroll-state="at-top"]) {
+  padding: 20px 20px 0 0;
+}
+
+.card-container:has([data-scroll-state="middle"]) {
+  padding: 0 20px 0 0;
+}
+
+.card-container:has([data-scroll-state="at-bottom"]) {
+  padding: 0 20px 20px 0;
+}
+
+/* Card itself - height always 100% of available space */
+.desktop-card-container {
+  background-color: white;
+  height: 100%;
+  overflow: auto;
+  transition:
+    border-radius 0.15s ease-out,
+    border-color 0.15s ease-out;
+}
+
+/* No scroll - full chrome (all borders, all radius) */
+.desktop-card-container[data-scroll-state="no-scroll"] {
+  border: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
+  border-radius: var(--goa-border-radius-3xl);
+}
+
+/* At top - top chrome only */
+.desktop-card-container[data-scroll-state="at-top"] {
+  border: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
+  border-bottom: none;
+  border-radius: var(--goa-border-radius-3xl) var(--goa-border-radius-3xl) 0 0;
+}
+
+/* Middle - side borders only, no top/bottom chrome */
+.desktop-card-container[data-scroll-state="middle"] {
+  border: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
+  border-top: none;
+  border-bottom: none;
+  border-radius: 0;
+}
+
+/* At bottom - bottom chrome only */
+.desktop-card-container[data-scroll-state="at-bottom"] {
+  border: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
+  border-top: none;
+  border-radius: 0 0 var(--goa-border-radius-3xl) var(--goa-border-radius-3xl);
+}
+
+/* Mobile: edge-to-edge content */
+.mobile-content-container {
+  background-color: white;
+  height: 100%;
+  overflow: auto;
+}
