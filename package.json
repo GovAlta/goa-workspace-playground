@@ -5,15 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "build:check": "tsc && vite build",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@abgov/react-components": "6.3.0-alpha.6",
-    "@abgov/ui-components-common": "1.3.0-alpha.2",
-    "@abgov/web-components": "1.33.0-alpha.17",
+    "@abgov/react-components": "/Users/thytran142/WebstormProjects/ui-components/dist/libs/react-components",
+    "@abgov/ui-components-common": "/Users/thytran142/WebstormProjects/ui-components/dist/libs/common",
+    "@abgov/web-components": "/Users/thytran142/WebstormProjects/ui-components/dist/libs/web-components",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.2"

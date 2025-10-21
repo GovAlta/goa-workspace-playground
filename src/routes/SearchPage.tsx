@@ -24,10 +24,12 @@ import { getTypeBadgeProps } from "../utils/badgeUtils";
 import {
   GoabCheckboxOnChangeDetail,
   GoabInputOnChangeDetail,
-  GoabInputOnKeyPressDetail
 } from "@abgov/ui-components-common";
+import { PageHeader } from "../components/PageHeader";
+import { useMenu } from "../contexts/MenuContext";
 
 export function SearchPage() {
+  const { isMobile } = useMenu();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchErrorMessage, setSearchErrorMessage] = useState('');
   const [typedChips, setTypedChips] = useState<string[]>([]);
@@ -91,11 +93,11 @@ export function SearchPage() {
     setResultToDelete(null);
   }, [resultToDelete]);
 
-  const handleSearchKeywordPress = (event: GoabInputOnKeyPressDetail) => {
-    const key = event.key;
+  const handleSearchKeywordPress = (event: any) => {
+    const key = getEventKey(event);
     if (key === "Enter") {
-      // Get the value directly from the event target to avoid stale state issues
-      const currentValue = getEventValue(e);
+      // Get the value directly from the event to avoid stale state issues
+      const currentValue = getEventValue(event);
       applyFilter(currentValue);
     }
   }
@@ -110,9 +112,7 @@ export function SearchPage() {
 
   return (
     <GoabPageBlock width="full">
-      <GoabText tag="h1" size="heading-xl" mt="none" mb="l">
-        Search
-      </GoabText>
+      <PageHeader title="Search" />
 
       <GoabFormItem id="searchInput" error={searchErrorMessage}>
         <GoabBlock gap="xs" direction="row" alignment="start">
@@ -124,11 +124,16 @@ export function SearchPage() {
               leadingIcon="search"
               width="100%"
               placeholder="Search clients, applications, documents..."
-              onChange={(event: GoabInputOnChangeDetail) => setSearchKeyword(event.value)}
+              onChange={(event: GoabInputOnChangeDetail) => {
+                setSearchKeyword(event.value);
+                if (searchErrorMessage) {
+                  setSearchErrorMessage("");
+                }
+              }}
               onKeyPress={handleSearchKeywordPress}
             />
           </div>
-          <GoabButton type="secondary" onClick={applyFilter} leadingIcon="search">
+          <GoabButton type="secondary" onClick={applyFilter} leadingIcon="search" size={isMobile ? "medium" : "large"}>
             Search
           </GoabButton>
         </GoabBlock>
@@ -154,8 +159,9 @@ export function SearchPage() {
           {filteredResults.length} results found
         </GoabText>
       )}
-      <GoabDataGrid keyboardNav={"table"}>
-        <GoabTable width="100%" mb={"m"} mt="m" onSort={handleSort}>
+      <div style={{ overflowX: 'auto', width: '100%' }}>
+        <GoabDataGrid keyboardNav={"table"}>
+          <GoabTable width="100%" mb={"m"} mt="m" onSort={handleSort}>
           <thead>
           <tr data-grid="row">
             <th style={{ paddingBottom: 0 }} data-grid="cell">
@@ -173,28 +179,28 @@ export function SearchPage() {
           <tbody>
           {filteredResults.map((result) => (
               <tr key={result.id} data-grid="row">
-                <td data-grid="cell">
+                <td data-grid="cell" className="goa-table-cell--checkbox">
                   <GoabCheckbox
                       name={`select-${result.id}`}
                       checked={result.selected}
                       onChange={() => handleSelectResult(result.id)}
                   />
                 </td>
-                <td data-grid="cell"><GoabBadge type={result.status} content={result.statusText} /></td>
-                <td data-grid="cell">
+                <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={result.status} content={result.statusText} /></td>
+                <td data-grid="cell" className="goa-table-cell--text">
                   <GoabLink>
                     <Link to={`/client/${result.id}`}>
                       {result.name}
                     </Link>
                   </GoabLink>
                 </td>
-                <td data-grid="cell">{result.staff}</td>
-                <td data-grid="cell">{result.dueDate}</td>
-                <td data-grid="cell">{result.fileNumber}</td>
-                <td data-grid="cell">
+                <td data-grid="cell" className="goa-table-cell--text">{result.staff}</td>
+                <td data-grid="cell" className="goa-table-cell--text">{result.dueDate}</td>
+                <td data-grid="cell" className="goa-table-cell--text">{result.fileNumber}</td>
+                <td data-grid="cell" className="goa-table-cell--badge">
                   <GoabBadge {...getTypeBadgeProps(result.type)} />
                 </td>
-                <td data-grid="cell">
+                <td data-grid="cell" className="goa-table-cell--icon-button">
                   <GoabIconButton
                       icon="trash"
                       size="small"
@@ -207,6 +213,7 @@ export function SearchPage() {
           </tbody>
         </GoabTable>
       </GoabDataGrid>
+      </div>
 
       {filteredResults.length === 0 && searchResults.length > 0 && typedChips.length > 0 && (
         <GoabBlock mt="l" mb="l">

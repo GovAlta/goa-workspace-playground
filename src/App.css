@@ -1,1 +1,258 @@
 @import "@abgov/web-components/index.css";
+
+/* ============================================================================
+   TABLE CELL ALIGNMENT
+   ============================================================================
+   This CSS provides classes to properly align different component types
+   within GoA Table cells by adjusting padding to achieve exact cell heights
+   and vertically center components.
+
+   Usage: Apply the appropriate class to <td> elements based on content type
+   Example: <td className="goa-table-cell--input">...</td>
+   ============================================================================ */
+
+/* ============================================================================
+   NORMAL VARIANT (Target: 48px cell height)
+   ============================================================================
+   Component heights and calculated padding:
+   - Text: 28px → 10px padding
+   - Checkbox: 24px → 12px padding
+   - Input/Dropdown: 42px → 3px padding
+   - Badge: 22px → 13px padding
+   - Button/Icon Button: 32px → 8px padding
+
+   Formula: padding = (48px - component_height) / 2
+   Must override table default: padding: 8px 16px 8px 16px
+   ============================================================================ */
+
+/* Text cells (28px component height) */
+goa-table td.goa-table-cell--text {
+  padding: 10px 16px 10px 16px !important;
+}
+
+/* Checkbox cells (24px component height) */
+goa-table td.goa-table-cell--checkbox {
+  padding: 12px 16px 12px 16px !important;
+}
+
+/* Input cells - text and number inputs (42px component height) */
+goa-table td.goa-table-cell--input {
+  padding: 3px 16px 3px 16px !important;
+}
+
+/* Badge cells (22px component height) */
+goa-table td.goa-table-cell--badge {
+  padding: 13px 16px 13px 16px !important;
+}
+
+/* Dropdown cells (42px component height) */
+goa-table td.goa-table-cell--dropdown {
+  padding: 3px 16px 3px 16px !important;
+}
+
+/* Button cells - compact buttons (32px component height) */
+goa-table td.goa-table-cell--button {
+  padding: 8px 16px 8px 16px !important;
+}
+
+/* Icon button cells (32px component height) */
+goa-table td.goa-table-cell--icon-button {
+  padding: 8px 16px 8px 16px !important;
+}
+
+/* ============================================================================
+   RELAXED VARIANT (Target: 64px cell height)
+   ============================================================================
+   Component heights and calculated padding:
+   - Text: 28px → 18px padding
+   - Checkbox: 24px → 20px padding
+   - Input/Dropdown: 42px → 11px padding
+   - Badge: 22px → 21px padding
+   - Button/Icon Button: 32px → 16px padding
+
+   Formula: padding = (64px - component_height) / 2
+   Must override table default for relaxed: padding: 16px
+   ============================================================================ */
+
+/* Text cells (28px component height) */
+goa-table[variant="relaxed"] td.goa-table-cell--text {
+  padding: 18px 16px 18px 16px !important;
+}
+
+/* Checkbox cells (24px component height) */
+goa-table[variant="relaxed"] td.goa-table-cell--checkbox {
+  padding: 20px 16px 20px 16px !important;
+}
+
+/* Input cells - text and number inputs (42px component height) */
+goa-table[variant="relaxed"] td.goa-table-cell--input {
+  padding: 11px 16px 11px 16px !important;
+}
+
+/* Badge cells (22px component height) */
+goa-table[variant="relaxed"] td.goa-table-cell--badge {
+  padding: 21px 16px 21px 16px !important;
+}
+
+/* Dropdown cells (42px component height) */
+goa-table[variant="relaxed"] td.goa-table-cell--dropdown {
+  padding: 11px 16px 11px 16px !important;
+}
+
+/* Button cells - compact buttons (32px component height) */
+goa-table[variant="relaxed"] td.goa-table-cell--button {
+  padding: 16px 16px 16px 16px !important;
+}
+
+/* Icon button cells (32px component height) */
+goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
+  padding: 16px 16px 16px 16px !important;
+}
+
+/* ============================================================================
+   NOTES FOR IMPLEMENTATION
+   ============================================================================
+
+   1. The !important flag is used to override GoA Table's default padding.
+      When implementing in the design system CSS, this may not be necessary
+      if the rules are placed after the default table styles.
+
+   2. All padding values maintain the table's default horizontal padding (16px)
+      while adjusting vertical padding to achieve exact cell heights.
+
+   3. Padding values are symmetric (top = bottom) to vertically center components.
+
+   4. These classes work with the GoA Table's existing vertical-align: top,
+      which ensures proper text wrapping behavior when content spans multiple lines.
+
+   5. Component heights measured:
+      - Checkbox: 24px
+      - Input (text/number): 42px
+      - Badge: 22px
+      - Dropdown: 42px
+      - Compact Button: 32px
+      - Icon Button: 32px
+      - Text (body-m): 28px
+   ============================================================================ */
+
+/* ============================================================================
+   PAGE LAYOUTS
+   ============================================================================
+   Using GoA Design System spacing tokens for consistent spacing.
+   Mobile breakpoint: 624px (matches the app's isMobile logic)
+   ============================================================================ */
+
+/* Filter section - contains tabs and search input */
+.clients-filter-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-top: var(--goa-space-m);
+  gap: var(--goa-space-m);
+  flex-wrap: wrap;
+}
+
+@media (min-width: 624px) {
+  .clients-filter-section {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-top: var(--goa-space-l);
+    gap: var(--goa-space-xl);
+  }
+}
+
+/* Filter chips container */
+.clients-chips-container {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-xs);
+  margin-top: var(--goa-space-m);
+  margin-bottom: var(--goa-space-m);
+}
+
+/* Table container */
+.clients-table-container {
+  margin-top: var(--goa-space-m);
+  margin-bottom: var(--goa-space-m);
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* ============================================================================
+   PAGE HEADER
+   ============================================================================ */
+
+/* Sentinel element for intersection observer */
+.page-header-sentinel {
+  height: 0;
+}
+
+/* Header container base styles */
+.page-header {
+  position: static;
+  background-color: transparent;
+  padding: 0;
+  margin-bottom: var(--goa-space-l);
+  transition: all 0.3s ease;
+}
+
+/* Mobile header styles */
+@media (max-width: 623px) {
+  .page-header {
+    background-color: white;
+    padding: var(--goa-space-m);
+    margin-bottom: var(--goa-space-m);
+  }
+
+  /* Sticky header on mobile */
+  .page-header--sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Header content container */
+.page-header__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: var(--goa-space-m);
+}
+
+@media (min-width: 624px) {
+  .page-header__content {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+  }
+}
+
+/* Title container with menu button */
+.page-header__title-container {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-m);
+}
+
+/* Actions container */
+.page-header__actions {
+  display: block;
+  width: 100%;
+}
+
+@media (min-width: 624px) {
+  .page-header__actions {
+    display: flex;
+    gap: var(--goa-space-s);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    width: auto;
+  }
+}
