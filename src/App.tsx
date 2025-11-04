@@ -6,13 +6,12 @@ import {
 import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { MenuContext } from './contexts/MenuContext';
+import {NotificationContent} from "./notification/NotificationContent";
 
 export function App() {
   // On mobile (< 624px), start with menu closed; on desktop, start with menu open
   const [menuOpen, setMenuOpen] = useState(window.innerWidth >= 624);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 624);
-
-  console.log('[App] menuOpen:', menuOpen, 'isMobile:', isMobile, 'window.innerWidth:', window.innerWidth);
 
   // Single resize handler - manages both isMobile state and menu visibility
   useEffect(() => {
@@ -20,13 +19,9 @@ export function App() {
       const width = window.innerWidth;
       const mobile = width < 624;
 
-      console.log('[App] Resize detected - width:', width, 'isMobile:', mobile);
-
       setIsMobile(mobile);
 
-      // When resizing to mobile, close the menu
       if (mobile) {
-        console.log('[App] Setting menuOpen to false due to mobile resize');
         setMenuOpen(false);
       }
     };
@@ -53,6 +48,9 @@ export function App() {
             console.log('[App] onToggle called, toggling menuOpen from', menuOpen, 'to', !menuOpen);
             setMenuOpen(prev => !prev);
           }}
+          popoverContent={
+              <NotificationContent/>
+          }
           primaryContent={
             <>
               <GoaxWorkSideMenuItem
@@ -106,13 +104,7 @@ export function App() {
           }
           secondaryContent={
             <>
-              <GoaxWorkSideMenuItem
-                  icon="notifications"
-                  label="Notifications"
-                  type="success"
-                  badge="1"
-                  url="/notifications"
-              />
+              <GoaxWorkSideMenuItem icon={"notifications"} label={"Notifications"} badge={"3"} type={"success"} triggerPopover={true}/>
               <GoaxWorkSideMenuItem
                   icon="help-circle"
                   label="Support"

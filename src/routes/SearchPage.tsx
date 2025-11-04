@@ -96,9 +96,8 @@ export function SearchPage() {
   const handleSearchKeywordPress = (event: any) => {
     const key = getEventKey(event);
     if (key === "Enter") {
-      // Get the value directly from the event to avoid stale state issues
-      const currentValue = getEventValue(event);
-      applyFilter(currentValue);
+        const currentValue = event.value;
+        applyFilter(currentValue);
     }
   }
 

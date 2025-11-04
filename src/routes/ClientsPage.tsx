@@ -18,7 +18,7 @@ import {
     GoabIconButton,
     GoabModal,
     GoabButtonGroup,
-    GoabDataGrid, GoabGrid,
+    GoabDataGrid,
 } from "@abgov/react-components";
 import { filterData, sortData } from "../utils/searchUtils";
 import { getPriorityBadgeProps } from "../utils/badgeUtils";
@@ -108,7 +108,8 @@ export function ClientsPage() {
     }
   };
 
-  return (
+  // @ts-ignore
+    return (
     <GoabPageBlock width="full">
       <PageHeader
         title="My clients"
