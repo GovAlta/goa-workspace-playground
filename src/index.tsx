@@ -23,30 +23,35 @@ import { OverviewPage } from './routes/OverviewPage';
 import App from './App';
 
 import './App.css';
+import {NotificationProvider} from "./contexts/NotificationContext";
+import {NotificationAdmin} from "./routes/NotificationAdmin";
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
   <React.StrictMode>
     <Router>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<Navigate to="/search" replace />} />
-          <Route path="search" element={<SearchPage />} />
-          <Route path="clients" element={<ClientsPage />} />
-          <Route path="client/:id" element={<ClientDetailPage />} />
-          <Route path="schedule" element={<SchedulePage />} />
-          <Route path="documents" element={<DocumentsPage />} />
-          <Route path="documents/sub1" element={<SubMenuItem1Page />} />
-          <Route path="documents/sub2" element={<SubMenuItem2Page />} />
-          <Route path="documents/sub3" element={<SubMenuItem3Page />} />
-          <Route path="team" element={<TeamPage />} />
-          <Route path="notifications" element={<NotificationsPage />} />
-          <Route path="support" element={<SupportPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="account" element={<AccountPage />} />
-          <Route path="overview" element={<OverviewPage />} />
-        </Route>
-      </Routes>
+        <NotificationProvider>
+            <Routes>
+                <Route path="/" element={<App />}>
+                    <Route index element={<Navigate to="/search" replace />} />
+                    <Route path="search" element={<SearchPage />} />
+                    <Route path="clients" element={<ClientsPage />} />
+                    <Route path="client/:id" element={<ClientDetailPage />} />
+                    <Route path="schedule" element={<SchedulePage />} />
+                    <Route path="documents" element={<DocumentsPage />} />
+                    <Route path="documents/sub1" element={<SubMenuItem1Page />} />
+                    <Route path="documents/sub2" element={<SubMenuItem2Page />} />
+                    <Route path="documents/sub3" element={<SubMenuItem3Page />} />
+                    <Route path="team" element={<TeamPage />} />
+                    <Route path="notifications" element={<NotificationsPage />} />
+                    <Route path="support" element={<SupportPage />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                    <Route path="account" element={<AccountPage />} />
+                    <Route path="overview" element={<OverviewPage />} />
+                    <Route path={"notification-admin"} element={<NotificationAdmin/>}/>
+                </Route>
+            </Routes>
+        </NotificationProvider>
     </Router>
   </React.StrictMode>,
 );

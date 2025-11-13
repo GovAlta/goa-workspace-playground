@@ -7,11 +7,15 @@ import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { MenuContext } from './contexts/MenuContext';
 import {NotificationContent} from "./notification/NotificationContent";
+import { useNotifications } from "./contexts/NotificationContext";
 
 export function App() {
   // On mobile (< 624px), start with menu closed; on desktop, start with menu open
   const [menuOpen, setMenuOpen] = useState(window.innerWidth >= 624);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 624);
+
+  const { getUnreadCount } = useNotifications();
+  const unreadCount = getUnreadCount();
 
   // Single resize handler - manages both isMobile state and menu visibility
   useEffect(() => {
@@ -104,7 +108,7 @@ export function App() {
           }
           secondaryContent={
             <>
-              <GoaxWorkSideMenuItem icon={"notifications"} label={"Notifications"} badge={"3"} type={"success"} triggerPopover={true}/>
+              <GoaxWorkSideMenuItem icon={"notifications"} label={"Notifications"} badge={unreadCount > 0 ? `${unreadCount}`: undefined} type={"success"} popoverContent={<NotificationContent/>}/>
               <GoaxWorkSideMenuItem
                   icon="help-circle"
                   label="Support"
