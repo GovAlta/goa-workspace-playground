@@ -158,7 +158,6 @@ export function SearchPage() {
           {filteredResults.length} results found
         </GoabText>
       )}
-      <div style={{ overflowX: 'auto', width: '100%' }}>
         <GoabDataGrid keyboardNav={"table"}>
           <GoabTable width="100%" mb={"m"} mt="m" onSort={handleSort}>
           <thead>
@@ -212,7 +211,6 @@ export function SearchPage() {
           </tbody>
         </GoabTable>
       </GoabDataGrid>
-      </div>
 
       {filteredResults.length === 0 && searchResults.length > 0 && typedChips.length > 0 && (
         <GoabBlock mt="l" mb="l">

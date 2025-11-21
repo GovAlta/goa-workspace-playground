@@ -143,24 +143,30 @@ export function App() {
         overflow: "auto"
       }}>
         {isMobile ? (
-          // Mobile: No card container, content directly rendered
+          // Mobile: No card container, content directly rendered with no padding
           <div style={{
             backgroundColor: "white",
-            minHeight: "100vh",
-            padding: "1rem"
+            minHeight: "100vh"
           }}>
             <Outlet />
           </div>
         ) : (
-          // Desktop: Keep the card container
+          // Desktop: Card container with horizontal scroll support
           <div style={{
             backgroundColor: "white",
             border: "1px solid #E9E9E9",
             borderRadius: "24px",
-            minHeight: "calc(100vh - 40px)",
-            padding: "2rem"
+            height: "calc(100vh - 40px)",
+            overflowX: "auto",
+            overflowY: "auto"
           }}>
-            <Outlet />
+            {/* Inner content wrapper - scrolls horizontally with padding preserved */}
+            <div style={{
+              padding: "2rem",
+              minWidth: "fit-content"
+            }}>
+              <Outlet />
+            </div>
           </div>
         )}
       </div>

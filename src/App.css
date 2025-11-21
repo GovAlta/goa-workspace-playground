@@ -149,6 +149,7 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
   justify-content: space-between;
   align-items: stretch;
   margin-top: var(--goa-space-m);
+  padding: 0 var(--goa-space-m);
   gap: var(--goa-space-m);
   flex-wrap: wrap;
 }
@@ -158,6 +159,7 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
     flex-direction: row;
     align-items: flex-start;
     margin-top: var(--goa-space-l);
+    padding: 0;
     gap: var(--goa-space-xl);
   }
 }
@@ -169,14 +171,28 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
   gap: var(--goa-space-xs);
   margin-top: var(--goa-space-m);
   margin-bottom: var(--goa-space-m);
+  padding: 0 var(--goa-space-m);
+}
+
+@media (min-width: 624px) {
+  .clients-chips-container {
+    padding: 0;
+  }
 }
 
 /* Table container */
 .clients-table-container {
   margin-top: var(--goa-space-m);
   margin-bottom: var(--goa-space-m);
+  padding: 0 var(--goa-space-m);
   width: 100%;
   overflow-x: auto;
+}
+
+@media (min-width: 624px) {
+  .clients-table-container {
+    padding: 0;
+  }
 }
 
 /* ============================================================================
@@ -202,7 +218,7 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
   .page-header {
     background-color: white;
     padding: var(--goa-space-m);
-    margin-bottom: var(--goa-space-m);
+    margin-bottom: 0;
   }
 
   /* Sticky header on mobile */
@@ -256,3 +272,4 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
     width: auto;
   }
 }
+

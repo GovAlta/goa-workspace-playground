@@ -68,7 +68,7 @@ export function PageHeader({ title, actions }: PageHeaderProps) {
           </div>
           {actions && (
             isMobile ? (
-              <GoabBlock gap="s" direction="row">
+              <GoabBlock gap="s" direction="column">
                 {actions}
               </GoabBlock>
             ) : (
