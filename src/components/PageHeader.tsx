@@ -14,11 +14,6 @@ export function PageHeader({ title, actions }: PageHeaderProps) {
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isMobile) {
-      setIsSticky(false);
-      return;
-    }
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsSticky(!entry.isIntersecting);
@@ -35,16 +30,16 @@ export function PageHeader({ title, actions }: PageHeaderProps) {
         observer.unobserve(sentinelRef.current);
       }
     };
-  }, [isMobile]);
+  }, []);
 
   return (
     <>
       {/* Sentinel element to detect when header should become sticky */}
-      {isMobile && <div ref={sentinelRef} className="page-header-sentinel" />}
+      <div ref={sentinelRef} className="page-header-sentinel" />
 
       <div
         ref={headerRef}
-        className={`page-header ${isMobile && isSticky ? 'page-header--sticky' : ''}`}
+        className={`page-header ${isSticky ? 'page-header--sticky' : ''}`}
       >
         <div className="page-header__content">
           <div className="page-header__title-container">
@@ -79,7 +74,7 @@ export function PageHeader({ title, actions }: PageHeaderProps) {
       </div>
 
       {/* Spacer to prevent content jump when header becomes sticky */}
-      {isMobile && isSticky && headerRef.current && (
+      {isSticky && headerRef.current && (
         <div style={{ height: headerRef.current.offsetHeight }} />
       )}
     </>

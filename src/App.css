@@ -213,6 +213,19 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
   transition: all 0.3s ease;
 }
 
+/* Desktop: Sticky header within scroll container */
+@media (min-width: 624px) {
+  .page-header--sticky {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: white;
+    margin: -2rem -2rem 0 -2rem;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
 /* Mobile header styles */
 @media (max-width: 623px) {
   .page-header {
@@ -221,7 +234,7 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
     margin-bottom: 0;
   }
 
-  /* Sticky header on mobile */
+  /* Sticky header on mobile - fixed to viewport */
   .page-header--sticky {
     position: fixed;
     top: 0;
