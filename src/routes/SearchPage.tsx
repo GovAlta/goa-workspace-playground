@@ -112,7 +112,7 @@ export function SearchPage() {
   }, []);
 
   return (
-    <GoabPageBlock width="full">
+    <div style={{paddingLeft: "32px", paddingRight: "32px"}}>
       <GoabFormItem id="searchInput" error={searchErrorMessage}>
         <GoabBlock gap="xs" direction="row" alignment="start">
           <div style={{ flex: 1 }}>
@@ -254,6 +254,6 @@ export function SearchPage() {
           Are you sure you want to delete this search result? This action cannot be undone.
         </GoabText>
       </GoabModal>
-    </GoabPageBlock>
+    </div>
   );
 }
