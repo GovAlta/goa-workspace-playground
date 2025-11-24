@@ -164,7 +164,6 @@ goa-table table tbody tr:nth-child(even) td {
     flex-direction: row;
     align-items: flex-start;
     margin-top: var(--goa-space-m); /* Reduced to align better with header */
-    padding: 0 2rem; /* Match the content padding */
     gap: var(--goa-space-xl);
   }
 }
