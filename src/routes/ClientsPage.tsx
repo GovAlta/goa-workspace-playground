@@ -35,8 +35,10 @@ export function ClientsPage() {
   // Memoize actions to prevent infinite re-renders
   const headerActions = useMemo(() => (
     <>
-      <GoabButton type="secondary" width={isMobile ? "100%" : undefined}>More</GoabButton>
-      <GoabButton type="primary" width={isMobile ? "100%" : undefined}>Add application</GoabButton>
+        <GoabBlock>
+            <GoabButton type="secondary" width={isMobile ? "50%" : undefined}>More</GoabButton>
+            <GoabButton type="primary" width={isMobile ? "50%" : undefined}>Add application</GoabButton>
+        </GoabBlock>
     </>
   ), [isMobile]);
 
@@ -169,70 +171,77 @@ export function ClientsPage() {
           </GoabButton>
         </div>
       )}
+        <div className="content-wrapper" style={{
+            minWidth: "fit-content",
+            padding: "0 2rem 2rem 2rem",
+            backgroundColor: "white"
+        }}>
+            <ScrollContainer className="clients-table-container">
+                <GoabDataGrid keyboardNav="table">
+                    <GoabTable width="100%" onSort={handleSort}>
+                        <thead>
+                        <tr data-grid="row">
+                            <th data-grid="cell" style={{ paddingBottom: 0 }}>
+                                <GoabCheckbox name="selectAll" value={allSelected} onChange={() => setAllSelected(!allSelected)} ariaLabel="Select all clients" />
+                            </th>
+                            <th data-grid="cell"><GoabTableSortHeader name="status">Status</GoabTableSortHeader></th>
+                            <th data-grid="cell">Name</th>
+                            <th data-grid="cell">Assigned to</th>
+                            <th data-grid="cell"><GoabTableSortHeader name="dueDate">Due date</GoabTableSortHeader></th>
+                            <th data-grid="cell"><GoabTableSortHeader name="jurisdiction">Jurisdiction</GoabTableSortHeader></th>
+                            <th data-grid="cell">File number</th>
+                            <th data-grid="cell">Category</th>
+                            <th data-grid="cell"><GoabTableSortHeader name="priority">Priority</GoabTableSortHeader></th>
+                            <th data-grid="cell">Notes</th>
+                            <th data-grid="cell"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {filteredClients.map((client) => (
+                            <tr key={client.id} data-grid="row">
+                                <td data-grid="cell" className="goa-table-cell--checkbox">
+                                    <GoabCheckbox
+                                        name={`select-${client.id}`}
+                                        value={client.selected}
+                                        ariaLabel={`Select ${client.name}`}
+                                    />
+                                </td>
+                                <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={client.status} content={client.statusText} /></td>
+                                <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>
+                                    <GoabLink>
+                                        <Link to={`/client/${client.id}`}>
+                                            {client.name}
+                                        </Link>
+                                    </GoabLink>
+                                </td>
+                                <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>{client.staff}</td>
+                                <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>{client.dueDate}</td>
+                                <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>{client.jurisdiction}</td>
+                                <td data-grid="cell" className="goa-table-cell--text">{client.fileNumber}</td>
+                                <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap', textTransform: 'capitalize' }}>{client.category}</td>
+                                <td data-grid="cell" className="goa-table-cell--badge">
+                                    <GoabBadge {...getPriorityBadgeProps(client.priority)} />
+                                </td>
+                                <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap', minWidth: '200px' }}>
+                                    {client.priority === 'high' ? 'Requires immediate attention' : 'Standard processing'}
+                                </td>
+                                <td data-grid="cell" className="goa-table-cell--icon-button">
+                                    <GoabIconButton
+                                        icon="trash"
+                                        size="small"
+                                        onClick={() => deleteClient(client.id)}
+                                        ariaLabel={`Delete ${client.name}`}
+                                    />
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </GoabTable>
+                </GoabDataGrid>
+            </ScrollContainer>
+        </div>
 
-      <ScrollContainer className="clients-table-container">
-        <GoabDataGrid keyboardNav="table">
-          <GoabTable width="100%" onSort={handleSort}>
-            <thead>
-              <tr data-grid="row">
-                <th data-grid="cell" style={{ paddingBottom: 0 }}>
-                  <GoabCheckbox name="selectAll" value={allSelected} onChange={() => setAllSelected(!allSelected)} ariaLabel="Select all clients" />
-                </th>
-                <th data-grid="cell"><GoabTableSortHeader name="status">Status</GoabTableSortHeader></th>
-                <th data-grid="cell">Name</th>
-                <th data-grid="cell">Assigned to</th>
-                <th data-grid="cell"><GoabTableSortHeader name="dueDate">Due date</GoabTableSortHeader></th>
-                <th data-grid="cell"><GoabTableSortHeader name="jurisdiction">Jurisdiction</GoabTableSortHeader></th>
-                <th data-grid="cell">File number</th>
-                <th data-grid="cell">Category</th>
-                <th data-grid="cell"><GoabTableSortHeader name="priority">Priority</GoabTableSortHeader></th>
-                <th data-grid="cell">Notes</th>
-                <th data-grid="cell"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredClients.map((client) => (
-                <tr key={client.id} data-grid="row">
-                  <td data-grid="cell" className="goa-table-cell--checkbox">
-                    <GoabCheckbox
-                      name={`select-${client.id}`}
-                      value={client.selected}
-                      ariaLabel={`Select ${client.name}`}
-                    />
-                  </td>
-                  <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={client.status} content={client.statusText} /></td>
-                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>
-                    <GoabLink>
-                      <Link to={`/client/${client.id}`}>
-                        {client.name}
-                      </Link>
-                    </GoabLink>
-                  </td>
-                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>{client.staff}</td>
-                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>{client.dueDate}</td>
-                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>{client.jurisdiction}</td>
-                  <td data-grid="cell" className="goa-table-cell--text">{client.fileNumber}</td>
-                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap', textTransform: 'capitalize' }}>{client.category}</td>
-                  <td data-grid="cell" className="goa-table-cell--badge">
-                    <GoabBadge {...getPriorityBadgeProps(client.priority)} />
-                  </td>
-                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap', minWidth: '200px' }}>
-                    {client.priority === 'high' ? 'Requires immediate attention' : 'Standard processing'}
-                  </td>
-                  <td data-grid="cell" className="goa-table-cell--icon-button">
-                    <GoabIconButton
-                      icon="trash"
-                      size="small"
-                      onClick={() => deleteClient(client.id)}
-                      ariaLabel={`Delete ${client.name}`}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </GoabTable>
-        </GoabDataGrid>
-      </ScrollContainer>
+
 
       {filteredClients.length === 0 && clients.length > 0 && (
         <GoabBlock mt="l" mb="l">

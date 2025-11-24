@@ -55,9 +55,6 @@ export function App() {
             console.log('[App] onToggle called, toggling menuOpen from', menuOpen, 'to', !menuOpen);
             setMenuOpen(prev => !prev);
           }}
-          popoverContent={
-              <NotificationContent/>
-          }
           primaryContent={
             <>
               <GoaxWorkSideMenuItem
@@ -140,11 +137,13 @@ export function App() {
           }
       />
 
-      <div style={{
-        flex: 1,
-        padding: isMobile ? "0" : "20px 20px 20px 0",
-        overflow: "auto"
-      }}>
+      <div
+        className="card-container"
+        style={{
+          flex: 1,
+          padding: isMobile ? "0" : "20px 20px 20px 0",
+          overflow: "auto",
+        }}>
         {isMobile ? (
           // Mobile: No card container, content directly rendered with no padding
           <div style={{
@@ -166,15 +165,11 @@ export function App() {
               overflowX: "auto",
               overflowY: "auto"
             }}>
-            {/* PageHeader - direct child of card container for proper sticky behavior */}
+            {/* PageHeader - sticky, stays within viewport */}
             <PageHeader />
-            {/* Inner content wrapper - scrolls horizontally with padding preserved */}
-            <div style={{
-              padding: "0 2rem 2rem 0",
-              minWidth: "fit-content"
-            }}>
               <Outlet />
-            </div>
+            {/* Content wrapper that expands to fit content */}
+
           </div>
         )}
       </div>

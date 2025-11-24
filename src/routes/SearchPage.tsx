@@ -27,6 +27,7 @@ import {
 } from "@abgov/ui-components-common";
 import { usePageHeader } from "../contexts/PageHeaderContext";
 import { useMenu } from "../contexts/MenuContext";
+import {ScrollContainer} from "../components/ScrollContainer";
 
 export function SearchPage() {
   const { isMobile } = useMenu();
@@ -157,59 +158,62 @@ export function SearchPage() {
           {filteredResults.length} results found
         </GoabText>
       )}
-        <GoabDataGrid keyboardNav={"table"}>
-          <GoabTable width="100%" mb={"m"} mt="m" onSort={handleSort}>
-          <thead>
-          <tr data-grid="row">
-            <th style={{ paddingBottom: 0 }} data-grid="cell">
-              <GoabCheckbox name="selectAll" onChange={handleSelectAll} checked={allSelected} ariaLabel={"Select all results"}/>
-            </th>
-            <th data-grid="cell"><GoabTableSortHeader name="status">Status</GoabTableSortHeader></th>
-            <th data-grid="cell">Name</th>
-            <th data-grid="cell">Staff</th>
-            <th data-grid="cell"><GoabTableSortHeader name="dueDate">Due date</GoabTableSortHeader></th>
-            <th data-grid="cell">File number</th>
-            <th data-grid="cell"><GoabTableSortHeader name="type">Type</GoabTableSortHeader></th>
-            <th data-grid="cell"></th>
-          </tr>
-          </thead>
-          <tbody>
-          {filteredResults.map((result) => (
-              <tr key={result.id} data-grid="row">
-                <td data-grid="cell" className="goa-table-cell--checkbox">
-                  <GoabCheckbox
-                      name={`select-${result.id}`}
-                      checked={result.selected}
-                      onChange={() => handleSelectResult(result.id)}
-                  />
-                </td>
-                <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={result.status} content={result.statusText} /></td>
-                <td data-grid="cell" className="goa-table-cell--text">
-                  <GoabLink>
-                    <Link to={`/client/${result.id}`}>
-                      {result.name}
-                    </Link>
-                  </GoabLink>
-                </td>
-                <td data-grid="cell" className="goa-table-cell--text">{result.staff}</td>
-                <td data-grid="cell" className="goa-table-cell--text">{result.dueDate}</td>
-                <td data-grid="cell" className="goa-table-cell--text">{result.fileNumber}</td>
-                <td data-grid="cell" className="goa-table-cell--badge">
-                  <GoabBadge {...getTypeBadgeProps(result.type)} />
-                </td>
-                <td data-grid="cell" className="goa-table-cell--icon-button">
-                  <GoabIconButton
-                      icon="trash"
-                      size="small"
-                      onClick={() => deleteResult(result.id)}
-                      aria-label={`Delete ${result.name}`}
-                  />
-                </td>
-              </tr>
-          ))}
-          </tbody>
-        </GoabTable>
-      </GoabDataGrid>
+        <ScrollContainer>
+            <GoabDataGrid keyboardNav={"table"}>
+                <GoabTable width="100%" mb={"m"} mt="m" onSort={handleSort}>
+                    <thead>
+                    <tr data-grid="row">
+                        <th style={{ paddingBottom: 0 }} data-grid="cell">
+                            <GoabCheckbox name="selectAll" onChange={handleSelectAll} checked={allSelected} ariaLabel={"Select all results"}/>
+                        </th>
+                        <th data-grid="cell"><GoabTableSortHeader name="status">Status</GoabTableSortHeader></th>
+                        <th data-grid="cell">Name</th>
+                        <th data-grid="cell">Staff</th>
+                        <th data-grid="cell"><GoabTableSortHeader name="dueDate">Due date</GoabTableSortHeader></th>
+                        <th data-grid="cell">File number</th>
+                        <th data-grid="cell"><GoabTableSortHeader name="type">Type</GoabTableSortHeader></th>
+                        <th data-grid="cell"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {filteredResults.map((result) => (
+                        <tr key={result.id} data-grid="row">
+                            <td data-grid="cell" className="goa-table-cell--checkbox">
+                                <GoabCheckbox
+                                    name={`select-${result.id}`}
+                                    checked={result.selected}
+                                    onChange={() => handleSelectResult(result.id)}
+                                />
+                            </td>
+                            <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={result.status} content={result.statusText} /></td>
+                            <td data-grid="cell" className="goa-table-cell--text">
+                                <GoabLink>
+                                    <Link to={`/client/${result.id}`}>
+                                        {result.name}
+                                    </Link>
+                                </GoabLink>
+                            </td>
+                            <td data-grid="cell" className="goa-table-cell--text">{result.staff}</td>
+                            <td data-grid="cell" className="goa-table-cell--text">{result.dueDate}</td>
+                            <td data-grid="cell" className="goa-table-cell--text">{result.fileNumber}</td>
+                            <td data-grid="cell" className="goa-table-cell--badge">
+                                <GoabBadge {...getTypeBadgeProps(result.type)} />
+                            </td>
+                            <td data-grid="cell" className="goa-table-cell--icon-button">
+                                <GoabIconButton
+                                    icon="trash"
+                                    size="small"
+                                    onClick={() => deleteResult(result.id)}
+                                    aria-label={`Delete ${result.name}`}
+                                />
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </GoabTable>
+            </GoabDataGrid>
+        </ScrollContainer>
+
 
       {filteredResults.length === 0 && searchResults.length > 0 && typedChips.length > 0 && (
         <GoabBlock mt="l" mb="l">

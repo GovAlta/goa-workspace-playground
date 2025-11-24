@@ -163,8 +163,8 @@ goa-table table tbody tr:nth-child(even) td {
   .clients-filter-section {
     flex-direction: row;
     align-items: flex-start;
-    margin-top: var(--goa-space-l);
-    padding: 0;
+    margin-top: var(--goa-space-m); /* Reduced to align better with header */
+    padding: 0 2rem; /* Match the content padding */
     gap: var(--goa-space-xl);
   }
 }
@@ -181,7 +181,7 @@ goa-table table tbody tr:nth-child(even) td {
 
 @media (min-width: 624px) {
   .clients-chips-container {
-    padding: 0;
+    padding: 0 2rem; /* Match content padding */
   }
 }
 
@@ -194,11 +194,6 @@ goa-table table tbody tr:nth-child(even) td {
   overflow-x: auto;
 }
 
-@media (min-width: 624px) {
-  .clients-table-container {
-    padding: 0;
-  }
-}
 
 /* ============================================================================
    SCROLL CONTAINER - Horizontal scroll shadows with gradient overlays
@@ -247,7 +242,7 @@ goa-table table tbody tr:nth-child(even) td {
   position: static;
   background-color: transparent;
   padding: 1rem 1rem 0 1rem;
-  margin-bottom: var(--goa-space-l);
+  margin-bottom: var(--goa-space-m);
   transition: all 0.3s ease;
   borderRadius: "24px",
 }
@@ -267,7 +262,34 @@ goa-table table tbody tr:nth-child(even) td {
     border-bottom: 1px solid #EDEFF3;
   }
 
-  /* Scroll position shadows - only apply when sticky */
+  /* Content wrapper - default state */
+  .desktop-card-container .content-wrapper {
+    position: relative;
+    transition: border-radius 0.3s ease, margin-top 0.3s ease;
+  }
+
+  /* Content container gets rounded corners when scrolled under sticky header */
+  .desktop-card-container.content-scrolled .content-wrapper {
+    border-radius: 24px 24px 0 0;
+    margin-top: 8px;
+    background-color: #f8f8f8;
+    clip-path: inset(0 0 -10px 0); /* Clip bottom shadow if any */
+  }
+
+  /* Optional: Add subtle shadow to emphasize the separation */
+  .desktop-card-container.content-scrolled .content-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 24px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), transparent);
+    border-radius: 24px 24px 0 0;
+    pointer-events: none;
+  }
+
+  /* Scroll position shadows - apply to GoabPageBlock when sticky */
   /* At top: shadow at bottom indicating more content below */
   .desktop-card-container .page-header--sticky.page-header--top {
     box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.15);
