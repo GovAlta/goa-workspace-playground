@@ -194,9 +194,10 @@ goa-table table tbody tr:nth-child(even) td {
   max-width: 100%;
 }
 
-/* Ensure the table inside doesn't shrink */
+/* Ensure the table inside doesn't shrink and add right margin for spacing at scroll edge */
 .scroll-container > * {
   min-width: max-content;
+  margin-right: 32px;
 }
 
 /* Shadow overlay elements - fixed position, dynamically positioned by JS */

@@ -110,9 +110,8 @@ export function SearchPage() {
   const clearAllChips = useCallback(() => {
     setTypedChips([]);
   }, []);
-
   return (
-    <div style={{paddingLeft: "32px", paddingRight: "32px"}}>
+    <div style={{paddingLeft: "32px"}}>
       <GoabFormItem id="searchInput" error={searchErrorMessage}>
         <GoabBlock gap="xs" direction="row" alignment="start">
           <div style={{ flex: 1 }}>
@@ -160,6 +159,7 @@ export function SearchPage() {
       )}
         <ScrollContainer>
             <GoabDataGrid keyboardNav={"table"}>
+                <div style={{marginRight:"32px"}}>
                 <GoabTable width="100%" mb={"m"} mt="m" onSort={handleSort}>
                     <thead>
                     <tr data-grid="row">
@@ -211,6 +211,7 @@ export function SearchPage() {
                     ))}
                     </tbody>
                 </GoabTable>
+                </div>
             </GoabDataGrid>
         </ScrollContainer>
 

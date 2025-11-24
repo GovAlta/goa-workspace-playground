@@ -128,7 +128,7 @@ export function ClientsPage() {
 
     // @ts-ignore
     return (
-        <div style={{paddingLeft: "32px", paddingRight: "32px"}}>
+        <div style={{paddingLeft: "32px"}}>
             <div className="clients-filter-section">
                 <GoabTabs initialTab={1} onChange={handleTabChange}>
                     <GoabTab heading="All"/>
@@ -177,6 +177,7 @@ export function ClientsPage() {
             )}
             <ScrollContainer>
                 <GoabDataGrid keyboardNav="table">
+                    <div style={{marginRight:"32px"}}>
                     <GoabTable width="100%" onSort={handleSort}>
                         <thead>
                         <tr data-grid="row">
@@ -247,6 +248,7 @@ export function ClientsPage() {
                         ))}
                         </tbody>
                     </GoabTable>
+                    </div>
                 </GoabDataGrid>
             </ScrollContainer>
 
