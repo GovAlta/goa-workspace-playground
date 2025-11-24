@@ -109,6 +109,11 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
   padding: 16px 16px 16px 16px !important;
 }
 
+/* Table zebra striping - even rows */
+goa-table table tbody tr:nth-child(even) td {
+  background-color: var(--goa-color-greyscale-50) !important;
+}
+
 /* ============================================================================
    NOTES FOR IMPLEMENTATION
    ============================================================================
@@ -196,6 +201,39 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
 }
 
 /* ============================================================================
+   SCROLL CONTAINER - Horizontal scroll shadows with gradient overlays
+   ============================================================================ */
+
+.scroll-container {
+  position: relative;
+  max-width: 100%;
+}
+
+/* Ensure the table inside doesn't shrink */
+.scroll-container > * {
+  min-width: max-content;
+}
+
+/* Shadow overlay elements - fixed position, dynamically positioned by JS */
+.scroll-shadow {
+  position: fixed;
+  width: 40px;
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 0.2s ease;
+}
+
+/* Left shadow gradient */
+.scroll-shadow--left {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.18), transparent);
+}
+
+/* Right shadow gradient */
+.scroll-shadow--right {
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.18), transparent);
+}
+
+/* ============================================================================
    PAGE HEADER
    ============================================================================ */
 
@@ -208,21 +246,42 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
 .page-header {
   position: static;
   background-color: transparent;
-  padding: 0;
+  padding: 1rem 1rem 0 1rem;
   margin-bottom: var(--goa-space-l);
   transition: all 0.3s ease;
+  borderRadius: "24px",
 }
 
-/* Desktop: Sticky header within scroll container */
+/* Desktop: Header is always sticky within scroll container */
 @media (min-width: 624px) {
-  .page-header--sticky {
+  .desktop-card-container .page-header {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000; /** Larger than shadow **/
     background-color: white;
-    margin: -2rem -2rem 0 -2rem;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px 16px 16px 32px;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .desktop-card-container .page-header--sticky {
+    border-bottom: 1px solid #EDEFF3;
+  }
+
+  /* Scroll position shadows - only apply when sticky */
+  /* At top: shadow at bottom indicating more content below */
+  .desktop-card-container .page-header--sticky.page-header--top {
+    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+  }
+
+  /* At bottom: shadow at top indicating content above, nothing below */
+  .desktop-card-container .page-header--sticky.page-header--bottom {
+    box-shadow: inset 0 -4px 6px -4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* In middle: shadows on both sides indicating content above and below */
+  .desktop-card-container .page-header--sticky.page-header--middle {
+    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.15),
+                inset 0 -4px 6px -4px rgba(0, 0, 0, 0.05);
   }
 }
 
@@ -232,6 +291,7 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
     background-color: white;
     padding: var(--goa-space-m);
     margin-bottom: 0;
+    transition: box-shadow 0.2s ease;
   }
 
   /* Sticky header on mobile - fixed to viewport */
@@ -241,7 +301,23 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
     left: 0;
     right: 0;
     z-index: 100;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Scroll position shadows for mobile - only apply when sticky */
+  /* At top: shadow at bottom indicating more content below */
+  .page-header--sticky.page-header--top {
+    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+  }
+
+  /* At bottom: shadow at top indicating content above, nothing below */
+  .page-header--sticky.page-header--bottom {
+    box-shadow: inset 0 -4px 6px -4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* In middle: shadows on both sides indicating content above and below */
+  .page-header--sticky.page-header--middle {
+    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.15),
+                inset 0 -4px 6px -4px rgba(0, 0, 0, 0.05);
   }
 }
 
@@ -268,6 +344,13 @@ goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
   display: flex;
   align-items: center;
   gap: var(--goa-space-m);
+}
+
+/* Align menu icon to content edge on mobile by compensating for button's internal padding */
+@media (max-width: 623px) {
+  .page-header__title-container > goa-icon-button:first-child {
+    margin-left: -12px;
+  }
 }
 
 /* Actions container */

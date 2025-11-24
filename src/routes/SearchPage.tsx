@@ -25,11 +25,12 @@ import {
   GoabCheckboxOnChangeDetail,
   GoabInputOnChangeDetail,
 } from "@abgov/ui-components-common";
-import { PageHeader } from "../components/PageHeader";
+import { usePageHeader } from "../contexts/PageHeaderContext";
 import { useMenu } from "../contexts/MenuContext";
 
 export function SearchPage() {
   const { isMobile } = useMenu();
+  usePageHeader("Search");
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchErrorMessage, setSearchErrorMessage] = useState('');
   const [typedChips, setTypedChips] = useState<string[]>([]);
@@ -111,8 +112,6 @@ export function SearchPage() {
 
   return (
     <GoabPageBlock width="full">
-      <PageHeader title="Search" />
-
       <GoabFormItem id="searchInput" error={searchErrorMessage}>
         <GoabBlock gap="xs" direction="row" alignment="start">
           <div style={{ flex: 1 }}>

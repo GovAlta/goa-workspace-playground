@@ -22,14 +22,27 @@ import {
 } from "@abgov/react-components";
 import { filterData, sortData } from "../utils/searchUtils";
 import { getPriorityBadgeProps } from "../utils/badgeUtils";
-import { PageHeader } from "../components/PageHeader";
+import { usePageHeader } from "../contexts/PageHeaderContext";
 import { useMenu } from "../contexts/MenuContext";
+import { ScrollContainer } from "../components/ScrollContainer";
 import {GoabInputOnChangeDetail, GoabInputOnKeyPressDetail, GoabTableOnSortDetail} from "@abgov/ui-components-common";
 import {Client} from "../types/Client";
 import mockData from "../data/mockClients.json";
 
 export function ClientsPage() {
   const { isMobile } = useMenu();
+
+  // Memoize actions to prevent infinite re-renders
+  const headerActions = useMemo(() => (
+    <>
+      <GoabButton type="secondary" width={isMobile ? "100%" : undefined}>More</GoabButton>
+      <GoabButton type="primary" width={isMobile ? "100%" : undefined}>Add application</GoabButton>
+    </>
+  ), [isMobile]);
+
+  // Set up page header with title and actions
+  usePageHeader("My clients", headerActions);
+
   const [activeTab, setActiveTab] = useState('all');
   const [inputValue, setInputValue] = useState('');
   const [inputError, setInputError] = useState('');
@@ -111,16 +124,6 @@ export function ClientsPage() {
   // @ts-ignore
     return (
     <GoabPageBlock width="full">
-      <PageHeader
-        title="My clients"
-        actions={
-          <>
-            <GoabButton type="secondary" width={isMobile ? "100%" : undefined}>More</GoabButton>
-            <GoabButton type="primary" width={isMobile ? "100%" : undefined}>Add application</GoabButton>
-          </>
-        }
-      />
-
       <div className="clients-filter-section">
         <GoabTabs initialTab={1} onChange={handleTabChange}>
           <GoabTab heading="All" />
@@ -167,7 +170,7 @@ export function ClientsPage() {
         </div>
       )}
 
-      <div className="clients-table-container">
+      <ScrollContainer className="clients-table-container">
         <GoabDataGrid keyboardNav="table">
           <GoabTable width="100%" onSort={handleSort}>
             <thead>
@@ -177,10 +180,13 @@ export function ClientsPage() {
                 </th>
                 <th data-grid="cell"><GoabTableSortHeader name="status">Status</GoabTableSortHeader></th>
                 <th data-grid="cell">Name</th>
+                <th data-grid="cell">Assigned to</th>
                 <th data-grid="cell"><GoabTableSortHeader name="dueDate">Due date</GoabTableSortHeader></th>
                 <th data-grid="cell"><GoabTableSortHeader name="jurisdiction">Jurisdiction</GoabTableSortHeader></th>
                 <th data-grid="cell">File number</th>
+                <th data-grid="cell">Category</th>
                 <th data-grid="cell"><GoabTableSortHeader name="priority">Priority</GoabTableSortHeader></th>
+                <th data-grid="cell">Notes</th>
                 <th data-grid="cell"></th>
               </tr>
             </thead>
@@ -195,18 +201,23 @@ export function ClientsPage() {
                     />
                   </td>
                   <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={client.status} content={client.statusText} /></td>
-                  <td data-grid="cell" className="goa-table-cell--text">
+                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>
                     <GoabLink>
                       <Link to={`/client/${client.id}`}>
                         {client.name}
                       </Link>
                     </GoabLink>
                   </td>
-                  <td data-grid="cell" className="goa-table-cell--text">{client.dueDate}</td>
-                  <td data-grid="cell" className="goa-table-cell--text">{client.jurisdiction}</td>
+                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>{client.staff}</td>
+                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>{client.dueDate}</td>
+                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap' }}>{client.jurisdiction}</td>
                   <td data-grid="cell" className="goa-table-cell--text">{client.fileNumber}</td>
+                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap', textTransform: 'capitalize' }}>{client.category}</td>
                   <td data-grid="cell" className="goa-table-cell--badge">
                     <GoabBadge {...getPriorityBadgeProps(client.priority)} />
+                  </td>
+                  <td data-grid="cell" className="goa-table-cell--text" style={{ whiteSpace: 'nowrap', minWidth: '200px' }}>
+                    {client.priority === 'high' ? 'Requires immediate attention' : 'Standard processing'}
                   </td>
                   <td data-grid="cell" className="goa-table-cell--icon-button">
                     <GoabIconButton
@@ -221,7 +232,7 @@ export function ClientsPage() {
             </tbody>
           </GoabTable>
         </GoabDataGrid>
-      </div>
+      </ScrollContainer>
 
       {filteredClients.length === 0 && clients.length > 0 && (
         <GoabBlock mt="l" mb="l">

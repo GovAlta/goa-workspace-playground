@@ -6,6 +6,8 @@ import {
 import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { MenuContext } from './contexts/MenuContext';
+import { PageHeaderProvider } from './contexts/PageHeaderContext';
+import { PageHeader } from './components/PageHeader';
 import {NotificationContent} from "./notification/NotificationContent";
 import { useNotifications } from "./contexts/NotificationContext";
 
@@ -36,6 +38,7 @@ export function App() {
 
   return (
     <MenuContext.Provider value={{ menuOpen, setMenuOpen, isMobile }}>
+    <PageHeaderProvider>
     <div style={{
       display: "flex",
       height: "100vh",
@@ -148,21 +151,26 @@ export function App() {
             backgroundColor: "white",
             minHeight: "100vh"
           }}>
-            <Outlet />
+            <PageHeader />
+              <Outlet />
           </div>
         ) : (
           // Desktop: Card container with horizontal scroll support
-          <div style={{
-            backgroundColor: "white",
-            border: "1px solid #E9E9E9",
-            borderRadius: "24px",
-            height: "calc(100vh - 40px)",
-            overflowX: "auto",
-            overflowY: "auto"
-          }}>
+          <div
+            className="desktop-card-container"
+            style={{
+              backgroundColor: "white",
+              border: "1px solid #E9E9E9",
+              borderRadius: "24px",
+              height: "calc(100vh - 40px)",
+              overflowX: "auto",
+              overflowY: "auto"
+            }}>
+            {/* PageHeader - direct child of card container for proper sticky behavior */}
+            <PageHeader />
             {/* Inner content wrapper - scrolls horizontally with padding preserved */}
             <div style={{
-              padding: "2rem",
+              padding: "0 2rem 2rem 0",
               minWidth: "fit-content"
             }}>
               <Outlet />
@@ -171,6 +179,7 @@ export function App() {
         )}
       </div>
     </div>
+    </PageHeaderProvider>
     </MenuContext.Provider>
   );
 }
