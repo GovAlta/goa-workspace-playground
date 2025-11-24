@@ -184,15 +184,6 @@ goa-table table tbody tr:nth-child(even) td {
   }
 }
 
-/* Table container */
-.clients-table-container {
-  margin-top: var(--goa-space-m);
-  margin-bottom: var(--goa-space-m);
-  padding: 0 var(--goa-space-m);
-  width: 100%;
-  overflow-x: auto;
-}
-
 
 /* ============================================================================
    SCROLL CONTAINER - Horizontal scroll shadows with gradient overlays

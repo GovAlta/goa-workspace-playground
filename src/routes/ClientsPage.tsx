@@ -175,7 +175,7 @@ export function ClientsPage() {
                     </GoabButton>
                 </div>
             )}
-            <ScrollContainer className="clients-table-container">
+            <ScrollContainer>
                 <GoabDataGrid keyboardNav="table">
                     <GoabTable width="100%" onSort={handleSort}>
                         <thead>
