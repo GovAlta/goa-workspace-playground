@@ -201,6 +201,8 @@ export function PageHeader({ title: propTitle, actions: propActions }: PageHeade
               {title}
             </GoabText>
           </div>
+          {/* Spacer pushes actions to the right in desktop mode */}
+          {!isMobile && <div className="page-header__spacer" />}
           {actions && (
             isMobile ? (
               <GoabBlock gap="s" direction="column">

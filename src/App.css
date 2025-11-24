@@ -252,10 +252,13 @@ goa-table table tbody tr:nth-child(even) td {
   .desktop-card-container .page-header {
     position: sticky;
     top: 0;
+    left: 0;
     z-index: 1000; /** Larger than shadow **/
     background-color: white;
     padding: 16px 16px 16px 32px;
     transition: box-shadow 0.2s ease;
+    /* Expand to full scrollable width when content is wider than viewport */
+    min-width: fit-content;
   }
 
   .desktop-card-container .page-header--sticky {
@@ -358,6 +361,8 @@ goa-table table tbody tr:nth-child(even) td {
     justify-content: space-between;
     align-items: center;
     gap: 0;
+    /* Ensure content expands to full width when scrollable */
+    min-width: fit-content;
   }
 }
 
@@ -368,11 +373,27 @@ goa-table table tbody tr:nth-child(even) td {
   gap: var(--goa-space-m);
 }
 
+@media (min-width: 624px) {
+  .page-header__title-container {
+    /* Sticky title - stays visible during horizontal scroll */
+    position: sticky;
+    left: 32px;
+    background: inherit;
+    z-index: 1;
+  }
+}
+
 /* Align menu icon to content edge on mobile by compensating for button's internal padding */
 @media (max-width: 623px) {
   .page-header__title-container > goa-icon-button:first-child {
     margin-left: -12px;
   }
+}
+
+/* Spacer element - pushes actions to the right in desktop mode */
+.page-header__spacer {
+  flex: 1;
+  min-width: 1rem;
 }
 
 /* Actions container */
@@ -388,6 +409,10 @@ goa-table table tbody tr:nth-child(even) td {
     flex-wrap: wrap;
     justify-content: flex-end;
     width: auto;
+    /* Sticky actions - stay visible during horizontal scroll */
+    position: sticky;
+    right: 1rem;
+    background: inherit;
   }
 }
 
