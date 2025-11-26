@@ -10,11 +10,12 @@ import { PageHeaderProvider } from './contexts/PageHeaderContext';
 import { PageHeader } from './components/PageHeader';
 import {NotificationContent} from "./notification/NotificationContent";
 import { useNotifications } from "./contexts/NotificationContext";
+import { MOBILE_BREAKPOINT } from "./constants/breakpoints";
 
 export function App() {
-  // On mobile (< 624px), start with menu closed; on desktop, start with menu open
-  const [menuOpen, setMenuOpen] = useState(window.innerWidth >= 624);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 624);
+  // On mobile (< MOBILE_BREAKPOINT), start with menu closed; on desktop, start with menu open
+  const [menuOpen, setMenuOpen] = useState(window.innerWidth >= MOBILE_BREAKPOINT);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BREAKPOINT);
 
   const { getUnreadCount } = useNotifications();
   const unreadCount = getUnreadCount();
@@ -23,7 +24,7 @@ export function App() {
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      const mobile = width < 624;
+      const mobile = width < MOBILE_BREAKPOINT;
 
       setIsMobile(mobile);
 
@@ -39,22 +40,14 @@ export function App() {
   return (
     <MenuContext.Provider value={{ menuOpen, setMenuOpen, isMobile }}>
     <PageHeaderProvider>
-    <div style={{
-      display: "flex",
-      height: "100vh",
-      overflow: "hidden",
-      backgroundColor: "#F8F8F8"
-    }}>
+    <div className="app-layout">
       <GoaxWorkSideMenu
           heading="Income and Employment Support (IES)"
           url="/"
           userName="Edna Mode"
           userSecondaryText="edna.mode@example.com"
           open={menuOpen}
-          onToggle={() => {
-            console.log('[App] onToggle called, toggling menuOpen from', menuOpen, 'to', !menuOpen);
-            setMenuOpen(prev => !prev);
-          }}
+          onToggle={() => setMenuOpen(prev => !prev)}
           primaryContent={
             <>
               <GoaxWorkSideMenuItem
@@ -137,39 +130,16 @@ export function App() {
           }
       />
 
-      <div
-        className="card-container"
-        style={{
-          flex: 1,
-          padding: isMobile ? "0" : "20px 20px 20px 0",
-          overflow: "auto",
-        }}>
+      <div className="card-container">
         {isMobile ? (
-          // Mobile: No card container, content directly rendered with no padding
-          <div style={{
-            backgroundColor: "white",
-            minHeight: "100vh"
-          }}>
+          <div className="mobile-content">
             <PageHeader />
-              <Outlet />
+            <Outlet />
           </div>
         ) : (
-          // Desktop: Card container with horizontal scroll support
-          <div
-            className="desktop-card-container"
-            style={{
-              backgroundColor: "white",
-              border: "1px solid #E9E9E9",
-              borderRadius: "24px",
-              height: "calc(100vh - 40px)",
-              overflowX: "auto",
-              overflowY: "auto"
-            }}>
-            {/* PageHeader - sticky, stays within viewport */}
+          <div className="desktop-card-container">
             <PageHeader />
-              <Outlet />
-            {/* Content wrapper that expands to fit content */}
-
+            <Outlet />
           </div>
         )}
       </div>

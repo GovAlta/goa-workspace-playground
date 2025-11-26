@@ -1,13 +1,18 @@
 import { SearchResult } from "../types/SearchResult";
 import React from "react";
 
+type NestedValue = string | number | boolean | null | undefined | NestedObject | NestedValue[];
+interface NestedObject {
+  [key: string]: NestedValue;
+}
+
 /**
  * Check if a search term matches any value in an object (nested search)
  */
-export const checkNested = (obj: any, searchTerm: string): boolean => {
+export const checkNested = (obj: NestedObject, searchTerm: string): boolean => {
   return Object.values(obj).some((value) =>
     typeof value === "object" && value !== null
-      ? checkNested(value, searchTerm)
+      ? checkNested(value as NestedObject, searchTerm)
       : typeof value === "string" && value.toLowerCase().includes(searchTerm.toLowerCase())
   );
 };
@@ -15,7 +20,7 @@ export const checkNested = (obj: any, searchTerm: string): boolean => {
 /**
  * Filter data based on search chips/terms
  */
-export const filterData = <T extends Record<string, any>>(
+export const filterData = <T extends NestedObject>(
   chips: string[],
   data: T[]
 ): T[] => {
@@ -26,7 +31,7 @@ export const filterData = <T extends Record<string, any>>(
 /**
  * Sort data based on a key and direction
  */
-export const sortData = <T extends Record<string, any>>(
+export const sortData = <T extends NestedObject>(
   data: T[],
   sortKey: keyof T | '',
   direction: 'asc' | 'desc' | 'none'

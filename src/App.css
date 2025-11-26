@@ -1,6 +1,64 @@
 @import "@abgov/web-components/index.css";
 
 /* ============================================================================
+   BREAKPOINT VARIABLES
+   ============================================================================
+   Note: CSS cannot use JS constants, so this must be kept in sync with
+   src/constants/breakpoints.ts (MOBILE_BREAKPOINT = 624)
+   ============================================================================ */
+:root {
+  --mobile-breakpoint: 624px;
+}
+
+/* ============================================================================
+   APP LAYOUT
+   ============================================================================ */
+
+/* Main app container */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #F8F8F8;
+}
+
+/* Card container - wraps content area */
+.card-container {
+  flex: 1;
+  overflow: auto;
+}
+
+/* Mobile: no padding */
+@media (max-width: 623px) {
+  .card-container {
+    padding: 0;
+  }
+}
+
+/* Desktop: padding on right, top, bottom */
+@media (min-width: 624px) {
+  .card-container {
+    padding: 20px 20px 20px 0;
+  }
+}
+
+/* Mobile content wrapper */
+.mobile-content {
+  background-color: white;
+  min-height: 100vh;
+}
+
+/* Desktop card container */
+.desktop-card-container {
+  background-color: white;
+  border: 1px solid #E9E9E9;
+  border-radius: 24px;
+  height: calc(100vh - 40px);
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+/* ============================================================================
    TABLE CELL ALIGNMENT
    ============================================================================
    This CSS provides classes to properly align different component types
@@ -182,6 +240,35 @@ goa-table table tbody tr:nth-child(even) td {
   .clients-chips-container {
     padding: 0 2rem; /* Match content padding */
   }
+}
+
+/* Clients page layout */
+.clients-page {
+  padding-left: 32px;
+}
+
+/* Table wrapper with right margin */
+.clients-table-wrapper {
+  margin-right: 32px;
+}
+
+/* Table cell utilities */
+.goa-table-cell--nowrap {
+  white-space: nowrap;
+}
+
+.goa-table-cell--capitalize {
+  text-transform: capitalize;
+}
+
+.goa-table-cell--notes {
+  white-space: nowrap;
+  min-width: 200px;
+}
+
+/* Table header checkbox alignment */
+goa-table th.goa-table-header--checkbox {
+  padding-bottom: 0;
 }
 
 

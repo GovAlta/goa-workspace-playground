@@ -25,7 +25,12 @@ import {getPriorityBadgeProps} from "../utils/badgeUtils";
 import {usePageHeader} from "../contexts/PageHeaderContext";
 import {useMenu} from "../contexts/MenuContext";
 import {ScrollContainer} from "../components/ScrollContainer";
-import {GoabInputOnChangeDetail, GoabInputOnKeyPressDetail, GoabTableOnSortDetail} from "@abgov/ui-components-common";
+import {
+    GoabInputOnChangeDetail,
+    GoabInputOnKeyPressDetail,
+    GoabTableOnSortDetail,
+    GoabTabsOnChangeDetail
+} from "@abgov/ui-components-common";
 import {Client} from "../types/Client";
 import mockData from "../data/mockClients.json";
 
@@ -83,8 +88,8 @@ export function ClientsPage() {
         setInputError("");
     };
 
-    const handleTabChange = (event: any) => {
-        const tabIndex = event.detail?.tab || event.tab;
+    const handleTabChange = (event: GoabTabsOnChangeDetail) => {
+        const tabIndex = event.tab;
         const tabMap = ['all', 'todo', 'progress', 'complete'];
         setActiveTab(tabMap[tabIndex - 1] || 'all');
     };
@@ -126,9 +131,8 @@ export function ClientsPage() {
         }
     };
 
-    // @ts-ignore
     return (
-        <div style={{paddingLeft: "32px"}}>
+        <div className="clients-page">
             <div className="clients-filter-section">
                 <GoabTabs initialTab={1} onChange={handleTabChange}>
                     <GoabTab heading="All"/>
@@ -177,11 +181,11 @@ export function ClientsPage() {
             )}
             <ScrollContainer>
                 <GoabDataGrid keyboardNav="table">
-                    <div style={{marginRight:"32px"}}>
+                    <div className="clients-table-wrapper">
                     <GoabTable width="100%" onSort={handleSort}>
                         <thead>
                         <tr data-grid="row">
-                            <th data-grid="cell" style={{paddingBottom: 0}}>
+                            <th data-grid="cell" className="goa-table-header--checkbox">
                                 <GoabCheckbox name="selectAll" value={allSelected}
                                               onChange={() => setAllSelected(!allSelected)}
                                               ariaLabel="Select all clients"/>
@@ -213,27 +217,22 @@ export function ClientsPage() {
                                 <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={client.status}
                                                                                                   content={client.statusText}/>
                                 </td>
-                                <td data-grid="cell" className="goa-table-cell--text" style={{whiteSpace: 'nowrap'}}>
+                                <td data-grid="cell" className="goa-table-cell--text goa-table-cell--nowrap">
                                     <GoabLink>
                                         <Link to={`/client/${client.id}`}>
                                             {client.name}
                                         </Link>
                                     </GoabLink>
                                 </td>
-                                <td data-grid="cell" className="goa-table-cell--text"
-                                    style={{whiteSpace: 'nowrap'}}>{client.staff}</td>
-                                <td data-grid="cell" className="goa-table-cell--text"
-                                    style={{whiteSpace: 'nowrap'}}>{client.dueDate}</td>
-                                <td data-grid="cell" className="goa-table-cell--text"
-                                    style={{whiteSpace: 'nowrap'}}>{client.jurisdiction}</td>
+                                <td data-grid="cell" className="goa-table-cell--text goa-table-cell--nowrap">{client.staff}</td>
+                                <td data-grid="cell" className="goa-table-cell--text goa-table-cell--nowrap">{client.dueDate}</td>
+                                <td data-grid="cell" className="goa-table-cell--text goa-table-cell--nowrap">{client.jurisdiction}</td>
                                 <td data-grid="cell" className="goa-table-cell--text">{client.fileNumber}</td>
-                                <td data-grid="cell" className="goa-table-cell--text"
-                                    style={{whiteSpace: 'nowrap', textTransform: 'capitalize'}}>{client.category}</td>
+                                <td data-grid="cell" className="goa-table-cell--text goa-table-cell--nowrap goa-table-cell--capitalize">{client.category}</td>
                                 <td data-grid="cell" className="goa-table-cell--badge">
                                     <GoabBadge {...getPriorityBadgeProps(client.priority)} />
                                 </td>
-                                <td data-grid="cell" className="goa-table-cell--text"
-                                    style={{whiteSpace: 'nowrap', minWidth: '200px'}}>
+                                <td data-grid="cell" className="goa-table-cell--text goa-table-cell--notes">
                                     {client.priority === 'high' ? 'Requires immediate attention' : 'Standard processing'}
                                 </td>
                                 <td data-grid="cell" className="goa-table-cell--icon-button">

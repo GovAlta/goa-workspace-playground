@@ -1,4 +1,5 @@
 {
+  // TODO: Enable strict mode before publishing this template (strict: true, noImplicitAny: true, strictNullChecks: true)
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
