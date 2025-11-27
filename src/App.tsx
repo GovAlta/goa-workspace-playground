@@ -3,7 +3,7 @@ import {
   GoaxWorkSideMenuItem,
 } from "@abgov/react-components/experimental";
 
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { MenuContext } from './contexts/MenuContext';
 import { PageHeaderProvider } from './contexts/PageHeaderContext';
@@ -13,12 +13,19 @@ import { useNotifications } from "./contexts/NotificationContext";
 import { MOBILE_BREAKPOINT } from "./constants/breakpoints";
 
 export function App() {
+  const navigate = useNavigate();
+
   // On mobile (< MOBILE_BREAKPOINT), start with menu closed; on desktop, start with menu open
   const [menuOpen, setMenuOpen] = useState(window.innerWidth >= MOBILE_BREAKPOINT);
   const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BREAKPOINT);
 
   const { getUnreadCount } = useNotifications();
   const unreadCount = getUnreadCount();
+
+  // Navigate and close menu on mobile
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
 
   // Single resize handler - manages both isMobile state and menu visibility
   useEffect(() => {
@@ -43,7 +50,7 @@ export function App() {
     <div className="app-layout">
       <GoaxWorkSideMenu
           heading="Income and Employment Support (IES)"
-          url="/"
+          onHeadingClick={() => handleNavigate("/")}
           userName="Edna Mode"
           userSecondaryText="edna.mode@example.com"
           open={menuOpen}
@@ -54,7 +61,7 @@ export function App() {
                   icon="search"
                   label="Search"
                   badge="30"
-                  url="/search"
+                  onClick={() => handleNavigate("/search")}
               />
 
               <GoaxWorkSideMenuItem
@@ -62,7 +69,7 @@ export function App() {
                   label="Clients"
                   type="success"
                   badge="New"
-                  url="/clients"
+                  onClick={() => handleNavigate("/clients")}
               />
 
               <GoaxWorkSideMenuItem
@@ -70,47 +77,47 @@ export function App() {
                   label="Schedule"
                   type="emergency"
                   badge="Urgent"
-                  url="/schedule"
+                  onClick={() => handleNavigate("/schedule")}
               />
 
               <GoaxWorkSideMenuItem
                   icon="document"
                   label="Documents"
-                  url="/documents"
+                  onClick={() => handleNavigate("/documents")}
               >
                 <GoaxWorkSideMenuItem
-                    url="/documents/sub1"
                     label="Sub menu item 1"
+                    onClick={() => handleNavigate("/documents/sub1")}
                 />
                 <GoaxWorkSideMenuItem
-                    url="/documents/sub2"
                     label="Sub menu item 2"
+                    onClick={() => handleNavigate("/documents/sub2")}
                 />
                 <GoaxWorkSideMenuItem
-                    url="/documents/sub3"
                     label="Sub menu item 3"
+                    onClick={() => handleNavigate("/documents/sub3")}
                 />
               </GoaxWorkSideMenuItem>
 
               <GoaxWorkSideMenuItem
                   icon="people"
                   label="Team"
-                  url="/team"
+                  onClick={() => handleNavigate("/team")}
               />
             </>
           }
           secondaryContent={
             <>
-              <GoaxWorkSideMenuItem icon={"notifications"} label={"Notifications"} badge={unreadCount > 0 ? `${unreadCount}`: undefined} type={"success"} popoverContent={<NotificationContent/>}/>
+              <GoaxWorkSideMenuItem icon="notifications" label="Notifications" badge={unreadCount > 0 ? `${unreadCount}`: undefined} type="success" popoverContent={<NotificationContent/>}/>
               <GoaxWorkSideMenuItem
                   icon="help-circle"
                   label="Support"
-                  url="/support"
+                  onClick={() => handleNavigate("/support")}
               />
               <GoaxWorkSideMenuItem
                   icon="settings"
                   label="Settings"
-                  url="/settings"
+                  onClick={() => handleNavigate("/settings")}
               />
             </>
           }
@@ -119,12 +126,12 @@ export function App() {
               <GoaxWorkSideMenuItem
                   icon="person"
                   label="Account management"
-                  url="/account"
+                  onClick={() => handleNavigate("/account")}
               />
               <GoaxWorkSideMenuItem
                   icon="log-out"
                   label="Log out"
-                  url="/logout"
+                  onClick={() => handleNavigate("/logout")}
               />
             </>
           }
