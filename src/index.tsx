@@ -25,11 +25,13 @@ import App from './App';
 import './App.css';
 import {NotificationProvider} from "./contexts/NotificationContext";
 import {NotificationAdmin} from "./routes/NotificationAdmin";
+import {ErrorBoundary} from "./components/ErrorBoundary";
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
   <React.StrictMode>
-    <Router>
+    <ErrorBoundary>
+      <Router>
         <NotificationProvider>
             <Routes>
                 <Route path="/" element={<App />}>
@@ -52,6 +54,7 @@ root.render(
                 </Route>
             </Routes>
         </NotificationProvider>
-    </Router>
+      </Router>
+    </ErrorBoundary>
   </React.StrictMode>,
 );
