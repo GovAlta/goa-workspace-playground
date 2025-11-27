@@ -19,6 +19,7 @@ import { SubMenuItem1Page } from './routes/SubMenuItem1Page';
 import { SubMenuItem2Page } from './routes/SubMenuItem2Page';
 import { SubMenuItem3Page } from './routes/SubMenuItem3Page';
 import { OverviewPage } from './routes/OverviewPage';
+import { NotFoundPage } from './routes/NotFoundPage';
 
 import App from './App';
 
@@ -50,7 +51,8 @@ root.render(
                     <Route path="settings" element={<SettingsPage />} />
                     <Route path="account" element={<AccountPage />} />
                     <Route path="overview" element={<OverviewPage />} />
-                    <Route path={"notification-admin"} element={<NotificationAdmin/>}/>
+                    <Route path="notification-admin" element={<NotificationAdmin />} />
+                    <Route path="*" element={<NotFoundPage />} />
                 </Route>
             </Routes>
         </NotificationProvider>

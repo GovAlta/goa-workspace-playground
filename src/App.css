@@ -271,6 +271,16 @@ goa-table th.goa-table-header--checkbox {
   padding-bottom: 0;
 }
 
+/* 404 Not Found page */
+.not-found-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: var(--goa-space-xl);
+}
+
 
 /* ============================================================================
    SCROLL CONTAINER - Horizontal scroll shadows with gradient overlays
