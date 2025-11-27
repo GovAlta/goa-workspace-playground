@@ -1,4 +1,5 @@
 export interface SearchResult {
+  [key: string]: unknown;
   id: string;
   name: string;
   staff: string;

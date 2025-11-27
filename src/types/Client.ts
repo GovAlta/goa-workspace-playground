@@ -1,4 +1,5 @@
 export interface Client {
+    [key: string]: unknown;
     id: string;
     name: string;
     staff: string;
