@@ -4,10 +4,10 @@ import React from "react";
 /**
  * Check if a search term matches any value in an object (nested search)
  */
-export const checkNested = (obj: any, searchTerm: string): boolean => {
+export const checkNested = (obj: Record<string, unknown>, searchTerm: string): boolean => {
   return Object.values(obj).some((value) =>
     typeof value === "object" && value !== null
-      ? checkNested(value, searchTerm)
+      ? checkNested(value as Record<string, unknown>, searchTerm)
       : typeof value === "string" && value.toLowerCase().includes(searchTerm.toLowerCase())
   );
 };
@@ -15,7 +15,7 @@ export const checkNested = (obj: any, searchTerm: string): boolean => {
 /**
  * Filter data based on search chips/terms
  */
-export const filterData = <T extends Record<string, any>>(
+export const filterData = <T extends Record<string, unknown>>(
   chips: string[],
   data: T[]
 ): T[] => {
@@ -26,7 +26,7 @@ export const filterData = <T extends Record<string, any>>(
 /**
  * Sort data based on a key and direction
  */
-export const sortData = <T extends Record<string, any>>(
+export const sortData = <T extends Record<string, unknown>>(
   data: T[],
   sortKey: keyof T | '',
   direction: 'asc' | 'desc' | 'none'

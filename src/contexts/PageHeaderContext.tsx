@@ -2,48 +2,43 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 
 interface PageHeaderContextType {
   title: string;
-  setTitle: (title: string) => void;
-  actions: ReactNode;
-  setActions: (actions: ReactNode) => void;
+  actions?: ReactNode;
+  setHeader: (title: string, actions?: ReactNode) => void;
 }
 
 const PageHeaderContext = createContext<PageHeaderContextType | undefined>(undefined);
 
-interface PageHeaderProviderProps {
-  children: ReactNode;
-}
+export function PageHeaderProvider({ children }: { children: ReactNode }) {
+  const [title, setTitle] = useState('');
+  const [actions, setActions] = useState<ReactNode>(undefined);
 
-export function PageHeaderProvider({ children }: PageHeaderProviderProps) {
-  const [title, setTitle] = useState<string>('');
-  const [actions, setActions] = useState<ReactNode>(null);
+  const setHeader = (newTitle: string, newActions?: ReactNode) => {
+    setTitle(newTitle);
+    setActions(newActions);
+  };
 
   return (
-    <PageHeaderContext.Provider value={{ title, setTitle, actions, setActions }}>
+    <PageHeaderContext.Provider value={{ title, actions, setHeader }}>
       {children}
     </PageHeaderContext.Provider>
   );
 }
 
-export function usePageHeaderContext() {
-  const context = useContext(PageHeaderContext);
-  if (context === undefined) {
-    throw new Error('usePageHeaderContext must be used within a PageHeaderProvider');
-  }
-  return context;
-}
-
-// Hook for pages to set their header title and actions
 export function usePageHeader(title: string, actions?: ReactNode) {
-  const { setTitle, setActions } = usePageHeaderContext();
+  const context = useContext(PageHeaderContext);
+  if (!context) {
+    throw new Error('usePageHeader must be used within PageHeaderProvider');
+  }
 
   useEffect(() => {
-    setTitle(title);
-    setActions(actions || null);
+    context.setHeader(title, actions);
+  }, [title, actions]);
+}
 
-    // Clean up on unmount
-    return () => {
-      setTitle('');
-      setActions(null);
-    };
-  }, [title, actions, setTitle, setActions]);
+export function usePageHeaderContext() {
+  const context = useContext(PageHeaderContext);
+  if (!context) {
+    throw new Error('usePageHeaderContext must be used within PageHeaderProvider');
+  }
+  return context;
 }

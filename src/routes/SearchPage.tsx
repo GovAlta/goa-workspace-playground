@@ -1,8 +1,7 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   GoabText,
-  GoabPageBlock,
   GoabFormItem,
   GoabBlock,
   GoabInput,
@@ -15,7 +14,9 @@ import {
   GoabLink,
   GoabIconButton,
   GoabModal,
-  GoabButtonGroup, GoabDataGrid,
+  GoabButtonGroup,
+  GoabDataGrid,
+  GoabCircularProgress,
 } from "@abgov/react-components";
 import { SearchResult, SortConfig } from "../types/SearchResult";
 import mockData from "../data/mockSearchResults.json";
@@ -27,7 +28,8 @@ import {
 } from "@abgov/ui-components-common";
 import { usePageHeader } from "../contexts/PageHeaderContext";
 import { useMenu } from "../contexts/MenuContext";
-import {ScrollContainer} from "../components/ScrollContainer";
+import { ScrollContainer } from "../components/ScrollContainer";
+import { mockFetch } from "../utils/mockApi";
 
 export function SearchPage() {
   const { isMobile } = useMenu();
@@ -39,7 +41,19 @@ export function SearchPage() {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: '', direction: 'none' });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [resultToDelete, setResultToDelete] = useState<string | null>(null);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>(mockData as SearchResult[]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate fetching search results from an API
+  useEffect(() => {
+    const fetchResults = async () => {
+      setIsLoading(true);
+      const data = await mockFetch<SearchResult[]>(mockData as SearchResult[]);
+      setSearchResults(data);
+      setIsLoading(false);
+    };
+    fetchResults();
+  }, []);
 
   const filteredResults = useMemo(() => {
     const filtered = filterData(typedChips, searchResults);
@@ -157,84 +171,88 @@ export function SearchPage() {
           {filteredResults.length} results found
         </GoabText>
       )}
-        <ScrollContainer>
-            <GoabDataGrid keyboardNav={"table"}>
-                <div style={{marginRight:"32px"}}>
-                <GoabTable width="100%" mb={"m"} mt="m" onSort={handleSort}>
-                    <thead>
-                    <tr data-grid="row">
-                        <th style={{ paddingBottom: 0 }} data-grid="cell">
-                            <GoabCheckbox name="selectAll" onChange={handleSelectAll} checked={allSelected} ariaLabel={"Select all results"}/>
-                        </th>
-                        <th data-grid="cell"><GoabTableSortHeader name="status">Status</GoabTableSortHeader></th>
-                        <th data-grid="cell">Name</th>
-                        <th data-grid="cell">Staff</th>
-                        <th data-grid="cell"><GoabTableSortHeader name="dueDate">Due date</GoabTableSortHeader></th>
-                        <th data-grid="cell">File number</th>
-                        <th data-grid="cell"><GoabTableSortHeader name="type">Type</GoabTableSortHeader></th>
-                        <th data-grid="cell"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {filteredResults.map((result) => (
-                        <tr key={result.id} data-grid="row">
-                            <td data-grid="cell" className="goa-table-cell--checkbox">
-                                <GoabCheckbox
-                                    name={`select-${result.id}`}
-                                    checked={result.selected}
-                                    onChange={() => handleSelectResult(result.id)}
-                                />
-                            </td>
-                            <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={result.status} content={result.statusText} /></td>
-                            <td data-grid="cell" className="goa-table-cell--text">
-                                <GoabLink>
-                                    <Link to={`/client/${result.id}`}>
-                                        {result.name}
-                                    </Link>
-                                </GoabLink>
-                            </td>
-                            <td data-grid="cell" className="goa-table-cell--text">{result.staff}</td>
-                            <td data-grid="cell" className="goa-table-cell--text">{result.dueDate}</td>
-                            <td data-grid="cell" className="goa-table-cell--text">{result.fileNumber}</td>
-                            <td data-grid="cell" className="goa-table-cell--badge">
-                                <GoabBadge {...getTypeBadgeProps(result.type)} />
-                            </td>
-                            <td data-grid="cell" className="goa-table-cell--icon-button">
-                                <GoabIconButton
-                                    icon="trash"
-                                    size="small"
-                                    onClick={() => deleteResult(result.id)}
-                                    aria-label={`Delete ${result.name}`}
-                                />
-                            </td>
+        <GoabCircularProgress variant="fullscreen" size="large" message="Loading search results..." visible={isLoading} />
+        {!isLoading && (
+          <>
+            <ScrollContainer>
+                <GoabDataGrid keyboardNav={"table"}>
+                    <div style={{marginRight:"32px"}}>
+                    <GoabTable width="100%" mb={"m"} mt="m" onSort={handleSort}>
+                        <thead>
+                        <tr data-grid="row">
+                            <th style={{ paddingBottom: 0 }} data-grid="cell">
+                                <GoabCheckbox name="selectAll" onChange={handleSelectAll} checked={allSelected} ariaLabel={"Select all results"}/>
+                            </th>
+                            <th data-grid="cell"><GoabTableSortHeader name="status">Status</GoabTableSortHeader></th>
+                            <th data-grid="cell">Name</th>
+                            <th data-grid="cell">Staff</th>
+                            <th data-grid="cell"><GoabTableSortHeader name="dueDate">Due date</GoabTableSortHeader></th>
+                            <th data-grid="cell">File number</th>
+                            <th data-grid="cell"><GoabTableSortHeader name="type">Type</GoabTableSortHeader></th>
+                            <th data-grid="cell"></th>
                         </tr>
-                    ))}
-                    </tbody>
-                </GoabTable>
-                </div>
-            </GoabDataGrid>
-        </ScrollContainer>
+                        </thead>
+                        <tbody>
+                        {filteredResults.map((result) => (
+                            <tr key={result.id} data-grid="row">
+                                <td data-grid="cell" className="goa-table-cell--checkbox">
+                                    <GoabCheckbox
+                                        name={`select-${result.id}`}
+                                        checked={result.selected}
+                                        onChange={() => handleSelectResult(result.id)}
+                                    />
+                                </td>
+                                <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={result.status} content={result.statusText} /></td>
+                                <td data-grid="cell" className="goa-table-cell--text">
+                                    <GoabLink>
+                                        <Link to={`/client/${result.id}`}>
+                                            {result.name}
+                                        </Link>
+                                    </GoabLink>
+                                </td>
+                                <td data-grid="cell" className="goa-table-cell--text">{result.staff}</td>
+                                <td data-grid="cell" className="goa-table-cell--text">{result.dueDate}</td>
+                                <td data-grid="cell" className="goa-table-cell--text">{result.fileNumber}</td>
+                                <td data-grid="cell" className="goa-table-cell--badge">
+                                    <GoabBadge {...getTypeBadgeProps(result.type)} />
+                                </td>
+                                <td data-grid="cell" className="goa-table-cell--icon-button">
+                                    <GoabIconButton
+                                        icon="trash"
+                                        size="small"
+                                        onClick={() => deleteResult(result.id)}
+                                        aria-label={`Delete ${result.name}`}
+                                    />
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </GoabTable>
+                    </div>
+                </GoabDataGrid>
+            </ScrollContainer>
 
+            {filteredResults.length === 0 && searchResults.length > 0 && typedChips.length > 0 && (
+              <GoabBlock mt="l" mb="l">
+                <GoabText>No results found for your search criteria</GoabText>
+              </GoabBlock>
+            )}
 
-      {filteredResults.length === 0 && searchResults.length > 0 && typedChips.length > 0 && (
-        <GoabBlock mt="l" mb="l">
-          <GoabText>No results found for your search criteria</GoabText>
-        </GoabBlock>
-      )}
+            {searchResults.length === 0 && (
+              <GoabBlock mt="l" mb="l" alignment="center">
+                <GoabText size="body-m" mt="none" mb="s">No search results available</GoabText>
+                <GoabText size="body-s" mt="none" mb="none">All results have been deleted</GoabText>
+              </GoabBlock>
+            )}
 
-      {searchResults.length === 0 && (
-        <GoabBlock mt="l" mb="l" alignment="center">
-          <GoabText size="body-m" mt="none" mb="s">No search results available</GoabText>
-          <GoabText size="body-s" mt="none" mb="none">All results have been deleted</GoabText>
-        </GoabBlock>
-      )}
-
-      {searchResults.length > 0 && filteredResults.length === 0 && typedChips.length === 0 && (
-        <GoabBlock mt="l" mb="l" alignment="center">
-          <GoabText size="body-m" mt="none" mb="s">Start typing to search across all records</GoabText>
-          <GoabText size="body-s" mt="none" mb="none">Search clients, applications, documents, and more</GoabText>
-        </GoabBlock>
-      )}
+            {searchResults.length > 0 && filteredResults.length === 0 && typedChips.length === 0 && (
+              <GoabBlock mt="l" mb="l" alignment="center">
+                <GoabText size="body-m" mt="none" mb="s">Start typing to search across all records</GoabText>
+                <GoabText size="body-s" mt="none" mb="none">Search clients, applications, documents, and more</GoabText>
+              </GoabBlock>
+            )}
+          </>
+        )}
 
       <GoabModal
         heading="Delete search result"

@@ -1,6 +1,42 @@
 @import "@abgov/web-components/index.css";
 
 /* ============================================================================
+   APP LAYOUT
+   ============================================================================ */
+
+/* Main app container */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #F8F8F8;
+}
+
+/* Table cell utilities */
+.goa-table-cell--nowrap {
+  white-space: nowrap;
+}
+
+.goa-table-cell--capitalize {
+  text-transform: capitalize;
+}
+
+.goa-table-cell--notes {
+  white-space: nowrap;
+  min-width: 200px;
+}
+
+/* 404 Not Found page */
+.not-found-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: var(--goa-space-xl);
+}
+
+/* ============================================================================
    PAGE LAYOUTS
    ============================================================================
    Using GoA Design System spacing tokens for consistent spacing.

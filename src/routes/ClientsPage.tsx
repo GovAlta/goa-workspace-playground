@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useCallback} from "react";
+import React, {useState, useMemo, useCallback, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {
     GoabText,
@@ -22,6 +22,7 @@ import {
     GoabDropdown,
     GoabDropdownItem,
     GoabDrawer,
+    GoabCircularProgress,
 } from "@abgov/react-components";
 import emptyStateIllustration from "../assets/empty-state-illustration.svg";
 import {filterData, sortData} from "../utils/searchUtils";
@@ -32,6 +33,7 @@ import {ScrollContainer} from "../components/ScrollContainer";
 import {GoabInputOnChangeDetail, GoabInputOnKeyPressDetail, GoabTableOnSortDetail} from "@abgov/ui-components-common";
 import {Client} from "../types/Client";
 import mockData from "../data/mockClients.json";
+import {mockFetch} from "../utils/mockApi";
 
 export function ClientsPage() {
     const {isMobile} = useMenu();
@@ -60,8 +62,20 @@ export function ClientsPage() {
     }>({key: '', direction: 'none'});
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [clientToDelete, setClientToDelete] = useState<string | null>(null);
-    const [clients, setClients] = useState<Client[]>(mockData as Client[]);
+    const [clients, setClients] = useState<Client[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+
+    // Simulate fetching clients from an API
+    useEffect(() => {
+        const fetchClients = async () => {
+            setIsLoading(true);
+            const data = await mockFetch<Client[]>(mockData as Client[]);
+            setClients(data);
+            setIsLoading(false);
+        };
+        fetchClients();
+    }, []);
 
     // Filter drawer state
     const [pendingFilters, setPendingFilters] = useState({
@@ -230,6 +244,7 @@ export function ClientsPage() {
     // @ts-ignore
     return (
         <div style={{maxWidth: "100%", overflow: "hidden", paddingBottom: "32px"}}>
+            <GoabCircularProgress variant="fullscreen" size="large" message="Loading clients..." visible={isLoading} />
             {/* Padding section - tabs + filter row, chips */}
             <div className="clients-content-padding">
                 <div className="clients-filter-section">

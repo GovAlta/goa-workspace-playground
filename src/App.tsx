@@ -3,7 +3,7 @@ import {
   GoaxWorkSideMenuItem,
 } from "@abgov/react-components/experimental";
 
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { MenuContext, useMenu } from './contexts/MenuContext';
 import { PageHeaderProvider } from './contexts/PageHeaderContext';
@@ -11,6 +11,7 @@ import { ScrollStateProvider, useScrollState } from './contexts/ScrollStateConte
 import { PageHeader } from './components/PageHeader';
 import {NotificationContent} from "./notification/NotificationContent";
 import { useNotifications } from "./contexts/NotificationContext";
+import { MOBILE_BREAKPOINT } from "./constants/breakpoints";
 
 // Inner component that can use ScrollState context
 function WorkspaceContent() {
@@ -47,18 +48,25 @@ function WorkspaceContent() {
 }
 
 export function App() {
-  // On mobile (< 624px), start with menu closed; on desktop, start with menu open
-  const [menuOpen, setMenuOpen] = useState(window.innerWidth >= 624);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 624);
+  const navigate = useNavigate();
+
+  // On mobile (< MOBILE_BREAKPOINT), start with menu closed; on desktop, start with menu open
+  const [menuOpen, setMenuOpen] = useState(window.innerWidth >= MOBILE_BREAKPOINT);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BREAKPOINT);
 
   const { getUnreadCount } = useNotifications();
   const unreadCount = getUnreadCount();
+
+  // Navigate and close menu on mobile
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
 
   // Single resize handler - manages both isMobile state and menu visibility
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      const mobile = width < 624;
+      const mobile = width < MOBILE_BREAKPOINT;
 
       setIsMobile(mobile);
 
@@ -75,34 +83,26 @@ export function App() {
     <MenuContext.Provider value={{ menuOpen, setMenuOpen, isMobile }}>
     <PageHeaderProvider>
     <ScrollStateProvider>
-    <div style={{
-      display: "flex",
-      height: "100vh",
-      overflow: "hidden",
-      backgroundColor: "#F8F8F8"
-    }}>
+    <div className="app-layout">
       <GoaxWorkSideMenu
           heading="Workspace Demo Application"
-          url="/"
+          onHeadingClick={() => handleNavigate("/")}
           userName="Edna Mode"
           userSecondaryText="edna.mode@example.com"
           open={menuOpen}
-          onToggle={() => {
-            console.log('[App] onToggle called, toggling menuOpen from', menuOpen, 'to', !menuOpen);
-            setMenuOpen(prev => !prev);
-          }}
+          onToggle={() => setMenuOpen(prev => !prev)}
           primaryContent={
             <>
               <GoaxWorkSideMenuItem
                   icon="search"
                   label="Search"
-                  url="/search"
+                  onClick={() => handleNavigate("/search")}
               />
 
               <GoaxWorkSideMenuItem
                   icon="list"
                   label="Clients"
-                  url="/clients"
+                  onClick={() => handleNavigate("/clients")}
               />
 
               <GoaxWorkSideMenuItem
@@ -110,26 +110,26 @@ export function App() {
                   label="Documents"
                   type="success"
                   badge="New"
-                  url="/documents"
+                  onClick={() => handleNavigate("/documents")}
               >
                 <GoaxWorkSideMenuItem
-                    url="/documents/sub1"
                     label="Sub menu item 1"
+                    onClick={() => handleNavigate("/documents/sub1")}
                 />
                 <GoaxWorkSideMenuItem
-                    url="/documents/sub2"
                     label="Sub menu item 2"
+                    onClick={() => handleNavigate("/documents/sub2")}
                 />
                 <GoaxWorkSideMenuItem
-                    url="/documents/sub3"
                     label="Sub menu item 3"
+                    onClick={() => handleNavigate("/documents/sub3")}
                 />
               </GoaxWorkSideMenuItem>
             </>
           }
           secondaryContent={
             <>
-              <GoaxWorkSideMenuItem icon={"notifications"} label={"Notifications"} badge={unreadCount > 0 ? `${unreadCount}`: undefined} type={"success"} popoverContent={<NotificationContent/>}/>
+              <GoaxWorkSideMenuItem icon="notifications" label="Notifications" badge={unreadCount > 0 ? `${unreadCount}`: undefined} type="success" popoverContent={<NotificationContent/>}/>
             </>
           }
           accountContent={
@@ -137,12 +137,12 @@ export function App() {
               <GoaxWorkSideMenuItem
                   icon="settings"
                   label="Settings"
-                  url="/settings"
+                  onClick={() => handleNavigate("/settings")}
               />
               <GoaxWorkSideMenuItem
                   icon="log-out"
                   label="Log out"
-                  url="/logout"
+                  onClick={() => handleNavigate("/logout")}
               />
             </>
           }
