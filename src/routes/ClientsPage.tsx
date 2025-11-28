@@ -23,6 +23,7 @@ import {
     GoabDropdownItem,
     GoabDrawer,
     GoabCircularProgress,
+    GoabDivider,
 } from "@abgov/react-components";
 import emptyStateIllustration from "../assets/empty-state-illustration.svg";
 import {filterData, sortData} from "../utils/searchUtils";
@@ -41,10 +42,10 @@ export function ClientsPage() {
     // Memoize actions to prevent infinite re-renders
     const headerActions = useMemo(() => (
         <>
-            <GoabBlock>
+            <GoabButtonGroup gap="compact">
                 <div><GoabButton type="secondary" size="compact">More</GoabButton></div>
                 <div><GoabButton type="primary" size="compact">Add application</GoabButton></div>
-            </GoabBlock>
+            </GoabButtonGroup>
         </>
     ), []);
 
@@ -244,8 +245,7 @@ export function ClientsPage() {
     // @ts-ignore
     return (
         <div style={{maxWidth: "100%", overflow: "hidden", paddingBottom: "32px"}}>
-            <GoabCircularProgress variant="fullscreen" size="large" message="Loading clients..." visible={isLoading} />
-            {/* Padding section - tabs + filter row, chips */}
+                        {/* Padding section - tabs + filter row, chips */}
             <div className="clients-content-padding">
                 <div className="clients-filter-section">
                     <GoabTabs initialTab={1} onChange={handleTabChange}>
@@ -345,10 +345,17 @@ export function ClientsPage() {
             </div>
 
             {/* Table section - scroll container goes edge-to-edge, table has its own margins */}
-            <ScrollContainer>
+            {isLoading ? (
                 <div className="clients-content-padding">
+                    <div className="clients-loading-state">
+                        <GoabCircularProgress variant="inline" size="small" message="Loading clients..." visible={true} />
+                    </div>
+                </div>
+            ) : (
+            <ScrollContainer>
+                <div className="clients-table-wrapper">
                     <GoabDataGrid keyboardNav="table" keyboardIcon={false}>
-                        <GoabTable width="100%" onSort={handleSort} variant="relaxed" striped={true}>
+                        <GoabTable width="100%" onSort={handleSort} variant={isMobile ? "normal" : "relaxed"} striped={true}>
                         <thead>
                         <tr data-grid="row">
                             <th data-grid="cell" className="goa-table-cell--checkbox" style={{paddingBottom: 0}}>
@@ -474,6 +481,7 @@ export function ClientsPage() {
                     </GoabDataGrid>
                 </div>
             </ScrollContainer>
+            )}
 
             <GoabModal
                 heading="Delete client record"
@@ -499,15 +507,15 @@ export function ClientsPage() {
                 heading="Filter clients"
                 position="right"
                 open={filterDrawerOpen}
-                maxSize="400px"
+                maxSize="300px"
                 onClose={() => setFilterDrawerOpen(false)}
                 actions={
-                    <GoabButtonGroup alignment="end">
-                        <GoabButton type="tertiary" size="compact" onClick={() => setFilterDrawerOpen(false)}>
-                            Cancel
-                        </GoabButton>
+                    <GoabButtonGroup alignment="start" gap="compact">
                         <GoabButton type="primary" size="compact" onClick={applyFilters}>
                             Apply filters
+                        </GoabButton>
+                        <GoabButton type="tertiary" size="compact" onClick={() => setFilterDrawerOpen(false)}>
+                            Cancel
                         </GoabButton>
                     </GoabButtonGroup>
                 }
@@ -575,9 +583,12 @@ export function ClientsPage() {
 
                     {/* Clear all button */}
                     {Object.values(pendingFilters).some(arr => arr.length > 0) && (
-                        <GoabButton type="tertiary" size="compact" onClick={() => setPendingFilters({ status: [], priority: [], jurisdiction: [], staff: [] })}>
-                            Clear all filters
-                        </GoabButton>
+                        <>
+                            <GoabDivider />
+                            <GoabButton type="tertiary" size="compact" onClick={() => setPendingFilters({ status: [], priority: [], jurisdiction: [], staff: [] })}>
+                                Clear all filters
+                            </GoabButton>
+                        </>
                     )}
                 </div>
             </GoabDrawer>
