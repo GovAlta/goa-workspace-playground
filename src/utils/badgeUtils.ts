@@ -19,9 +19,9 @@ export const getTypeBadgeProps = (type: SearchResult['type']): TypeBadgeProps =>
  */
 export const getPriorityBadgeProps = (priority: 'high' | 'medium' | 'low'): TypeBadgeProps => {
   const badgeMap: Record<'high' | 'medium' | 'low', TypeBadgeProps> = {
-    high: { type: 'important', content: 'High' },
-    medium: { type: 'information', content: 'Medium' },
-    low: { type: 'midtone', content: 'Low' }
+    high: { type: 'emergency', content: 'High' },
+    medium: { type: 'important', content: 'Medium' },
+    low: { type: 'archived', content: 'Low' }
   };
   return badgeMap[priority];
 };
