@@ -1,189 +1,237 @@
 @import "@abgov/web-components/index.css";
 
 /* ============================================================================
-   TABLE CELL ALIGNMENT
-   ============================================================================
-   This CSS provides classes to properly align different component types
-   within GoA Table cells by adjusting padding to achieve exact cell heights
-   and vertically center components.
-
-   Usage: Apply the appropriate class to <td> elements based on content type
-   Example: <td className="goa-table-cell--input">...</td>
-   ============================================================================ */
-
-/* ============================================================================
-   NORMAL VARIANT (Target: 48px cell height)
-   ============================================================================
-   Component heights and calculated padding:
-   - Text: 28px → 10px padding
-   - Checkbox: 24px → 12px padding
-   - Input/Dropdown: 42px → 3px padding
-   - Badge: 22px → 13px padding
-   - Button/Icon Button: 32px → 8px padding
-
-   Formula: padding = (48px - component_height) / 2
-   Must override table default: padding: 8px 16px 8px 16px
-   ============================================================================ */
-
-/* Text cells (28px component height) */
-goa-table td.goa-table-cell--text {
-  padding: 10px 16px 10px 16px !important;
-}
-
-/* Checkbox cells (24px component height) */
-goa-table td.goa-table-cell--checkbox {
-  padding: 12px 16px 12px 16px !important;
-}
-
-/* Input cells - text and number inputs (42px component height) */
-goa-table td.goa-table-cell--input {
-  padding: 3px 16px 3px 16px !important;
-}
-
-/* Badge cells (22px component height) */
-goa-table td.goa-table-cell--badge {
-  padding: 13px 16px 13px 16px !important;
-}
-
-/* Dropdown cells (42px component height) */
-goa-table td.goa-table-cell--dropdown {
-  padding: 3px 16px 3px 16px !important;
-}
-
-/* Button cells - compact buttons (32px component height) */
-goa-table td.goa-table-cell--button {
-  padding: 8px 16px 8px 16px !important;
-}
-
-/* Icon button cells (32px component height) */
-goa-table td.goa-table-cell--icon-button {
-  padding: 8px 16px 8px 16px !important;
-}
-
-/* ============================================================================
-   RELAXED VARIANT (Target: 64px cell height)
-   ============================================================================
-   Component heights and calculated padding:
-   - Text: 28px → 18px padding
-   - Checkbox: 24px → 20px padding
-   - Input/Dropdown: 42px → 11px padding
-   - Badge: 22px → 21px padding
-   - Button/Icon Button: 32px → 16px padding
-
-   Formula: padding = (64px - component_height) / 2
-   Must override table default for relaxed: padding: 16px
-   ============================================================================ */
-
-/* Text cells (28px component height) */
-goa-table[variant="relaxed"] td.goa-table-cell--text {
-  padding: 18px 16px 18px 16px !important;
-}
-
-/* Checkbox cells (24px component height) */
-goa-table[variant="relaxed"] td.goa-table-cell--checkbox {
-  padding: 20px 16px 20px 16px !important;
-}
-
-/* Input cells - text and number inputs (42px component height) */
-goa-table[variant="relaxed"] td.goa-table-cell--input {
-  padding: 11px 16px 11px 16px !important;
-}
-
-/* Badge cells (22px component height) */
-goa-table[variant="relaxed"] td.goa-table-cell--badge {
-  padding: 21px 16px 21px 16px !important;
-}
-
-/* Dropdown cells (42px component height) */
-goa-table[variant="relaxed"] td.goa-table-cell--dropdown {
-  padding: 11px 16px 11px 16px !important;
-}
-
-/* Button cells - compact buttons (32px component height) */
-goa-table[variant="relaxed"] td.goa-table-cell--button {
-  padding: 16px 16px 16px 16px !important;
-}
-
-/* Icon button cells (32px component height) */
-goa-table[variant="relaxed"] td.goa-table-cell--icon-button {
-  padding: 16px 16px 16px 16px !important;
-}
-
-/* Table zebra striping - even rows */
-goa-table table tbody tr:nth-child(even) td {
-  background-color: var(--goa-color-greyscale-50) !important;
-}
-
-/* ============================================================================
-   NOTES FOR IMPLEMENTATION
-   ============================================================================
-
-   1. The !important flag is used to override GoA Table's default padding.
-      When implementing in the design system CSS, this may not be necessary
-      if the rules are placed after the default table styles.
-
-   2. All padding values maintain the table's default horizontal padding (16px)
-      while adjusting vertical padding to achieve exact cell heights.
-
-   3. Padding values are symmetric (top = bottom) to vertically center components.
-
-   4. These classes work with the GoA Table's existing vertical-align: top,
-      which ensures proper text wrapping behavior when content spans multiple lines.
-
-   5. Component heights measured:
-      - Checkbox: 24px
-      - Input (text/number): 42px
-      - Badge: 22px
-      - Dropdown: 42px
-      - Compact Button: 32px
-      - Icon Button: 32px
-      - Text (body-m): 28px
-   ============================================================================ */
-
-/* ============================================================================
    PAGE LAYOUTS
    ============================================================================
    Using GoA Design System spacing tokens for consistent spacing.
    Mobile breakpoint: 624px (matches the app's isMobile logic)
    ============================================================================ */
 
-/* Filter section - contains tabs and search input */
-.clients-filter-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: stretch;
-  margin-top: var(--goa-space-m);
-  padding: 0 var(--goa-space-m);
-  gap: var(--goa-space-m);
-  flex-wrap: wrap;
+/* Content padding - responsive left/right padding */
+/* Also serves as container query context for child layouts */
+.clients-content-padding {
+  container-type: inline-size;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 @media (min-width: 624px) {
-  .clients-filter-section {
-    flex-direction: row;
-    align-items: flex-start;
-    margin-top: var(--goa-space-m); /* Reduced to align better with header */
-    gap: var(--goa-space-xl);
+  .clients-content-padding {
+    padding-left: 32px;
+    padding-right: 32px;
   }
+}
+
+/* Filter section - contains search input and filter button */
+.clients-filter-section {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: var(--goa-space-m);
+  margin-bottom: 16px;
+  gap: var(--goa-space-xl);
+}
+
+/* Container query: Stack search above tabs when container is narrow */
+@container (max-width: 960px) {
+  .clients-filter-section {
+    flex-direction: column-reverse;
+  }
+
+  .clients-filter-section goa-form-item {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .clients-filter-section goa-tabs {
+    width: 100%;
+  }
+}
+
+/* Mobile: Fix spacing when in mobile viewport */
+@media (max-width: 623px) {
+  .clients-filter-section {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    gap: 16px;
+  }
+}
+
+.clients-filter-section goa-form-item {
+  flex: 1;
+  max-width: 80ch;
+}
+
+.clients-search-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--goa-space-xs);
+  width: 100%;
+}
+
+/* Allow search row to wrap when space is tight */
+@container (max-width: 580px) {
+  .clients-search-row {
+    flex-wrap: wrap;
+  }
+}
+
+.clients-search-group {
+  display: flex;
+  flex: 1 1 280px; /* grow, shrink, min basis before wrapping */
+  gap: var(--goa-space-xs);
+}
+
+.clients-search-group goa-input {
+  flex: 1;
+  min-width: 0; /* allow input to shrink below content size */
+}
+
+.clients-actions-group {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--goa-space-xs);
+}
+
+/* Tabs in filter section - remove bottom margin from shadow DOM */
+/* Only apply on desktop when tabs are side-by-side with search */
+@media (min-width: 624px) {
+  .clients-filter-section goa-tabs {
+    margin-bottom: -2rem; /* Counteract the internal 2rem margin */
+  }
+}
+
+/* Clear all link button styled like GoabLink color="dark" size="small" */
+.clear-all-link {
+  background: none;
+  border: none;
+  color: var(--goa-color-text-default);
+  font: var(--goa-typography-body-s);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  margin-left: var(--goa-space-2xs);
+}
+
+.clear-all-link:hover {
+  color: var(--goa-color-interactive-hover);
 }
 
 /* Filter chips container */
 .clients-chips-container {
   display: flex;
   align-items: center;
-  gap: var(--goa-space-xs);
+  gap: var(--goa-space-s);
   margin-top: var(--goa-space-m);
   margin-bottom: var(--goa-space-m);
-  padding: 0 var(--goa-space-m);
 }
 
-@media (min-width: 624px) {
-  .clients-chips-container {
-    padding: 0 2rem; /* Match content padding */
-  }
+/* Empty state - inside table body */
+.clients-empty-state-cell {
+  padding: 0 !important;
+  border: none !important;
 }
 
+.clients-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px var(--goa-space-m);
+  background-color: var(--goa-color-greyscale-white, #ffffff);
+  text-align: center;
+}
+
+.clients-empty-state__illustration {
+  width: 100px;
+  height: auto;
+  margin-bottom: 32px;
+}
+
+.clients-empty-state__heading {
+  font: var(--goa-typography-heading-2xs);
+  color: var(--goa-color-text-secondary);
+  margin-bottom: 16px;
+}
+
+.clients-empty-state__subline {
+  font: var(--goa-typography-body-s);
+  color: var(--goa-color-greyscale-500);
+  margin-bottom: 32px;
+}
+
+
+/* ============================================================================
+   DESKTOP CARD CONTAINER - Adaptive chrome based on vertical scroll state
+   ============================================================================
+   The content card "floats" on the grey background. Margins, borders, and
+   border-radius appear/disappear based on scroll position:
+   - no-scroll: All chrome visible (content fits in viewport)
+   - at-top: Top chrome visible, bottom bleeds off
+   - middle: No chrome, content edge-to-edge
+   - at-bottom: Bottom chrome visible, top bleeds off
+
+   IMPORTANT: Height stays constant to prevent layout jitter. We use padding
+   on the wrapper (.card-container) to create space, not height changes.
+   ============================================================================ */
+
+/* Wrapper - provides the spacing around the card */
+.card-container {
+  transition: padding 0.2s ease;
+}
+
+.card-container:has([data-scroll-state="no-scroll"]) {
+  padding: 20px 20px 20px 0;
+}
+
+.card-container:has([data-scroll-state="at-top"]) {
+  padding: 20px 20px 0 0;
+}
+
+.card-container:has([data-scroll-state="middle"]) {
+  padding: 0 20px 0 0;
+}
+
+.card-container:has([data-scroll-state="at-bottom"]) {
+  padding: 0 20px 20px 0;
+}
+
+/* Card itself - height always 100% of available space */
+.desktop-card-container {
+  background-color: white;
+  height: 100%;
+  overflow: auto;
+  transition: border-radius 0.2s ease, border-color 0.2s ease;
+}
+
+/* No scroll - full chrome (all borders, all radius) */
+.desktop-card-container[data-scroll-state="no-scroll"] {
+  border: 1px solid #E9E9E9;
+  border-radius: 24px;
+}
+
+/* At top - top chrome only */
+.desktop-card-container[data-scroll-state="at-top"] {
+  border: 1px solid #E9E9E9;
+  border-bottom: none;
+  border-radius: 24px 24px 0 0;
+}
+
+/* Middle - side borders only, no top/bottom chrome */
+.desktop-card-container[data-scroll-state="middle"] {
+  border: 1px solid #E9E9E9;
+  border-top: none;
+  border-bottom: none;
+  border-radius: 0;
+}
+
+/* At bottom - bottom chrome only */
+.desktop-card-container[data-scroll-state="at-bottom"] {
+  border: 1px solid #E9E9E9;
+  border-top: none;
+  border-radius: 0 0 24px 24px;
+}
 
 /* ============================================================================
    SCROLL CONTAINER - Horizontal scroll shadows with gradient overlays
@@ -191,169 +239,108 @@ goa-table table tbody tr:nth-child(even) td {
 
 .scroll-container {
   position: relative;
-  max-width: 100%;
+  /* Constrain width so content doesn't expand parent - enables horizontal scroll */
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  /* Hide the native scrollbar on the content - we'll use the fixed one instead */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
 
-/* Ensure the table inside doesn't shrink and add right margin for spacing at scroll edge */
+.scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Opera */
+}
+
+/* Ensure the table inside doesn't shrink - margins handled by table wrapper */
 .scroll-container > * {
   min-width: max-content;
-  margin-right: 32px;
 }
 
-/* Shadow overlay elements - fixed position, dynamically positioned by JS */
-.scroll-shadow {
-  position: fixed;
-  width: 40px;
-  pointer-events: none;
+/* Fixed scrollbar that stays at bottom of card container */
+.scroll-container-scrollbar {
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 14px;
   z-index: 100;
-  transition: opacity 0.2s ease;
 }
 
-/* Left shadow gradient */
-.scroll-shadow--left {
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.18), transparent);
-}
-
-/* Right shadow gradient */
-.scroll-shadow--right {
-  background: linear-gradient(to left, rgba(0, 0, 0, 0.18), transparent);
+/* Inner element that provides the scroll width */
+.scroll-container-scrollbar-inner {
+  height: 1px;
 }
 
 /* ============================================================================
    PAGE HEADER
    ============================================================================ */
 
-/* Sentinel element for intersection observer */
-.page-header-sentinel {
-  height: 0;
-}
-
 /* Header container base styles */
 .page-header {
-  position: static;
-  background-color: transparent;
-  padding: 1rem 1rem 0 1rem;
-  margin-bottom: var(--goa-space-m);
-  transition: all 0.3s ease;
-  borderRadius: "24px",
+  background-color: white;
+  transition: padding 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Desktop: Header is always sticky within scroll container */
+/* Desktop: Header states based on scroll position */
 @media (min-width: 624px) {
   .desktop-card-container .page-header {
     position: sticky;
     top: 0;
-    left: 0;
-    z-index: 1000; /** Larger than shadow **/
+    z-index: 100;
     background-color: white;
-    padding: 16px 16px 16px 32px;
-    transition: box-shadow 0.2s ease;
-    /* Expand to full scrollable width when content is wider than viewport */
-    min-width: fit-content;
   }
 
-  .desktop-card-container .page-header--sticky {
-    border-bottom: 1px solid #EDEFF3;
+  /* Expanded state - at top or no scroll */
+  .desktop-card-container .page-header--expanded {
+    padding: 24px 32px 16px 32px;
   }
 
-  /* Content wrapper - default state */
-  .desktop-card-container .content-wrapper {
-    position: relative;
-    transition: border-radius 0.3s ease, margin-top 0.3s ease;
+  /* Collapsed state - middle or bottom scroll */
+  .desktop-card-container .page-header--collapsed {
+    padding: 12px 32px;
+    border-bottom: 1px solid var(--goa-color-greyscale-150);
   }
 
-  /* Content container gets rounded corners when scrolled under sticky header */
-  .desktop-card-container.content-scrolled .content-wrapper {
-    border-radius: 24px 24px 0 0;
-    margin-top: 8px;
-    background-color: #f8f8f8;
-    clip-path: inset(0 0 -10px 0); /* Clip bottom shadow if any */
-  }
-
-  /* Optional: Add subtle shadow to emphasize the separation */
-  .desktop-card-container.content-scrolled .content-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 24px;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), transparent);
-    border-radius: 24px 24px 0 0;
-    pointer-events: none;
-  }
-
-  /* Scroll position shadows - apply to GoabPageBlock when sticky */
-  /* At top: shadow at bottom indicating more content below */
-  .desktop-card-container .page-header--sticky.page-header--top {
-    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.15);
-  }
-
-  /* At bottom: shadow at top indicating content above, nothing below */
-  .desktop-card-container .page-header--sticky.page-header--bottom {
-    box-shadow: inset 0 -4px 6px -4px rgba(0, 0, 0, 0.1);
-  }
-
-  /* In middle: shadows on both sides indicating content above and below */
-  .desktop-card-container .page-header--sticky.page-header--middle {
-    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.15),
-                inset 0 -4px 6px -4px rgba(0, 0, 0, 0.05);
+  /* Subtle shadow when collapsed - indicates content below */
+  .desktop-card-container .page-header--collapsed.page-header--middle,
+  .desktop-card-container .page-header--collapsed.page-header--atbottom {
+    box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.06);
   }
 }
 
 /* Mobile header styles */
 @media (max-width: 623px) {
   .page-header {
-    background-color: white;
-    padding: var(--goa-space-m);
-    margin-bottom: 0;
-    transition: box-shadow 0.2s ease;
-  }
-
-  /* Sticky header on mobile - fixed to viewport */
-  .page-header--sticky {
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
     z-index: 100;
+    background-color: white;
+    padding: var(--goa-space-m) 16px;
+    margin-bottom: 0;
+    transition: padding 0.2s ease, box-shadow 0.2s ease;
   }
 
-  /* Scroll position shadows for mobile - only apply when sticky */
-  /* At top: shadow at bottom indicating more content below */
-  .page-header--sticky.page-header--top {
-    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.15);
-  }
-
-  /* At bottom: shadow at top indicating content above, nothing below */
-  .page-header--sticky.page-header--bottom {
-    box-shadow: inset 0 -4px 6px -4px rgba(0, 0, 0, 0.1);
-  }
-
-  /* In middle: shadows on both sides indicating content above and below */
-  .page-header--sticky.page-header--middle {
-    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.15),
-                inset 0 -4px 6px -4px rgba(0, 0, 0, 0.05);
+  /* Collapsed state on mobile - smaller padding */
+  .page-header--collapsed {
+    padding: var(--goa-space-s) var(--goa-space-m);
+    border-bottom: 1px solid var(--goa-color-greyscale-150);
+    box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   }
 }
 
 /* Header content container */
 .page-header__content {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-  gap: var(--goa-space-m);
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--goa-space-s);
 }
 
 @media (min-width: 624px) {
   .page-header__content {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-wrap: nowrap;
     gap: 0;
-    /* Ensure content expands to full width when scrollable */
-    min-width: fit-content;
   }
 }
 
@@ -361,17 +348,7 @@ goa-table table tbody tr:nth-child(even) td {
 .page-header__title-container {
   display: flex;
   align-items: center;
-  gap: var(--goa-space-m);
-}
-
-@media (min-width: 624px) {
-  .page-header__title-container {
-    /* Sticky title - stays visible during horizontal scroll */
-    position: sticky;
-    left: 32px;
-    background: inherit;
-    z-index: 1;
-  }
+  gap: var(--goa-space-xs);
 }
 
 /* Align menu icon to content edge on mobile by compensating for button's internal padding */
@@ -387,23 +364,95 @@ goa-table table tbody tr:nth-child(even) td {
   min-width: 1rem;
 }
 
-/* Actions container */
-.page-header__actions {
-  display: block;
-  width: 100%;
+/* ============================================================================
+   ROW ACTION MENU - Fix popover in table cells
+   ============================================================================ */
+
+/* Wrapper to contain the popover */
+.row-action-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@media (min-width: 624px) {
-  .page-header__actions {
-    display: flex;
-    gap: var(--goa-space-s);
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    width: auto;
-    /* Sticky actions - stay visible during horizontal scroll */
-    position: sticky;
-    right: 1rem;
-    background: inherit;
-  }
+/* Trigger button for row actions */
+.row-action-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--goa-border-radius-m);
+  background: transparent;
+  cursor: pointer;
+  color: var(--goa-color-text-secondary);
+}
+
+.row-action-trigger:hover {
+  background: var(--goa-color-greyscale-100);
+  color: var(--goa-color-text-default);
+}
+
+.row-action-trigger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--goa-color-interactive-focus);
+}
+
+/* Row action menu container */
+.row-action-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-2xs);
+  margin: calc(-1 * var(--goa-space-m)); /* Offset popover padding */
+  padding: var(--goa-space-xs);
+  width: max-content;
+}
+
+/* Row action menu items - styled like dropdown 2.0 */
+.row-action-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-s);
+  width: 100%;
+  padding: var(--goa-space-s) var(--goa-space-m);
+  border: none;
+  border-radius: var(--goa-border-radius-m);
+  background: transparent;
+  font: var(--goa-typography-body-m);
+  color: var(--goa-color-text-default);
+  cursor: pointer;
+  text-align: left;
+}
+
+.row-action-menu__item:hover,
+.row-action-menu__item:focus-visible {
+  background: var(--goa-dropdown-item-color-bg-hover);
+  color: var(--goa-dropdown-item-color-text-hover);
+  outline: none;
+}
+
+.row-action-menu__item:focus-visible {
+  box-shadow: 0 0 0 var(--goa-border-width-l) var(--goa-color-interactive-focus);
+}
+
+/* Destructive action variant (delete, remove, etc.) */
+.row-action-menu__item--destructive {
+  color: var(--goa-input-color-text-error);
+}
+
+.row-action-menu__item--destructive:hover,
+.row-action-menu__item--destructive:focus-visible {
+  background: var(--goa-color-emergency-background);
+  color: var(--goa-input-color-text-error);
+}
+
+/* Actions container */
+.page-header__actions {
+  display: flex;
+  gap: var(--goa-space-s);
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 

@@ -5,11 +5,46 @@ import {
 
 import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { MenuContext } from './contexts/MenuContext';
+import { MenuContext, useMenu } from './contexts/MenuContext';
 import { PageHeaderProvider } from './contexts/PageHeaderContext';
+import { ScrollStateProvider, useScrollState } from './contexts/ScrollStateContext';
 import { PageHeader } from './components/PageHeader';
 import {NotificationContent} from "./notification/NotificationContent";
 import { useNotifications } from "./contexts/NotificationContext";
+
+// Inner component that can use ScrollState context
+function WorkspaceContent() {
+  const { isMobile } = useMenu();
+  const { scrollPosition } = useScrollState();
+
+  if (isMobile) {
+    // Mobile: No adaptive chrome, content edge-to-edge
+    return (
+      <div
+        className="mobile-content-container"
+        style={{
+          backgroundColor: "white",
+          height: "100%",
+          overflow: "auto"
+        }}
+      >
+        <PageHeader />
+        <Outlet />
+      </div>
+    );
+  }
+
+  // Desktop: Card container with adaptive chrome based on scroll state
+  return (
+    <div
+      className="desktop-card-container"
+      data-scroll-state={scrollPosition}
+    >
+      <PageHeader />
+      <Outlet />
+    </div>
+  );
+}
 
 export function App() {
   // On mobile (< 624px), start with menu closed; on desktop, start with menu open
@@ -39,6 +74,7 @@ export function App() {
   return (
     <MenuContext.Provider value={{ menuOpen, setMenuOpen, isMobile }}>
     <PageHeaderProvider>
+    <ScrollStateProvider>
     <div style={{
       display: "flex",
       height: "100vh",
@@ -46,7 +82,7 @@ export function App() {
       backgroundColor: "#F8F8F8"
     }}>
       <GoaxWorkSideMenu
-          heading="Income and Employment Support (IES)"
+          heading="Workspace Demo Application"
           url="/"
           userName="Edna Mode"
           userSecondaryText="edna.mode@example.com"
@@ -60,29 +96,20 @@ export function App() {
               <GoaxWorkSideMenuItem
                   icon="search"
                   label="Search"
-                  badge="30"
                   url="/search"
               />
 
               <GoaxWorkSideMenuItem
                   icon="list"
                   label="Clients"
-                  type="success"
-                  badge="New"
                   url="/clients"
-              />
-
-              <GoaxWorkSideMenuItem
-                  icon="calendar"
-                  label="Schedule"
-                  type="emergency"
-                  badge="Urgent"
-                  url="/schedule"
               />
 
               <GoaxWorkSideMenuItem
                   icon="document"
                   label="Documents"
+                  type="success"
+                  badge="New"
                   url="/documents"
               >
                 <GoaxWorkSideMenuItem
@@ -98,35 +125,19 @@ export function App() {
                     label="Sub menu item 3"
                 />
               </GoaxWorkSideMenuItem>
-
-              <GoaxWorkSideMenuItem
-                  icon="people"
-                  label="Team"
-                  url="/team"
-              />
             </>
           }
           secondaryContent={
             <>
               <GoaxWorkSideMenuItem icon={"notifications"} label={"Notifications"} badge={unreadCount > 0 ? `${unreadCount}`: undefined} type={"success"} popoverContent={<NotificationContent/>}/>
-              <GoaxWorkSideMenuItem
-                  icon="help-circle"
-                  label="Support"
-                  url="/support"
-              />
-              <GoaxWorkSideMenuItem
-                  icon="settings"
-                  label="Settings"
-                  url="/settings"
-              />
             </>
           }
           accountContent={
             <>
               <GoaxWorkSideMenuItem
-                  icon="person"
-                  label="Account management"
-                  url="/account"
+                  icon="settings"
+                  label="Settings"
+                  url="/settings"
               />
               <GoaxWorkSideMenuItem
                   icon="log-out"
@@ -141,39 +152,12 @@ export function App() {
         className="card-container"
         style={{
           flex: 1,
-          padding: isMobile ? "0" : "20px 20px 20px 0",
-          overflow: "auto",
+          overflow: "hidden",
         }}>
-        {isMobile ? (
-          // Mobile: No card container, content directly rendered with no padding
-          <div style={{
-            backgroundColor: "white",
-            minHeight: "100vh"
-          }}>
-            <PageHeader />
-              <Outlet />
-          </div>
-        ) : (
-          // Desktop: Card container with horizontal scroll support
-          <div
-            className="desktop-card-container"
-            style={{
-              backgroundColor: "white",
-              border: "1px solid #E9E9E9",
-              borderRadius: "24px",
-              height: "calc(100vh - 40px)",
-              overflowX: "auto",
-              overflowY: "auto"
-            }}>
-            {/* PageHeader - sticky, stays within viewport */}
-            <PageHeader />
-              <Outlet />
-            {/* Content wrapper that expands to fit content */}
-
-          </div>
-        )}
+        <WorkspaceContent />
       </div>
     </div>
+    </ScrollStateProvider>
     </PageHeaderProvider>
     </MenuContext.Provider>
   );

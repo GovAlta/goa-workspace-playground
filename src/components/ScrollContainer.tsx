@@ -1,200 +1,187 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-
-type HorizontalScrollPosition = 'left' | 'h-middle' | 'right' | null;
-
-interface ShadowVisibility {
-  left: boolean;
-  right: boolean;
-}
+import React, { useRef, useEffect, useState, useCallback } from "react";
 
 interface ScrollContainerProps {
   children: React.ReactNode;
   className?: string;
 }
 
+interface ScrollbarPosition {
+  left: number;
+  bottom: number;
+  width: number;
+}
+
 /**
- * ScrollContainer - A reusable component for horizontal scrollable content with shadow indicators.
+ * ScrollContainer - A reusable component for horizontal scrollable content with a sticky scrollbar.
  *
  * Use this component to wrap tables or other wide content that may need horizontal scrolling.
- * It provides visual shadow indicators to show users there is more content to scroll to,
- * similar to the GoA Modal scroll behavior.
+ * The container clips content at its edges, creating a "scroll off the edge" effect when
+ * the content inside has its own margins.
+ *
+ * Features:
+ * - Horizontal scrollbar stays visible at the bottom of the card container
+ * - Syncs scroll position between content and fixed scrollbar
  *
  * Usage:
- *   <ScrollContainer className="my-table-wrapper">
- *     <GoabTable>...</GoabTable>
+ *   <ScrollContainer>
+ *     <div style={{marginLeft: 32, marginRight: 32}}>
+ *       <GoabTable>...</GoabTable>
+ *     </div>
  *   </ScrollContainer>
  */
 export function ScrollContainer({ children, className = '' }: ScrollContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const leftShadowRef = useRef<HTMLDivElement>(null);
-  const rightShadowRef = useRef<HTMLDivElement>(null);
-  const [hScrollPos, setHScrollPos] = useState<HorizontalScrollPosition>(null);
-  const [shadowVisibility, setShadowVisibility] = useState<ShadowVisibility>({ left: true, right: true });
+  const scrollbarRef = useRef<HTMLDivElement>(null);
+  const [scrollWidth, setScrollWidth] = useState(0);
+  const [showScrollbar, setShowScrollbar] = useState(false);
+  const [scrollbarPosition, setScrollbarPosition] = useState<ScrollbarPosition>({ left: 0, bottom: 0, width: 0 });
+  const isScrollingSelf = useRef(false);
 
-  const updateShadowPositions = useCallback(() => {
+  // Update dimensions and scrollbar position
+  const updateDimensions = useCallback(() => {
     const container = containerRef.current;
-    const scrollParent = document.querySelector('.desktop-card-container') || document.querySelector('.card-container');
+    const cardContainer = document.querySelector('.desktop-card-container');
+    if (!container) return;
 
-    if (!container || !scrollParent) return;
+    const newScrollWidth = container.scrollWidth;
+    const newClientWidth = container.clientWidth;
+    const needsScrollbar = newScrollWidth > newClientWidth;
 
-    const containerRect = container.getBoundingClientRect();
-    const parentRect = scrollParent.getBoundingClientRect();
+    setScrollWidth(newScrollWidth);
+    setShowScrollbar(needsScrollbar);
 
-    // Check for sticky header and account for its height
-    const stickyHeader = scrollParent.querySelector('.page-header');
-    const headerRect = stickyHeader?.getBoundingClientRect();
-    const headerBottom = headerRect ? headerRect.bottom : parentRect.top;
+    // Calculate fixed position based on the inner content margins (aligns with table)
+    // Use card container only for bottom position
+    if (needsScrollbar && cardContainer) {
+      const cardRect = cardContainer.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const bottomInset = 6; // Small inset from bottom
 
-    // Shadows should be at the viewport edges (parentRect), not table edges
-    // They indicate "scroll to see more content" at the visible boundary
-    const shadowLeft = parentRect.left;
-    const shadowRight = parentRect.right - 40; // 40px is shadow width
+      // Get the first child element to determine its margin/padding
+      const innerContent = container.firstElementChild as HTMLElement;
+      if (innerContent) {
+        const computedStyle = window.getComputedStyle(innerContent);
+        const marginLeft = parseFloat(computedStyle.marginLeft) || 0;
+        const marginRight = parseFloat(computedStyle.marginRight) || 0;
 
-    // Vertical bounds: shadow should only cover the visible table area
-    const visibleTop = Math.max(containerRect.top, parentRect.top, headerBottom);
-    const visibleBottom = Math.min(containerRect.bottom, parentRect.bottom);
-    const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-
-    // Check if table is visible vertically
-    const isTableVisibleVertically = visibleTop < visibleBottom;
-
-    // Update shadow visibility state
-    setShadowVisibility({
-      left: isTableVisibleVertically,
-      right: isTableVisibleVertically
-    });
-
-    if (leftShadowRef.current) {
-      leftShadowRef.current.style.left = `${shadowLeft}px`;
-      leftShadowRef.current.style.top = `${visibleTop}px`;
-      leftShadowRef.current.style.height = `${visibleHeight}px`;
-    }
-
-    if (rightShadowRef.current) {
-      rightShadowRef.current.style.left = `${shadowRight}px`;
-      rightShadowRef.current.style.top = `${visibleTop}px`;
-      rightShadowRef.current.style.height = `${visibleHeight}px`;
+        setScrollbarPosition({
+          left: containerRect.left + marginLeft,
+          bottom: window.innerHeight - cardRect.bottom + bottomInset,
+          width: containerRect.width - marginLeft - marginRight
+        });
+      }
     }
   }, []);
 
-  const handleScroll = useCallback(() => {
-    const scrollParent = document.querySelector('.desktop-card-container');
+  // Sync scroll positions
+  const handleContentScroll = useCallback(() => {
+    if (isScrollingSelf.current) return;
     const container = containerRef.current;
+    const scrollbar = scrollbarRef.current;
+    if (!container || !scrollbar) return;
 
-    if (!container) return;
+    isScrollingSelf.current = true;
+    scrollbar.scrollLeft = container.scrollLeft;
+    requestAnimationFrame(() => {
+      isScrollingSelf.current = false;
+    });
+  }, []);
 
-    const scrollContainer = scrollParent || container;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollContainer;
+  const handleScrollbarScroll = useCallback(() => {
+    if (isScrollingSelf.current) return;
+    const container = containerRef.current;
+    const scrollbar = scrollbarRef.current;
+    if (!container || !scrollbar) return;
 
-    const contentWidth = container.scrollWidth;
-    const viewportWidth = scrollParent ? scrollParent.clientWidth : container.clientWidth;
-    const hasHorizontalScroll = contentWidth > viewportWidth;
-
-    if (!hasHorizontalScroll) {
-      setHScrollPos(null);
-      // Still update shadow positions even if no horizontal scroll (for vertical scroll updates)
-      requestAnimationFrame(updateShadowPositions);
-      return;
-    }
-
-    if (scrollLeft === 0) {
-      setHScrollPos('left');
-    } else if (Math.abs(scrollWidth - scrollLeft - clientWidth) < 1) {
-      setHScrollPos('right');
-    } else {
-      setHScrollPos('h-middle');
-    }
-
-    // Update shadow positions with animation frame for smoother updates
-    requestAnimationFrame(updateShadowPositions);
-  }, [updateShadowPositions]);
+    isScrollingSelf.current = true;
+    container.scrollLeft = scrollbar.scrollLeft;
+    requestAnimationFrame(() => {
+      isScrollingSelf.current = false;
+    });
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
-    // Use desktop-card-container for desktop, card-container for mobile
-    const scrollParent = document.querySelector('.desktop-card-container') || document.querySelector('.card-container');
-
+    const scrollbar = scrollbarRef.current;
+    const cardContainer = document.querySelector('.desktop-card-container');
     if (!container) return;
 
-    // Initial calculation
-    handleScroll();
+    // Initial dimension check
+    updateDimensions();
 
-    // Debounced scroll handler for better performance
-    let scrollTimeout: NodeJS.Timeout;
-    const debouncedHandleScroll = () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        handleScroll();
-      }, 10);
-    };
+    // Listen to content scroll
+    container.addEventListener('scroll', handleContentScroll, { passive: true });
 
-    // Listen to scroll on the parent container (for both horizontal and vertical)
-    if (scrollParent) {
-      scrollParent.addEventListener('scroll', debouncedHandleScroll, { passive: true });
+    // Listen to scrollbar scroll
+    if (scrollbar) {
+      scrollbar.addEventListener('scroll', handleScrollbarScroll, { passive: true });
     }
 
-    // Also listen to scroll on the container itself if it has its own scrollbar
-    container.addEventListener('scroll', debouncedHandleScroll, { passive: true });
+    // Listen to vertical scroll on card container to update scrollbar position
+    const handleCardScroll = () => {
+      requestAnimationFrame(updateDimensions);
+    };
+    if (cardContainer) {
+      cardContainer.addEventListener('scroll', handleCardScroll, { passive: true });
+    }
 
-    // Use ResizeObserver to detect size changes
+    // Observe size changes
     const resizeObserver = new ResizeObserver(() => {
-      requestAnimationFrame(handleScroll);
+      updateDimensions();
     });
     resizeObserver.observe(container);
-    if (scrollParent) {
-      resizeObserver.observe(scrollParent);
+    if (cardContainer) {
+      resizeObserver.observe(cardContainer);
     }
 
-    // MutationObserver to detect DOM changes
-    const mutationObserver = new MutationObserver(() => {
-      requestAnimationFrame(handleScroll);
-    });
-    mutationObserver.observe(container, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['style', 'class']
-    });
-
-    // Also update on window resize
-    const handleWindowResize = () => {
-      requestAnimationFrame(handleScroll);
-    };
-    window.addEventListener('resize', handleWindowResize, { passive: true });
+    // Window resize
+    window.addEventListener('resize', updateDimensions, { passive: true });
 
     return () => {
-      clearTimeout(scrollTimeout);
-      if (scrollParent) {
-        scrollParent.removeEventListener('scroll', debouncedHandleScroll);
+      container.removeEventListener('scroll', handleContentScroll);
+      if (scrollbar) {
+        scrollbar.removeEventListener('scroll', handleScrollbarScroll);
       }
-      container.removeEventListener('scroll', debouncedHandleScroll);
-      window.removeEventListener('resize', handleWindowResize);
+      if (cardContainer) {
+        cardContainer.removeEventListener('scroll', handleCardScroll);
+      }
+      window.removeEventListener('resize', updateDimensions);
       resizeObserver.disconnect();
-      mutationObserver.disconnect();
     };
-  }, [handleScroll]);
+  }, [handleContentScroll, handleScrollbarScroll, updateDimensions]);
 
   const scrollClasses = [
     'scroll-container',
     className
   ].filter(Boolean).join(' ');
 
-  const showLeftShadow = (hScrollPos === 'right' || hScrollPos === 'h-middle') && shadowVisibility.left;
-  const showRightShadow = (hScrollPos === 'left' || hScrollPos === 'h-middle') && shadowVisibility.right;
-
   return (
-    <div ref={containerRef} className={scrollClasses}>
-      {children}
+    <>
       <div
-        ref={leftShadowRef}
-        className="scroll-shadow scroll-shadow--left"
-        style={{ opacity: showLeftShadow ? 1 : 0 }}
-      />
-      <div
-        ref={rightShadowRef}
-        className="scroll-shadow scroll-shadow--right"
-        style={{ opacity: showRightShadow ? 1 : 0 }}
-      />
-    </div>
+        ref={containerRef}
+        className={scrollClasses}
+      >
+        {children}
+      </div>
+
+      {/* Fixed scrollbar at bottom of card container */}
+      {showScrollbar && (
+        <div
+          ref={scrollbarRef}
+          className="scroll-container-scrollbar"
+          style={{
+            position: 'fixed',
+            left: scrollbarPosition.left,
+            bottom: scrollbarPosition.bottom,
+            width: scrollbarPosition.width
+          }}
+        >
+          <div
+            className="scroll-container-scrollbar-inner"
+            style={{ width: scrollWidth }}
+          />
+        </div>
+      )}
+    </>
   );
 }
