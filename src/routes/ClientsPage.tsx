@@ -359,8 +359,12 @@ export function ClientsPage() {
                         <thead>
                         <tr data-grid="row">
                             <th data-grid="cell" className="goa-table-cell--checkbox" style={{paddingBottom: 0}}>
-                                <GoabCheckbox name="selectAll" value={allSelected}
-                                              onChange={() => setAllSelected(!allSelected)}
+                                <GoabCheckbox name="selectAll" checked={allSelected}
+                                              onChange={() => {
+                                                  const newValue = !allSelected;
+                                                  setAllSelected(newValue);
+                                                  setClients(prev => prev.map(c => ({ ...c, selected: newValue })));
+                                              }}
                                               ariaLabel="Select all clients"/>
                             </th>
                             <th data-grid="cell"><GoabTableSortHeader name="status" direction={sortConfig.key === 'status' ? sortConfig.direction : 'none'}>Status</GoabTableSortHeader></th>
@@ -397,7 +401,12 @@ export function ClientsPage() {
                                     <td data-grid="cell" className="goa-table-cell--checkbox">
                                         <GoabCheckbox
                                             name={`select-${client.id}`}
-                                            value={client.selected}
+                                            checked={client.selected}
+                                            onChange={() => {
+                                                setClients(prev => prev.map(c =>
+                                                    c.id === client.id ? { ...c, selected: !c.selected } : c
+                                                ));
+                                            }}
                                             ariaLabel={`Select ${client.name}`}
                                         />
                                     </td>
