@@ -96,32 +96,38 @@ export function App() {
               <GoaxWorkSideMenuItem
                   icon="search"
                   label="Search"
+                  url="/search"
                   onClick={() => handleNavigate("/search")}
               />
 
               <GoaxWorkSideMenuItem
                   icon="list"
                   label="Clients"
+                  url="/clients"
                   onClick={() => handleNavigate("/clients")}
               />
 
               <GoaxWorkSideMenuItem
                   icon="document"
                   label="Documents"
+                  url="/documents"
                   type="success"
                   badge="New"
                   onClick={() => handleNavigate("/documents")}
               >
                 <GoaxWorkSideMenuItem
                     label="Sub menu item 1"
+                    url="/documents/sub1"
                     onClick={() => handleNavigate("/documents/sub1")}
                 />
                 <GoaxWorkSideMenuItem
                     label="Sub menu item 2"
+                    url="/documents/sub2"
                     onClick={() => handleNavigate("/documents/sub2")}
                 />
                 <GoaxWorkSideMenuItem
                     label="Sub menu item 3"
+                    url="/documents/sub3"
                     onClick={() => handleNavigate("/documents/sub3")}
                 />
               </GoaxWorkSideMenuItem>
@@ -137,11 +143,13 @@ export function App() {
               <GoaxWorkSideMenuItem
                   icon="settings"
                   label="Settings"
+                  url="/settings"
                   onClick={() => handleNavigate("/settings")}
               />
               <GoaxWorkSideMenuItem
                   icon="log-out"
                   label="Log out"
+                  url="/logout"
                   onClick={() => handleNavigate("/logout")}
               />
             </>
