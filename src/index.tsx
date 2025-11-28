@@ -20,6 +20,8 @@ import { SubMenuItem2Page } from './routes/SubMenuItem2Page';
 import { SubMenuItem3Page } from './routes/SubMenuItem3Page';
 import { OverviewPage } from './routes/OverviewPage';
 import { NotFoundPage } from './routes/NotFoundPage';
+import { UnauthorizedPage } from './routes/UnauthorizedPage';
+import { ServerErrorPage } from './routes/ServerErrorPage';
 
 import App from './App';
 
@@ -52,6 +54,8 @@ root.render(
                     <Route path="account" element={<AccountPage />} />
                     <Route path="overview" element={<OverviewPage />} />
                     <Route path="notification-admin" element={<NotificationAdmin />} />
+                    <Route path="401" element={<UnauthorizedPage />} />
+                    <Route path="500" element={<ServerErrorPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Route>
             </Routes>

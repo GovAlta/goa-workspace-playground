@@ -26,14 +26,51 @@
   min-width: 200px;
 }
 
-/* 404 Not Found page */
-.not-found-page {
+/* Error pages (404, 401, 500) */
+.error-page {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 60vh;
+  min-height: 100%;
+  padding: var(--goa-space-3xl) var(--goa-space-xl) 128px;
+}
+
+@media (max-width: 1024px) {
+  .error-page {
+    padding: var(--goa-space-2xl) var(--goa-space-xl) 112px;
+  }
+}
+
+@media (max-width: 623px) {
+  .error-page {
+    /* Subtract approximate header height (icon button ~44px + padding 32px) to prevent unnecessary scroll */
+    min-height: calc(100% - 76px);
+    padding: var(--goa-space-xl) var(--goa-space-m) 96px;
+  }
+}
+
+.error-page-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: var(--goa-space-xl);
+}
+
+.error-page-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: var(--goa-color-greyscale-100);
+}
+
+.error-page-underline {
+  width: 110px;
+  height: 8px;
+  background-color: var(--goa-color-brand-default);
+  margin-top: var(--goa-space-m);
 }
 
 /* ============================================================================
@@ -58,6 +95,19 @@
   }
 }
 
+/* Table wrapper - uses margin for scroll container compatibility */
+.clients-table-wrapper {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+@media (min-width: 624px) {
+  .clients-table-wrapper {
+    margin-left: 32px;
+    margin-right: 32px;
+  }
+}
+
 /* Filter section - contains search input and filter button */
 .clients-filter-section {
   display: flex;
@@ -73,10 +123,11 @@
 @container (max-width: 960px) {
   .clients-filter-section {
     flex-direction: column-reverse;
+    gap: var(--goa-space-s);
   }
 
   .clients-filter-section goa-form-item {
-    max-width: 100%;
+    max-width: none !important;
     width: 100%;
   }
 
@@ -102,7 +153,7 @@
 .clients-search-row {
   display: flex;
   flex-wrap: nowrap;
-  gap: var(--goa-space-xs);
+  gap: var(--goa-space-s);
   width: 100%;
 }
 
@@ -127,7 +178,7 @@
 .clients-actions-group {
   display: flex;
   flex-shrink: 0;
-  gap: var(--goa-space-xs);
+  gap: var(--goa-space-s);
 }
 
 /* Tabs in filter section - remove bottom margin from shadow DOM */
@@ -195,6 +246,16 @@
   font: var(--goa-typography-body-s);
   color: var(--goa-color-greyscale-500);
   margin-bottom: 32px;
+}
+
+/* Loading state - shown while data is being fetched */
+.clients-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px var(--goa-space-m);
+  background-color: var(--goa-color-greyscale-white, #ffffff);
 }
 
 
