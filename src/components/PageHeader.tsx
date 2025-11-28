@@ -22,8 +22,9 @@ export function PageHeader({ title: propTitle, actions: propActions }: PageHeade
   // Collapsed when scrolled into middle or bottom
   const isCollapsed = scrollPosition === 'middle' || scrollPosition === 'at-bottom';
 
-  // Don't render if no title
-  if (!title) return null;
+  // On desktop, don't render if no title
+  // On mobile, always render to show the menu button
+  if (!title && !isMobile) return null;
 
   // Build class names based on state
   const headerClasses = [
@@ -45,14 +46,16 @@ export function PageHeader({ title: propTitle, actions: propActions }: PageHeade
                 ariaLabel="Open menu"
               />
             )}
-            <GoabText
-              tag="h1"
-              size={isCollapsed ? "heading-s" : (isMobile ? "heading-m" : "heading-l")}
-              mt="none"
-              mb="none"
-            >
-              {title}
-            </GoabText>
+            {title && (
+              <GoabText
+                tag="h1"
+                size={isCollapsed ? "heading-s" : (isMobile ? "heading-m" : "heading-l")}
+                mt="none"
+                mb="none"
+              >
+                {title}
+              </GoabText>
+            )}
           </div>
           {/* Spacer pushes actions to the right in desktop mode */}
           {!isMobile && <div className="page-header__spacer" />}
