@@ -1,15 +1,14 @@
-import React from "react";
-import { GoabText, GoabPageBlock } from "@abgov/react-components";
+import { ErrorPage } from "../components/ErrorPage";
 
 export function SettingsPage() {
-  return (
-    <GoabPageBlock width="content">
-      <GoabText tag="h1" size="heading-l" mb="l">
-        Settings
-      </GoabText>
-      <GoabText size="body-m">
-        Settings page content goes here.
-      </GoabText>
-    </GoabPageBlock>
-  );
+    return (
+        <ErrorPage
+            icon="warning"
+            errorCode="Error 401"
+            heading="Restricted access"
+            description="We cannot provide access to this page without valid credentials. Please log in or contact support at cs.licensingsupport@gov.ab.ca to request access. We apologize for the inconvenience."
+            buttonText="Go to home page"
+            buttonLink="/search"
+        />
+    );
 }

@@ -22,6 +22,7 @@ import { OverviewPage } from './routes/OverviewPage';
 import { NotFoundPage } from './routes/NotFoundPage';
 import { UnauthorizedPage } from './routes/UnauthorizedPage';
 import { ServerErrorPage } from './routes/ServerErrorPage';
+import { LogoutPage } from './routes/LogoutPage';
 
 import App from './App';
 
@@ -56,6 +57,7 @@ root.render(
                     <Route path="notification-admin" element={<NotificationAdmin />} />
                     <Route path="401" element={<UnauthorizedPage />} />
                     <Route path="500" element={<ServerErrorPage />} />
+                    <Route path="logout" element={<LogoutPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Route>
             </Routes>
