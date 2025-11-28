@@ -461,6 +461,22 @@
   min-width: 1rem;
 }
 
+/* Hide spacer when actions contain expandable search */
+.page-header__content:has(.page-header-search) .page-header__spacer {
+  display: none;
+}
+
+/* Gap between title and search input */
+.page-header__content:has(.page-header-search) {
+  gap: 32px;
+}
+
+@media (min-width: 624px) {
+  .page-header__content:has(.page-header-search) {
+    gap: 48px;
+  }
+}
+
 /* ============================================================================
    ROW ACTION MENU - Fix popover in table cells
    ============================================================================ */
@@ -551,5 +567,11 @@
   gap: var(--goa-space-s);
   flex-wrap: wrap;
   justify-content: flex-end;
+}
+
+/* Allow actions to expand (e.g., search input in header) */
+.page-header__actions:has(.page-header-search) {
+  flex: 1;
+  min-width: 0;
 }
 

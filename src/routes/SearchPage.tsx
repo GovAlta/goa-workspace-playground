@@ -2,8 +2,6 @@ import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   GoabText,
-  GoabFormItem,
-  GoabBlock,
   GoabInput,
   GoabButton,
   GoabFilterChip,
@@ -12,11 +10,9 @@ import {
   GoabCheckbox,
   GoabBadge,
   GoabLink,
-  GoabIconButton,
-  GoabModal,
-  GoabButtonGroup,
   GoabDataGrid,
   GoabCircularProgress,
+  GoabBlock,
 } from "@abgov/react-components";
 import { SearchResult, SortConfig } from "../types/SearchResult";
 import mockData from "../data/mockSearchResults.json";
@@ -33,14 +29,11 @@ import { mockFetch } from "../utils/mockApi";
 
 export function SearchPage() {
   const { isMobile } = useMenu();
-  usePageHeader("Search");
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchErrorMessage, setSearchErrorMessage] = useState('');
   const [typedChips, setTypedChips] = useState<string[]>([]);
   const [allSelected, setAllSelected] = useState(false);
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: '', direction: 'none' });
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [resultToDelete, setResultToDelete] = useState<string | null>(null);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -96,19 +89,6 @@ export function SearchPage() {
     );
   }, []);
 
-  const deleteResult = useCallback((id: string) => {
-    setResultToDelete(id);
-    setShowDeleteModal(true);
-  }, []);
-
-  const confirmDelete = useCallback(() => {
-    if (resultToDelete) {
-      setSearchResults(prev => prev.filter(r => r.id !== resultToDelete));
-    }
-    setShowDeleteModal(false);
-    setResultToDelete(null);
-  }, [resultToDelete]);
-
   const handleSearchKeywordPress = (event: any) => {
     const key = getEventKey(event);
     if (key === "Enter") {
@@ -124,72 +104,85 @@ export function SearchPage() {
   const clearAllChips = useCallback(() => {
     setTypedChips([]);
   }, []);
+
+  // Header actions with search input
+  const headerActions = (
+    <div className="page-header-search" style={{ display: 'flex', gap: 'var(--goa-space-xs)', alignItems: 'center', flex: 1, minWidth: 0 }}>
+      <div style={{ flex: 1, minWidth: '120px' }}>
+        <GoabInput
+          name="searchInput"
+          value={searchKeyword}
+          maxLength={100}
+          leadingIcon="search"
+          width="100%"
+          size="compact"
+          placeholder={isMobile ? "Search..." : "Search clients, staff, or file numbers..."}
+          onChange={(event: GoabInputOnChangeDetail) => {
+            setSearchKeyword(event.value);
+            if (searchErrorMessage) {
+              setSearchErrorMessage("");
+            }
+          }}
+          onKeyPress={handleSearchKeywordPress}
+        />
+      </div>
+      <div>
+        <GoabButton type="secondary" onClick={() => applyFilter()} size="compact">
+          Search
+        </GoabButton>
+      </div>
+    </div>
+  );
+
+  usePageHeader("Search", headerActions);
+
   return (
-    <div style={{paddingLeft: "32px"}}>
-      <GoabFormItem id="searchInput" error={searchErrorMessage}>
-        <GoabBlock gap="xs" direction="row" alignment="start">
-          <div style={{ flex: 1 }}>
-            <GoabInput
-              name="searchInput"
-              value={searchKeyword}
-              maxLength={100}
-              leadingIcon="search"
-              width="100%"
-              placeholder="Search clients, applications, documents..."
-              onChange={(event: GoabInputOnChangeDetail) => {
-                setSearchKeyword(event.value);
-                if (searchErrorMessage) {
-                  setSearchErrorMessage("");
-                }
-              }}
-              onKeyPress={handleSearchKeywordPress}
-            />
+    <div>
+      <div className="clients-content-padding">
+        {typedChips.length > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', marginBottom: '1rem' }}>
+            {typedChips.map((chip) => (
+              <GoabFilterChip
+                key={chip}
+                content={chip}
+                onClick={() => removeChip(chip)}
+              />
+            ))}
+            <GoabButton type="tertiary" size="compact" onClick={clearAllChips}>
+              Clear all
+            </GoabButton>
           </div>
-          <GoabButton type="secondary" onClick={applyFilter} leadingIcon="search" size={isMobile ? "medium" : "large"}>
-            Search
-          </GoabButton>
-        </GoabBlock>
-      </GoabFormItem>
+        )}
 
-      {typedChips.length > 0 && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', marginBottom: '1rem' }}>
-          {typedChips.map((chip) => (
-            <GoabFilterChip
-              key={chip}
-              content={chip}
-              onClick={() => removeChip(chip)}
-            />
-          ))}
-          <GoabButton type="tertiary" size="compact" onClick={clearAllChips}>
-            Clear all
-          </GoabButton>
+        {typedChips.length > 0 && (
+          <GoabText size="body-s" mt="none" mb="m">
+            {filteredResults.length} results found
+          </GoabText>
+        )}
+      </div>
+      {isLoading ? (
+        <div className="clients-content-padding">
+          <div className="clients-loading-state">
+            <GoabCircularProgress variant="inline" size="small" message="Loading search results..." visible={true} />
+          </div>
         </div>
-      )}
-
-      {typedChips.length > 0 && (
-        <GoabText size="body-s" mt="none" mb="m">
-          {filteredResults.length} results found
-        </GoabText>
-      )}
-        <GoabCircularProgress variant="fullscreen" size="large" message="Loading search results..." visible={isLoading} />
-        {!isLoading && (
+      ) : (
           <>
             <ScrollContainer>
-                <GoabDataGrid keyboardNav={"table"}>
-                    <div style={{marginRight:"32px"}}>
-                    <GoabTable width="100%" mb={"m"} mt="m" onSort={handleSort}>
-                        <thead>
-                        <tr data-grid="row">
-                            <th style={{ paddingBottom: 0 }} data-grid="cell">
-                                <GoabCheckbox name="selectAll" onChange={handleSelectAll} checked={allSelected} ariaLabel={"Select all results"}/>
-                            </th>
+                <div className="clients-table-wrapper">
+                    <GoabDataGrid keyboardNav="table" keyboardIcon={false}>
+                        <GoabTable width="100%" onSort={handleSort} variant={isMobile ? "normal" : "relaxed"} striped={true}>
+                            <thead>
+                            <tr data-grid="row">
+                                <th data-grid="cell" className="goa-table-cell--checkbox" style={{ paddingBottom: 0 }}>
+                                    <GoabCheckbox name="selectAll" onChange={handleSelectAll} checked={allSelected} ariaLabel="Select all results"/>
+                                </th>
                             <th data-grid="cell"><GoabTableSortHeader name="status">Status</GoabTableSortHeader></th>
                             <th data-grid="cell">Name</th>
                             <th data-grid="cell">Staff</th>
                             <th data-grid="cell"><GoabTableSortHeader name="dueDate">Due date</GoabTableSortHeader></th>
                             <th data-grid="cell">File number</th>
                             <th data-grid="cell"><GoabTableSortHeader name="type">Type</GoabTableSortHeader></th>
-                            <th data-grid="cell"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -216,20 +209,12 @@ export function SearchPage() {
                                 <td data-grid="cell" className="goa-table-cell--badge">
                                     <GoabBadge {...getTypeBadgeProps(result.type)} />
                                 </td>
-                                <td data-grid="cell" className="goa-table-cell--icon-button">
-                                    <GoabIconButton
-                                        icon="trash"
-                                        size="small"
-                                        onClick={() => deleteResult(result.id)}
-                                        aria-label={`Delete ${result.name}`}
-                                    />
-                                </td>
                             </tr>
                         ))}
-                        </tbody>
-                    </GoabTable>
-                    </div>
-                </GoabDataGrid>
+                            </tbody>
+                        </GoabTable>
+                    </GoabDataGrid>
+                </div>
             </ScrollContainer>
 
             {filteredResults.length === 0 && searchResults.length > 0 && typedChips.length > 0 && (
@@ -253,26 +238,6 @@ export function SearchPage() {
             )}
           </>
         )}
-
-      <GoabModal
-        heading="Delete search result"
-        open={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        actions={
-          <GoabButtonGroup alignment="end">
-            <GoabButton type="tertiary" onClick={() => setShowDeleteModal(false)}>
-              Cancel
-            </GoabButton>
-            <GoabButton type="primary" variant="destructive" onClick={confirmDelete}>
-              Delete
-            </GoabButton>
-          </GoabButtonGroup>
-        }
-      >
-        <GoabText tag="p" mt="none" mb="none">
-          Are you sure you want to delete this search result? This action cannot be undone.
-        </GoabText>
-      </GoabModal>
     </div>
   );
 }
