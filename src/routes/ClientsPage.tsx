@@ -6,7 +6,6 @@ import {
     GoabTabs,
     GoabTab,
     GoabFormItem,
-    GoabBlock,
     GoabInput,
     GoabFilterChip,
     GoabTable,
@@ -23,7 +22,7 @@ import {
     GoabDropdownItem,
     GoabDrawer,
     GoabCircularProgress,
-    GoabDivider,
+    GoabDivider, GoabMenuButton, GoALinkButton, GoabMenuAction,
 } from "@abgov/react-components";
 import emptyStateIllustration from "../assets/empty-state-illustration.svg";
 import {filterData, sortData} from "../utils/searchUtils";
@@ -31,7 +30,12 @@ import {getPriorityBadgeProps} from "../utils/badgeUtils";
 import {usePageHeader} from "../contexts/PageHeaderContext";
 import {useMenu} from "../contexts/MenuContext";
 import {ScrollContainer} from "../components/ScrollContainer";
-import {GoabInputOnChangeDetail, GoabInputOnKeyPressDetail, GoabTableOnSortDetail} from "@abgov/ui-components-common";
+import {
+    GoabInputOnChangeDetail,
+    GoabInputOnKeyPressDetail,
+    GoabMenuButtonOnActionDetail,
+    GoabTableOnSortDetail
+} from "@abgov/ui-components-common";
 import {Client} from "../types/Client";
 import mockData from "../data/mockClients.json";
 import {mockFetch} from "../utils/mockApi";
@@ -42,7 +46,7 @@ export function ClientsPage() {
     // Memoize actions to prevent infinite re-renders
     const headerActions = useMemo(() => (
         <>
-            <GoabButtonGroup gap="compact">
+            <GoabButtonGroup gap="compact" alignment={"start"}>
                 <div><GoabButton type="secondary" size="compact">More</GoabButton></div>
                 <div><GoabButton type="primary" size="compact">Add application</GoabButton></div>
             </GoabButtonGroup>
@@ -98,7 +102,7 @@ export function ClientsPage() {
         const priorities = ['high', 'medium', 'low'];
         const jurisdictions = [...new Set(clients.map(c => c.jurisdiction))].sort();
         const staffMembers = [...new Set(clients.map(c => c.staff))].sort();
-        return { statuses, priorities, jurisdictions, staffMembers };
+        return {statuses, priorities, jurisdictions, staffMembers};
     }, [clients]);
 
     const togglePendingFilter = (category: keyof typeof pendingFilters, value: string) => {
@@ -116,7 +120,7 @@ export function ClientsPage() {
     };
 
     const clearAllFilters = () => {
-        const emptyFilters = { status: [], priority: [], jurisdiction: [], staff: [] };
+        const emptyFilters = {status: [], priority: [], jurisdiction: [], staff: []};
         setPendingFilters(emptyFilters);
         setAppliedFilters(emptyFilters);
     };
@@ -131,10 +135,14 @@ export function ClientsPage() {
     // Build a flat list of all filter chips for display
     const filterChips = useMemo(() => {
         const chips: { category: keyof typeof appliedFilters; value: string; label: string }[] = [];
-        appliedFilters.status.forEach(v => chips.push({ category: 'status', value: v, label: v }));
-        appliedFilters.priority.forEach(v => chips.push({ category: 'priority', value: v, label: v.charAt(0).toUpperCase() + v.slice(1) + ' priority' }));
-        appliedFilters.staff.forEach(v => chips.push({ category: 'staff', value: v, label: v }));
-        appliedFilters.jurisdiction.forEach(v => chips.push({ category: 'jurisdiction', value: v, label: v }));
+        appliedFilters.status.forEach(v => chips.push({category: 'status', value: v, label: v}));
+        appliedFilters.priority.forEach(v => chips.push({
+            category: 'priority',
+            value: v,
+            label: v.charAt(0).toUpperCase() + v.slice(1) + ' priority'
+        }));
+        appliedFilters.staff.forEach(v => chips.push({category: 'staff', value: v, label: v}));
+        appliedFilters.jurisdiction.forEach(v => chips.push({category: 'jurisdiction', value: v, label: v}));
         return chips;
     }, [appliedFilters]);
 
@@ -216,7 +224,7 @@ export function ClientsPage() {
 
     const handleRowAction = useCallback((action: string, clientId: string, event: Event) => {
         // Close the popover by dispatching a close event
-        (event.target as HTMLElement)?.dispatchEvent(new CustomEvent('close', { bubbles: true }));
+        (event.target as HTMLElement)?.dispatchEvent(new CustomEvent('close', {bubbles: true}));
 
         switch (action) {
             case 'edit':
@@ -233,6 +241,22 @@ export function ClientsPage() {
         }
     }, []);
 
+    const onMenuActionButton = (action: string, clientId: string) => {
+        switch (action) {
+            case 'edit':
+                console.log('Edit client:', clientId);
+                // TODO: Navigate to edit page or open edit modal
+                break;
+            case 'view':
+                console.log('View client details:', clientId);
+                // TODO: Navigate to details page
+                break;
+            case 'delete':
+                deleteClient(clientId);
+                break;
+        }
+    }
+
     const handleInputKeyPress = (event: GoabInputOnKeyPressDetail) => {
         if (event.key === "Enter") {
             const value = event.value;
@@ -245,7 +269,7 @@ export function ClientsPage() {
     // @ts-ignore
     return (
         <div style={{maxWidth: "100%", overflow: "hidden", paddingBottom: "32px"}}>
-                        {/* Padding section - tabs + filter row, chips */}
+            {/* Padding section - tabs + filter row, chips */}
             <div className="clients-content-padding">
                 <div className="clients-filter-section">
                     <GoabTabs initialTab={1} onChange={handleTabChange}>
@@ -284,30 +308,28 @@ export function ClientsPage() {
                                     onChange={(e) => {
                                         const key = e.value as keyof Client;
                                         if (key) {
-                                            setSortConfig({ key, direction: 'asc' });
+                                            setSortConfig({key, direction: 'asc'});
                                         }
                                     }}
                                     placeholder="— Sort by —"
                                     size="compact"
                                     width="160px"
                                 >
-                                    <GoabDropdownItem value="dueDate" label="Due date" />
-                                    <GoabDropdownItem value="priority" label="Priority" />
-                                    <GoabDropdownItem value="jurisdiction" label="Jurisdiction" />
+                                    <GoabDropdownItem value="dueDate" label="Due date"/>
+                                    <GoabDropdownItem value="priority" label="Priority"/>
+                                    <GoabDropdownItem value="jurisdiction" label="Jurisdiction"/>
                                 </GoabDropdown>
-                                <div>
-                                    <GoabButton
-                                        type="tertiary"
-                                        leadingIcon="filter"
-                                        size="compact"
-                                        onClick={() => {
-                                            setPendingFilters(appliedFilters);
-                                            setFilterDrawerOpen(true);
-                                        }}
-                                    >
-                                        Filter
-                                    </GoabButton>
-                                </div>
+                                <GoabButton
+                                    type="tertiary"
+                                    leadingIcon="filter"
+                                    size="compact"
+                                    onClick={() => {
+                                        setPendingFilters(appliedFilters);
+                                        setFilterDrawerOpen(true);
+                                    }}
+                                >
+                                    Filter
+                                </GoabButton>
                             </div>
                         </div>
                     </GoabFormItem>
@@ -315,7 +337,7 @@ export function ClientsPage() {
 
                 {(typedChips.length > 0 || filterChips.length > 0) && (
                     <div className="clients-chips-container">
-                        <GoabIcon type="filter" size="small" fillColor="var(--goa-color-text-secondary)" mr="2xs" />
+                        <GoabIcon type="filter" size="small" fillColor="var(--goa-color-text-secondary)" mr="2xs"/>
                         {typedChips.map((chip) => (
                             <GoabFilterChip
                                 key={`search-${chip}`}
@@ -330,16 +352,24 @@ export function ClientsPage() {
                                 onClick={() => removeAppliedFilter(chip.category, chip.value)}
                             />
                         ))}
-                        <button
-                            type="button"
-                            className="clear-all-link"
-                            onClick={() => {
-                                clearAllChips();
-                                clearAllFilters();
-                            }}
-                        >
+                        {/*TODO: Thomas -> perhaps we should add a style for button behaves like a link (we used to have that on v1)*/}
+                        <GoabButton size={"compact"} type="tertiary" onClick={() => {
+                            clearAllChips();
+                            clearAllFilters();
+                        }}>
                             Clear all
-                        </button>
+                        </GoabButton>
+
+                        {/*<button*/}
+                        {/*    type="button"*/}
+                        {/*    className="clear-all-link"*/}
+                        {/*    onClick={() => {*/}
+                        {/*        clearAllChips();*/}
+                        {/*        clearAllFilters();*/}
+                        {/*    }}*/}
+                        {/*>*/}
+                        {/*    Clear all*/}
+                        {/*</button>*/}
                     </div>
                 )}
             </div>
@@ -348,148 +378,173 @@ export function ClientsPage() {
             {isLoading ? (
                 <div className="clients-content-padding">
                     <div className="clients-loading-state">
-                        <GoabCircularProgress variant="inline" size="small" message="Loading clients..." visible={true} />
+                        <GoabCircularProgress variant="inline" size="small" message="Loading clients..."
+                                              visible={true}/>
                     </div>
                 </div>
             ) : (
-            <ScrollContainer>
-                <div className="clients-table-wrapper">
-                    <GoabDataGrid keyboardNav="table" keyboardIcon={false}>
-                        <GoabTable width="100%" onSort={handleSort} variant={isMobile ? "normal" : "relaxed"} striped={true}>
-                        <thead>
-                        <tr data-grid="row">
-                            <th data-grid="cell" className="goa-table-cell--checkbox" style={{paddingBottom: 0}}>
-                                <GoabCheckbox name="selectAll" checked={allSelected}
-                                              onChange={() => {
-                                                  const newValue = !allSelected;
-                                                  setAllSelected(newValue);
-                                                  setClients(prev => prev.map(c => ({ ...c, selected: newValue })));
-                                              }}
-                                              ariaLabel="Select all clients"/>
-                            </th>
-                            <th data-grid="cell"><GoabTableSortHeader name="status" direction={sortConfig.key === 'status' ? sortConfig.direction : 'none'}>Status</GoabTableSortHeader></th>
-                            <th data-grid="cell">Name</th>
-                            <th data-grid="cell">Assigned to</th>
-                            <th data-grid="cell"><GoabTableSortHeader name="dueDate" direction={sortConfig.key === 'dueDate' ? sortConfig.direction : 'none'}>Due date</GoabTableSortHeader></th>
-                            <th data-grid="cell"><GoabTableSortHeader
-                                name="jurisdiction" direction={sortConfig.key === 'jurisdiction' ? sortConfig.direction : 'none'}>Jurisdiction</GoabTableSortHeader></th>
-                            <th data-grid="cell">File number</th>
-                            <th data-grid="cell">Category</th>
-                            <th data-grid="cell"><GoabTableSortHeader name="priority" direction={sortConfig.key === 'priority' ? sortConfig.direction : 'none'}>Priority</GoabTableSortHeader>
-                            </th>
-                            <th data-grid="cell">Notes</th>
-                            <th data-grid="cell"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {filteredClients.length === 0 && clients.length > 0 ? (
-                            <tr>
-                                <td colSpan={11} className="clients-empty-state-cell">
-                                    <div className="clients-empty-state">
-                                        <img src={emptyStateIllustration} alt="" className="clients-empty-state__illustration" />
-                                        <span className="clients-empty-state__heading">No results found</span>
-                                        <span className="clients-empty-state__subline">Try adjusting your search or filters.</span>
-                                        <GoabButton type="tertiary" size="compact" onClick={clearAllChips}>
-                                            Clear filters
-                                        </GoabButton>
-                                    </div>
-                                </td>
-                            </tr>
-                        ) : (
-                            filteredClients.map((client) => (
-                                <tr key={client.id} data-grid="row">
-                                    <td data-grid="cell" className="goa-table-cell--checkbox">
-                                        <GoabCheckbox
-                                            name={`select-${client.id}`}
-                                            checked={client.selected}
-                                            onChange={() => {
-                                                setClients(prev => prev.map(c =>
-                                                    c.id === client.id ? { ...c, selected: !c.selected } : c
-                                                ));
-                                            }}
-                                            ariaLabel={`Select ${client.name}`}
-                                        />
-                                    </td>
-                                    <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={client.status}
-                                                                                                      content={client.statusText}
-                                                                                                      emphasis="subtle"
-                                                                                                      icon={true}/>
-                                    </td>
-                                    <td data-grid="cell" className="goa-table-cell--text" style={{whiteSpace: 'nowrap'}}>
-                                        <GoabLink>
-                                            <Link to={`/client/${client.id}`}>
-                                                {client.name}
-                                            </Link>
-                                        </GoabLink>
-                                    </td>
-                                    <td data-grid="cell" className="goa-table-cell--text"
-                                        style={{whiteSpace: 'nowrap'}}>{client.staff || '—'}</td>
-                                    <td data-grid="cell" className="goa-table-cell--text"
-                                        style={{whiteSpace: 'nowrap'}}>{client.dueDate || '—'}</td>
-                                    <td data-grid="cell" className="goa-table-cell--text"
-                                        style={{whiteSpace: 'nowrap'}}>{client.jurisdiction || '—'}</td>
-                                    <td data-grid="cell" className="goa-table-cell--text">{client.fileNumber || '—'}</td>
-                                    <td data-grid="cell" className="goa-table-cell--text"
-                                        style={{whiteSpace: 'nowrap'}}>
-                                        {client.category === 'todo' ? 'To do' :
-                                         client.category === 'progress' ? 'In progress' :
-                                         client.category === 'complete' ? 'Complete' :
-                                         client.category || '—'}
-                                    </td>
-                                    <td data-grid="cell" className="goa-table-cell--badge">
-                                        {client.priority ? <GoabBadge {...getPriorityBadgeProps(client.priority)} /> : '—'}
-                                    </td>
-                                    <td data-grid="cell" className="goa-table-cell--text"
-                                        style={{whiteSpace: 'nowrap', minWidth: '200px'}}>
-                                        {client.priority === 'high' ? 'Requires immediate attention' : client.priority ? 'Standard processing' : '—'}
-                                    </td>
-                                    <td data-grid="cell" className="goa-table-cell--actions">
-                                        <div className="row-action-wrapper">
-                                            <GoabPopover
-                                                padded={true}
-                                                minWidth="0"
-                                                position="right"
-                                                target={
-                                                    <button
-                                                        className="row-action-trigger"
-                                                        aria-label={`Actions for ${client.name}`}
-                                                    >
-                                                        <GoabIcon type="ellipsis-horizontal" theme="filled" size="medium" />
-                                                    </button>
-                                                }
-                                            >
-                                                <div className="row-action-menu">
-                                                    <button
-                                                        className="row-action-menu__item"
-                                                        onClick={(e) => handleRowAction('view', client.id, e.nativeEvent)}
-                                                    >
-                                                        View client
-                                                    </button>
-                                                    <button
-                                                        className="row-action-menu__item"
-                                                        onClick={(e) => handleRowAction('edit', client.id, e.nativeEvent)}
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                    <button
-                                                        className="row-action-menu__item row-action-menu__item--destructive"
-                                                        onClick={(e) => handleRowAction('delete', client.id, e.nativeEvent)}
-                                                    >
-                                                        <GoabIcon type="trash" size="small" />
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </GoabPopover>
-                                        </div>
-                                    </td>
+                <ScrollContainer>
+                    <div className="clients-table-wrapper">
+                        <GoabDataGrid keyboardNav="table" keyboardIconPosition={"right"}>
+                            <GoabTable width="100%" onSort={handleSort} variant={isMobile ? "normal" : "relaxed"}
+                                       striped={true}>
+                                <thead>
+                                <tr data-grid="row">
+                                    <th data-grid="cell" className="goa-table-cell--checkbox"
+                                        style={{paddingBottom: 0}}>
+                                        <GoabCheckbox name="selectAll" checked={allSelected}
+                                                      onChange={() => {
+                                                          const newValue = !allSelected;
+                                                          setAllSelected(newValue);
+                                                          setClients(prev => prev.map(c => ({
+                                                              ...c,
+                                                              selected: newValue
+                                                          })));
+                                                      }}
+                                                      ariaLabel="Select all clients"/>
+                                    </th>
+                                    <th data-grid="cell"><GoabTableSortHeader name="status"
+                                                                              direction={sortConfig.key === 'status' ? sortConfig.direction : 'none'}>Status</GoabTableSortHeader>
+                                    </th>
+                                    <th data-grid="cell">Name</th>
+                                    <th data-grid="cell">Assigned to</th>
+                                    <th data-grid="cell"><GoabTableSortHeader name="dueDate"
+                                                                              direction={sortConfig.key === 'dueDate' ? sortConfig.direction : 'none'}>Due
+                                        date</GoabTableSortHeader></th>
+                                    <th data-grid="cell"><GoabTableSortHeader
+                                        name="jurisdiction"
+                                        direction={sortConfig.key === 'jurisdiction' ? sortConfig.direction : 'none'}>Jurisdiction</GoabTableSortHeader>
+                                    </th>
+                                    <th data-grid="cell">File number</th>
+                                    <th data-grid="cell">Category</th>
+                                    <th data-grid="cell"><GoabTableSortHeader name="priority"
+                                                                              direction={sortConfig.key === 'priority' ? sortConfig.direction : 'none'}>Priority</GoabTableSortHeader>
+                                    </th>
+                                    <th data-grid="cell">Notes</th>
+                                    <th data-grid="cell"></th>
                                 </tr>
-                            ))
-                        )}
-                        </tbody>
-                        </GoabTable>
-                    </GoabDataGrid>
-                </div>
-            </ScrollContainer>
+                                </thead>
+                                <tbody>
+                                {filteredClients.length === 0 && clients.length > 0 ? (
+                                    <tr>
+                                        <td colSpan={11} className="clients-empty-state-cell">
+                                            <div className="clients-empty-state">
+                                                <img src={emptyStateIllustration} alt=""
+                                                     className="clients-empty-state__illustration"/>
+                                                <span className="clients-empty-state__heading">No results found</span>
+                                                <span className="clients-empty-state__subline">Try adjusting your search or filters.</span>
+                                                <GoabButton type="tertiary" size="compact" onClick={clearAllChips}>
+                                                    Clear filters
+                                                </GoabButton>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    filteredClients.map((client) => (
+                                        <tr key={client.id} data-grid="row">
+                                            <td data-grid="cell" className="goa-table-cell--checkbox">
+                                                <GoabCheckbox
+                                                    name={`select-${client.id}`}
+                                                    checked={client.selected}
+                                                    onChange={() => {
+                                                        setClients(prev => prev.map(c =>
+                                                            c.id === client.id ? {...c, selected: !c.selected} : c
+                                                        ));
+                                                    }}
+                                                    ariaLabel={`Select ${client.name}`}
+                                                />
+                                            </td>
+                                            <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge
+                                                type={client.status}
+                                                content={client.statusText}
+                                                emphasis="subtle"
+                                                icon={true}/>
+                                            </td>
+                                            <td data-grid="cell" className="goa-table-cell--text"
+                                                style={{whiteSpace: 'nowrap'}}>
+                                                <GoabLink>
+                                                    <Link to={`/client/${client.id}`}>
+                                                        {client.name}
+                                                    </Link>
+                                                </GoabLink>
+                                            </td>
+                                            <td data-grid="cell" className="goa-table-cell--text"
+                                                style={{whiteSpace: 'nowrap'}}>{client.staff || '—'}</td>
+                                            <td data-grid="cell" className="goa-table-cell--text"
+                                                style={{whiteSpace: 'nowrap'}}>{client.dueDate || '—'}</td>
+                                            <td data-grid="cell" className="goa-table-cell--text"
+                                                style={{whiteSpace: 'nowrap'}}>{client.jurisdiction || '—'}</td>
+                                            <td data-grid="cell"
+                                                className="goa-table-cell--text">{client.fileNumber || '—'}</td>
+                                            <td data-grid="cell" className="goa-table-cell--text"
+                                                style={{whiteSpace: 'nowrap'}}>
+                                                {client.category === 'todo' ? 'To do' :
+                                                    client.category === 'progress' ? 'In progress' :
+                                                        client.category === 'complete' ? 'Complete' :
+                                                            client.category || '—'}
+                                            </td>
+                                            <td data-grid="cell" className="goa-table-cell--badge">
+                                                {client.priority ?
+                                                    <GoabBadge {...getPriorityBadgeProps(client.priority)} /> : '—'}
+                                            </td>
+                                            <td data-grid="cell" className="goa-table-cell--text"
+                                                style={{whiteSpace: 'nowrap', minWidth: '200px'}}>
+                                                {client.priority === 'high' ? 'Requires immediate attention' : client.priority ? 'Standard processing' : '—'}
+                                            </td>
+                                            <td data-grid="cell"  className="goa-table-cell--actions">
+                                                {/*<GoabMenuButton leadingIcon={"ellipsis-horizontal"} */}
+                                                {/*                onAction={(e: GoabMenuButtonOnActionDetail) => onMenuActionButton(e.action, client.id)}>*/}
+                                                {/*    <GoabMenuAction text={"View client"} action={"view"}></GoabMenuAction>*/}
+                                                {/*    <GoabMenuAction text={"Edit"} action={"edit"}></GoabMenuAction>*/}
+                                                {/*    <GoabMenuAction text={"Delete"} icon={"trash"} action={"delete"}></GoabMenuAction>*/}
+                                                {/*</GoabMenuButton>*/}
+                                                <div className="row-action-wrapper">
+                                                    <GoabPopover
+                                                        padded={true}
+                                                        minWidth="0"
+                                                        position="right"
+                                                        target={
+                                                            <button
+                                                                className="row-action-trigger"
+                                                                aria-label={`Actions for ${client.name}`}
+                                                            >
+                                                                <GoabIcon type="ellipsis-horizontal" theme="filled"
+                                                                          size="medium"/>
+                                                            </button>
+                                                        }
+                                                    >
+                                                        <div className="row-action-menu">
+                                                            <button
+                                                                className="row-action-menu__item"
+                                                                onClick={(e) => handleRowAction('view', client.id, e.nativeEvent)}
+                                                            >
+                                                                View client
+                                                            </button>
+                                                            <button
+                                                                className="row-action-menu__item"
+                                                                onClick={(e) => handleRowAction('edit', client.id, e.nativeEvent)}
+                                                            >
+                                                                Edit
+                                                            </button>
+                                                            <button
+                                                                className="row-action-menu__item row-action-menu__item--destructive"
+                                                                onClick={(e) => handleRowAction('delete', client.id, e.nativeEvent)}
+                                                            >
+                                                                <GoabIcon type="trash" size="small"/>
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </GoabPopover>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                                </tbody>
+                            </GoabTable>
+                        </GoabDataGrid>
+                    </div>
+                </ScrollContainer>
             )}
 
             <GoabModal
@@ -529,10 +584,10 @@ export function ClientsPage() {
                     </GoabButtonGroup>
                 }
             >
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--goa-space-l)' }}>
+                <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--goa-space-l)'}}>
                     {/* Status filter */}
                     <GoabFormItem label="Status">
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--goa-space-xs)' }}>
+                        <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--goa-space-xs)'}}>
                             {filterOptions.statuses.map(status => (
                                 <GoabCheckbox
                                     key={status}
@@ -547,7 +602,7 @@ export function ClientsPage() {
 
                     {/* Priority filter */}
                     <GoabFormItem label="Priority">
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--goa-space-xs)' }}>
+                        <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--goa-space-xs)'}}>
                             {filterOptions.priorities.map(priority => (
                                 <GoabCheckbox
                                     key={priority}
@@ -562,7 +617,7 @@ export function ClientsPage() {
 
                     {/* Assigned to filter */}
                     <GoabFormItem label="Assigned to">
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--goa-space-xs)' }}>
+                        <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--goa-space-xs)'}}>
                             {filterOptions.staffMembers.map(staff => (
                                 <GoabCheckbox
                                     key={staff}
@@ -577,7 +632,7 @@ export function ClientsPage() {
 
                     {/* Jurisdiction filter */}
                     <GoabFormItem label="Jurisdiction">
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--goa-space-xs)' }}>
+                        <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--goa-space-xs)'}}>
                             {filterOptions.jurisdictions.map(jurisdiction => (
                                 <GoabCheckbox
                                     key={jurisdiction}
@@ -593,8 +648,13 @@ export function ClientsPage() {
                     {/* Clear all button */}
                     {Object.values(pendingFilters).some(arr => arr.length > 0) && (
                         <>
-                            <GoabDivider />
-                            <GoabButton type="tertiary" size="compact" onClick={() => setPendingFilters({ status: [], priority: [], jurisdiction: [], staff: [] })}>
+                            <GoabDivider/>
+                            <GoabButton type="tertiary" size="compact" onClick={() => setPendingFilters({
+                                status: [],
+                                priority: [],
+                                jurisdiction: [],
+                                staff: []
+                            })}>
                                 Clear all filters
                             </GoabButton>
                         </>

@@ -1,6 +1,6 @@
 import {
-  GoaxWorkSideMenu,
-  GoaxWorkSideMenuItem,
+  GoabxWorkSideMenu,
+  GoabxWorkSideMenuItem
 } from "@abgov/react-components/experimental";
 
 import { Outlet, useNavigate } from 'react-router-dom';
@@ -59,6 +59,7 @@ export function App() {
 
   // Navigate and close menu on mobile
   const handleNavigate = (path: string) => {
+    console.log("handleNavigate is clicked ", path);
     navigate(path);
   };
 
@@ -84,69 +85,71 @@ export function App() {
     <PageHeaderProvider>
     <ScrollStateProvider>
     <div className="app-layout">
-      <GoaxWorkSideMenu
+      <GoabxWorkSideMenu
+          url={"/"}
           heading="Workspace Demo Application"
-          onHeadingClick={() => handleNavigate("/")}
           userName="Edna Mode"
           userSecondaryText="edna.mode@example.com"
           open={menuOpen}
           onToggle={() => setMenuOpen(prev => !prev)}
           primaryContent={
             <>
-              <GoaxWorkSideMenuItem
+              <GoabxWorkSideMenuItem
                   icon="search"
                   label="Search"
-                  url="/search"
+                  url={"/search"}
                   onClick={() => handleNavigate("/search")}
               />
 
-              <GoaxWorkSideMenuItem
+              <GoabxWorkSideMenuItem
                   icon="list"
                   label="Clients"
-                  url="/clients"
+                  url={"/clients"}
                   onClick={() => handleNavigate("/clients")}
               />
 
-              <GoaxWorkSideMenuItem
+              <GoabxWorkSideMenuItem
                   icon="document"
                   label="Documents"
-                  url="/documents"
                   type="success"
                   badge="New"
+                  url={"/documents"}
                   onClick={() => handleNavigate("/documents")}
               >
-                <GoaxWorkSideMenuItem
+                <GoabxWorkSideMenuItem
                     label="Sub menu item 1"
-                    url="/documents/sub1"
+                    url={"/documents/sub1"}
                     onClick={() => handleNavigate("/documents/sub1")}
                 />
-                <GoaxWorkSideMenuItem
+                <GoabxWorkSideMenuItem
                     label="Sub menu item 2"
-                    url="/documents/sub2"
+                    url={"/documents/sub2"}
                     onClick={() => handleNavigate("/documents/sub2")}
                 />
-                <GoaxWorkSideMenuItem
+                <GoabxWorkSideMenuItem
                     label="Sub menu item 3"
-                    url="/documents/sub3"
+                    url={"/documents/sub3"}
                     onClick={() => handleNavigate("/documents/sub3")}
                 />
-              </GoaxWorkSideMenuItem>
+              </GoabxWorkSideMenuItem>
             </>
           }
           secondaryContent={
             <>
-              <GoaxWorkSideMenuItem icon="notifications" label="Notifications" badge={unreadCount > 0 ? `${unreadCount}`: undefined} type="success" popoverContent={<NotificationContent/>}/>
+              <GoabxWorkSideMenuItem icon="notifications" label="Notifications" url={"none"}
+                                 badge={unreadCount > 0 ? `${unreadCount}` : undefined} type="success"
+                                 popoverContent={<NotificationContent/>}/>
             </>
           }
           accountContent={
             <>
-              <GoaxWorkSideMenuItem
+              <GoabxWorkSideMenuItem
                   icon="settings"
                   label="Settings"
                   url="/settings"
                   onClick={() => handleNavigate("/settings")}
               />
-              <GoaxWorkSideMenuItem
+              <GoabxWorkSideMenuItem
                   icon="log-out"
                   label="Log out"
                   url="/logout"
