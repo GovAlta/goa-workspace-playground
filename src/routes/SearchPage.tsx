@@ -105,8 +105,8 @@ export function SearchPage() {
     setTypedChips([]);
   }, []);
 
-  // Header actions with search input
-  const headerActions = (
+  // Header actions with search input - memoized to prevent infinite re-renders
+  const headerActions = useMemo(() => (
     <div className="page-header-search" style={{ display: 'flex', gap: 'var(--goa-space-xs)', alignItems: 'center', flex: 1, minWidth: 0 }}>
       <div style={{ flex: 1, minWidth: '120px' }}>
         <GoabInput
@@ -132,7 +132,7 @@ export function SearchPage() {
         </GoabButton>
       </div>
     </div>
-  );
+  ), [searchKeyword, isMobile, searchErrorMessage, handleSearchKeywordPress, applyFilter]);
 
   usePageHeader("Search", headerActions);
 

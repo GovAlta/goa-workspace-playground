@@ -80,6 +80,8 @@ export function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  console.log('[App] Rendering, menuOpen:', menuOpen, 'isMobile:', isMobile);
+
   return (
     <MenuContext.Provider value={{ menuOpen, setMenuOpen, isMobile }}>
     <PageHeaderProvider>
@@ -91,7 +93,10 @@ export function App() {
           userName="Edna Mode"
           userSecondaryText="edna.mode@example.com"
           open={menuOpen}
-          onToggle={() => setMenuOpen(prev => !prev)}
+          onToggle={() => {
+            console.log('[App] onToggle called, toggling menuOpen from', menuOpen, 'to', !menuOpen);
+            setMenuOpen(prev => !prev);
+          }}
           primaryContent={
             <>
               <GoabxWorkSideMenuItem
