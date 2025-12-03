@@ -141,7 +141,7 @@ export function App() {
           }
           secondaryContent={
             <>
-              <GoabxWorkSideMenuItem icon="notifications" label="Notifications" url={"none"}
+              <GoabxWorkSideMenuItem icon="notifications" label="Notifications" url={"/notifications"}
                                  badge={unreadCount > 0 ? `${unreadCount}` : undefined} type="success"
                                  popoverContent={<NotificationContent/>}/>
             </>
