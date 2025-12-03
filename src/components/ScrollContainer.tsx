@@ -148,7 +148,7 @@ export function ScrollContainer({ children, className = '' }: ScrollContainerPro
       window.removeEventListener('resize', updateDimensions);
       resizeObserver.disconnect();
     };
-  }, [handleContentScroll, handleScrollbarScroll, updateDimensions]);
+  }, [handleContentScroll, handleScrollbarScroll, updateDimensions, showScrollbar]);
 
   const scrollClasses = [
     'scroll-container',

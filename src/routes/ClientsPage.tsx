@@ -60,7 +60,6 @@ export function ClientsPage() {
     const [inputValue, setInputValue] = useState('');
     const [inputError, setInputError] = useState('');
     const [typedChips, setTypedChips] = useState<string[]>([]);
-    const [allSelected, setAllSelected] = useState(false);
     const [sortConfig, setSortConfig] = useState<{
         key: keyof Client | '',
         direction: 'asc' | 'desc' | 'none'
@@ -169,6 +168,14 @@ export function ClientsPage() {
 
         return sortData(filtered, sortConfig.key, sortConfig.direction);
     }, [clients, activeTab, typedChips, sortConfig, appliedFilters]);
+
+    // Calculate selection state for header checkbox
+    const selectedCount = useMemo(() =>
+        filteredClients.filter(c => c.selected).length,
+        [filteredClients]
+    );
+    const isAllSelected = selectedCount > 0 && selectedCount === filteredClients.length;
+    const isIndeterminate = selectedCount > 0 && selectedCount < filteredClients.length;
 
     const applyFilter = (valueOverride?: string) => {
         const valueToUse = valueOverride !== undefined ? valueOverride : inputValue;
@@ -315,9 +322,10 @@ export function ClientsPage() {
                                     size="compact"
                                     width="160px"
                                 >
+                                    <GoabDropdownItem value="status" label="Status"/>
                                     <GoabDropdownItem value="dueDate" label="Due date"/>
-                                    <GoabDropdownItem value="priority" label="Priority"/>
                                     <GoabDropdownItem value="jurisdiction" label="Jurisdiction"/>
+                                    <GoabDropdownItem value="priority" label="Priority"/>
                                 </GoabDropdown>
                                 <GoabButton
                                     type="tertiary"
@@ -392,10 +400,12 @@ export function ClientsPage() {
                                 <tr data-grid="row">
                                     <th data-grid="cell" className="goa-table-cell--checkbox"
                                         style={{paddingBottom: 0}}>
-                                        <GoabCheckbox name="selectAll" checked={allSelected}
+                                        <GoabCheckbox name="selectAll"
+                                                      checked={isAllSelected}
+                                                      indeterminate={isIndeterminate}
                                                       onChange={() => {
-                                                          const newValue = !allSelected;
-                                                          setAllSelected(newValue);
+                                                          // If any are selected, deselect all; otherwise select all
+                                                          const newValue = !isAllSelected && !isIndeterminate;
                                                           setClients(prev => prev.map(c => ({
                                                               ...c,
                                                               selected: newValue

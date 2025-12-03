@@ -26,6 +26,11 @@
   min-width: 200px;
 }
 
+/* Checkbox in table cells - remove default bottom margin */
+.goa-table-cell--checkbox goa-checkbox {
+  margin-bottom: 0;
+}
+
 /* Error pages (404, 401, 500) */
 .error-page {
   display: flex;
@@ -153,7 +158,8 @@
 .clients-search-row {
   display: flex;
   flex-wrap: nowrap;
-  gap: var(--goa-space-s);
+  column-gap: var(--goa-space-xl);
+  row-gap: var(--goa-space-s);
   width: 100%;
 }
 

@@ -32,7 +32,6 @@ export function SearchPage() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchErrorMessage, setSearchErrorMessage] = useState('');
   const [typedChips, setTypedChips] = useState<string[]>([]);
-  const [allSelected, setAllSelected] = useState(false);
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: '', direction: 'none' });
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,6 +51,14 @@ export function SearchPage() {
     const filtered = filterData(typedChips, searchResults);
     return sortData(filtered, sortConfig.key, sortConfig.direction);
   }, [typedChips, searchResults, sortConfig]);
+
+  // Calculate selection state for header checkbox
+  const selectedCount = useMemo(() =>
+    filteredResults.filter(r => r.selected).length,
+    [filteredResults]
+  );
+  const isAllSelected = selectedCount > 0 && selectedCount === filteredResults.length;
+  const isIndeterminate = selectedCount > 0 && selectedCount < filteredResults.length;
 
   const applyFilter = useCallback((valueOverride?: string) => {
     const valueToUse = valueOverride !== undefined ? valueOverride : searchKeyword;
@@ -77,9 +84,9 @@ export function SearchPage() {
     });
   }, []);
 
-  const handleSelectAll = (event: GoabCheckboxOnChangeDetail) => {
-    const newValue = event.checked;
-    setAllSelected(newValue);
+  const handleSelectAll = () => {
+    // If any are selected, deselect all; otherwise select all
+    const newValue = !isAllSelected && !isIndeterminate;
     setSearchResults(prev => prev.map(r => ({ ...r, selected: newValue })));
   }
 
@@ -170,12 +177,12 @@ export function SearchPage() {
           <>
             <ScrollContainer>
                 <div className="clients-table-wrapper">
-                    <GoabDataGrid keyboardNav="table" keyboardIcon={false}>
+                    <GoabDataGrid keyboardNav="table" keyboardIconPosition="right">
                         <GoabTable width="100%" onSort={handleSort} variant={isMobile ? "normal" : "relaxed"} striped={true}>
                             <thead>
                             <tr data-grid="row">
                                 <th data-grid="cell" className="goa-table-cell--checkbox" style={{ paddingBottom: 0 }}>
-                                    <GoabCheckbox name="selectAll" onChange={handleSelectAll} checked={allSelected} ariaLabel="Select all results"/>
+                                    <GoabCheckbox name="selectAll" onChange={handleSelectAll} checked={isAllSelected} indeterminate={isIndeterminate} ariaLabel="Select all results"/>
                                 </th>
                             <th data-grid="cell"><GoabTableSortHeader name="status">Status</GoabTableSortHeader></th>
                             <th data-grid="cell">Name</th>
