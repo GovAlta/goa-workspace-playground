@@ -31,6 +31,22 @@
   margin-bottom: 0;
 }
 
+/* Clickable table rows - link styling */
+.table-row-link,
+.table-row-link:visited {
+  color: var(--goa-color-text-default);
+  text-decoration: none;
+  font-weight: var(--goa-font-weight-semi-bold, 600);
+}
+
+.table-row-link:hover,
+.table-row-link:visited:hover,
+tr:hover .table-row-link,
+tr:hover .table-row-link:visited {
+  text-decoration: underline;
+  color: var(--goa-color-text-default);
+}
+
 /* Error pages (404, 401, 500) */
 .error-page {
   display: flex;
@@ -188,11 +204,8 @@
 }
 
 /* Tabs in filter section - remove bottom margin from shadow DOM */
-/* Only apply on desktop when tabs are side-by-side with search */
-@media (min-width: 624px) {
-  .clients-filter-section goa-tabs {
-    margin-bottom: -2rem; /* Counteract the internal 2rem margin */
-  }
+.clients-filter-section goa-tabs {
+  margin-bottom: -2rem; /* Counteract the internal 2rem margin */
 }
 
 /* Clear all link button styled like GoabLink color="dark" size="small" */
@@ -342,6 +355,8 @@
 
 .scroll-container {
   position: relative;
+  display: flex;
+  align-items: stretch;
   /* Constrain width so content doesn't expand parent - enables horizontal scroll */
   width: 100%;
   overflow-x: auto;
@@ -356,8 +371,33 @@
 }
 
 /* Ensure the table inside doesn't shrink - margins handled by table wrapper */
-.scroll-container > * {
+.scroll-container > *:not(.scroll-container-shadow) {
   min-width: max-content;
+}
+
+/* Horizontal scroll shadows - use sticky positioning to stay at edges */
+.scroll-container-shadow {
+  position: sticky;
+  width: 8px;
+  min-width: 8px;
+  /* Height set dynamically via JS for mobile compatibility */
+  /* Opacity set dynamically via inline styles */
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.scroll-container-shadow--left {
+  left: 0;
+  margin-right: -8px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent);
+}
+
+.scroll-container-shadow--right {
+  right: 0;
+  margin-left: -8px;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.08), transparent);
 }
 
 /* Fixed scrollbar that stays at bottom of card container */
@@ -403,11 +443,26 @@
     border-bottom: 1px solid var(--goa-color-greyscale-150);
   }
 
-  /* Subtle shadow when collapsed - indicates content below */
-  .desktop-card-container .page-header--collapsed.page-header--middle,
-  .desktop-card-container .page-header--collapsed.page-header--atbottom {
-    box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-  }
+}
+
+/* Page header scroll shadow - gradient fade when content scrolls behind */
+.page-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 8px;
+  transform: translateY(100%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.08), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.page-header--middle::after,
+.page-header--atbottom::after {
+  opacity: 1;
 }
 
 /* Mobile header styles */
@@ -426,7 +481,6 @@
   .page-header--collapsed {
     padding: var(--goa-space-s) var(--goa-space-m);
     border-bottom: 1px solid var(--goa-color-greyscale-150);
-    box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   }
 }
 

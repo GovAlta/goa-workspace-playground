@@ -1,5 +1,5 @@
 import React, {useState, useMemo, useCallback, useEffect} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {
     GoabText,
     GoabButton,
@@ -42,6 +42,7 @@ import {mockFetch} from "../utils/mockApi";
 
 export function ClientsPage() {
     const {isMobile} = useMenu();
+    const navigate = useNavigate();
 
     // Memoize actions to prevent infinite re-renders
     const headerActions = useMemo(() => (
@@ -279,7 +280,7 @@ export function ClientsPage() {
             {/* Padding section - tabs + filter row, chips */}
             <div className="clients-content-padding">
                 <div className="clients-filter-section">
-                    <GoabTabs initialTab={1} onChange={handleTabChange}>
+                    <GoabTabs initialTab={1} onChange={handleTabChange} stackOnMobile={false}>
                         <GoabTab heading="All"/>
                         <GoabTab heading="To do"/>
                         <GoabTab heading="In progress"/>
@@ -451,8 +452,14 @@ export function ClientsPage() {
                                     </tr>
                                 ) : (
                                     filteredClients.map((client) => (
-                                        <tr key={client.id} data-grid="row">
-                                            <td data-grid="cell" className="goa-table-cell--checkbox">
+                                        <tr
+                                            key={client.id}
+                                            data-grid="row"
+                                            aria-selected={client.selected ? "true" : undefined}
+                                            onClick={() => navigate(`/client/${client.id}`)}
+                                            style={{cursor: 'pointer'}}
+                                        >
+                                            <td data-grid="cell" className="goa-table-cell--checkbox" onClick={(e) => e.stopPropagation()}>
                                                 <GoabCheckbox
                                                     name={`select-${client.id}`}
                                                     checked={client.selected}
@@ -472,11 +479,9 @@ export function ClientsPage() {
                                             </td>
                                             <td data-grid="cell" className="goa-table-cell--text"
                                                 style={{whiteSpace: 'nowrap'}}>
-                                                <GoabLink>
-                                                    <Link to={`/client/${client.id}`}>
-                                                        {client.name}
-                                                    </Link>
-                                                </GoabLink>
+                                                <Link to={`/client/${client.id}`} className="table-row-link">
+                                                    {client.name}
+                                                </Link>
                                             </td>
                                             <td data-grid="cell" className="goa-table-cell--text"
                                                 style={{whiteSpace: 'nowrap'}}>{client.staff || '—'}</td>
@@ -501,7 +506,7 @@ export function ClientsPage() {
                                                 style={{whiteSpace: 'nowrap', minWidth: '200px'}}>
                                                 {client.priority === 'high' ? 'Requires immediate attention' : client.priority ? 'Standard processing' : '—'}
                                             </td>
-                                            <td data-grid="cell"  className="goa-table-cell--actions">
+                                            <td data-grid="cell" className="goa-table-cell--actions" onClick={(e) => e.stopPropagation()}>
                                                 {/*<GoabMenuButton leadingIcon={"ellipsis-horizontal"} */}
                                                 {/*                onAction={(e: GoabMenuButtonOnActionDetail) => onMenuActionButton(e.action, client.id)}>*/}
                                                 {/*    <GoabMenuAction text={"View client"} action={"view"}></GoabMenuAction>*/}

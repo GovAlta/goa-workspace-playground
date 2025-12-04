@@ -21,6 +21,7 @@ interface ScrollbarPosition {
  * Features:
  * - Horizontal scrollbar stays visible at the bottom of the card container
  * - Syncs scroll position between content and fixed scrollbar
+ * - Subtle edge shadows appear when content scrolls off the edge
  *
  * Usage:
  *   <ScrollContainer>
@@ -32,10 +33,48 @@ interface ScrollbarPosition {
 export function ScrollContainer({ children, className = '' }: ScrollContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollbarRef = useRef<HTMLDivElement>(null);
+  const leftShadowRef = useRef<HTMLDivElement>(null);
+  const rightShadowRef = useRef<HTMLDivElement>(null);
   const [scrollWidth, setScrollWidth] = useState(0);
   const [showScrollbar, setShowScrollbar] = useState(false);
   const [scrollbarPosition, setScrollbarPosition] = useState<ScrollbarPosition>({ left: 0, bottom: 0, width: 0 });
+  const [shadowLeft, setShadowLeft] = useState(false);
+  const [shadowRight, setShadowRight] = useState(false);
   const isScrollingSelf = useRef(false);
+
+  // Update shadow heights to match content
+  const updateShadowHeights = useCallback(() => {
+    const container = containerRef.current;
+    const leftShadow = leftShadowRef.current;
+    const rightShadow = rightShadowRef.current;
+    if (!container || !leftShadow || !rightShadow) return;
+
+    // Get the content child (the table wrapper) to match its height
+    const contentChild = container.children[1] as HTMLElement;
+    if (contentChild && contentChild.offsetHeight > 0) {
+      const height = `${contentChild.offsetHeight}px`;
+      leftShadow.style.height = height;
+      rightShadow.style.height = height;
+    }
+  }, []);
+
+  // Update shadow visibility based on scroll position
+  const updateShadows = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    const maxScroll = scrollWidth - clientWidth;
+
+    // Get margin from first content child (skip shadow elements) to know when content hits the edge
+    const contentChild = container.children[1] as HTMLElement; // children[0] is left shadow
+    const margin = contentChild ? parseFloat(getComputedStyle(contentChild).marginLeft) || 0 : 0;
+
+    // Left shadow: show when scrolled past the content's left margin
+    setShadowLeft(scrollLeft > margin);
+    // Right shadow: show when content extends past the right edge (accounting for right margin)
+    setShadowRight(scrollLeft < maxScroll - margin);
+  }, []);
 
   // Update dimensions and scrollbar position
   const updateDimensions = useCallback(() => {
@@ -73,8 +112,10 @@ export function ScrollContainer({ children, className = '' }: ScrollContainerPro
     }
   }, []);
 
-  // Sync scroll positions
+  // Sync scroll positions between content and fixed scrollbar
   const handleContentScroll = useCallback(() => {
+    updateShadows();
+
     if (isScrollingSelf.current) return;
     const container = containerRef.current;
     const scrollbar = scrollbarRef.current;
@@ -85,7 +126,7 @@ export function ScrollContainer({ children, className = '' }: ScrollContainerPro
     requestAnimationFrame(() => {
       isScrollingSelf.current = false;
     });
-  }, []);
+  }, [updateShadows]);
 
   const handleScrollbarScroll = useCallback(() => {
     if (isScrollingSelf.current) return;
@@ -97,8 +138,9 @@ export function ScrollContainer({ children, className = '' }: ScrollContainerPro
     container.scrollLeft = scrollbar.scrollLeft;
     requestAnimationFrame(() => {
       isScrollingSelf.current = false;
+      updateShadows();
     });
-  }, []);
+  }, [updateShadows]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -106,8 +148,10 @@ export function ScrollContainer({ children, className = '' }: ScrollContainerPro
     const cardContainer = document.querySelector('.desktop-card-container');
     if (!container) return;
 
-    // Initial dimension check
+    // Initial dimension check, shadows, and shadow heights
     updateDimensions();
+    updateShadows();
+    updateShadowHeights();
 
     // Listen to content scroll
     container.addEventListener('scroll', handleContentScroll, { passive: true });
@@ -128,6 +172,8 @@ export function ScrollContainer({ children, className = '' }: ScrollContainerPro
     // Observe size changes
     const resizeObserver = new ResizeObserver(() => {
       updateDimensions();
+      updateShadows();
+      updateShadowHeights();
     });
     resizeObserver.observe(container);
     if (cardContainer) {
@@ -148,20 +194,29 @@ export function ScrollContainer({ children, className = '' }: ScrollContainerPro
       window.removeEventListener('resize', updateDimensions);
       resizeObserver.disconnect();
     };
-  }, [handleContentScroll, handleScrollbarScroll, updateDimensions, showScrollbar]);
-
-  const scrollClasses = [
-    'scroll-container',
-    className
-  ].filter(Boolean).join(' ');
+  }, [handleContentScroll, handleScrollbarScroll, updateDimensions, updateShadows, updateShadowHeights, showScrollbar]);
 
   return (
     <>
       <div
         ref={containerRef}
-        className={scrollClasses}
+        className={`scroll-container ${className}`.trim()}
+        data-shadow-left={shadowLeft}
+        data-shadow-right={shadowRight}
       >
+        <div
+          ref={leftShadowRef}
+          className="scroll-container-shadow scroll-container-shadow--left"
+          aria-hidden="true"
+          style={{ opacity: shadowLeft ? 1 : 0 }}
+        />
         {children}
+        <div
+          ref={rightShadowRef}
+          className="scroll-container-shadow scroll-container-shadow--right"
+          aria-hidden="true"
+          style={{ opacity: shadowRight ? 1 : 0 }}
+        />
       </div>
 
       {/* Fixed scrollbar at bottom of card container */}
