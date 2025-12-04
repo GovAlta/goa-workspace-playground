@@ -635,3 +635,76 @@ tr:hover .table-row-link:visited {
   min-width: 0;
 }
 
+/* ============================================================================
+   NOTIFICATION CENTRE
+   ============================================================================ */
+
+/* Use darker shadow for notification popover */
+goa-work-side-menu {
+  --goa-popover-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Remove default tabs margin in notification centre */
+goa-work-side-menu goa-tabs {
+  --goa-tabs-margin-bottom: 0;
+}
+
+/* Notification centre action links (no underline by default) */
+.notification-action-link {
+  color: var(--goa-color-text-default);
+  text-decoration: none;
+  font: var(--goa-typography-body-s);
+}
+.notification-action-link:hover {
+  color: var(--goa-color-interactive-hover);
+  text-decoration: underline;
+}
+
+/* Header shadow - appears when content scrolls behind */
+.notification-header {
+  position: relative;
+}
+
+.notification-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  transform: translateY(100%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 1;
+}
+
+.notification-header--shadowed::after {
+  opacity: 1;
+}
+
+/* Footer shadow - appears when content scrolls behind */
+.notification-footer {
+  position: relative;
+}
+
+.notification-footer::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 5px;
+  transform: translateY(-100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.05), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 1;
+}
+
+.notification-footer--shadowed::before {
+  opacity: 1;
+}
+

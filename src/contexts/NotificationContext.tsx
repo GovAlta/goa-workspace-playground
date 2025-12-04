@@ -7,7 +7,8 @@ interface NotificationContextType {
     addNotification: (notification: Omit<Notification, "id">) => void;
     deleteNotification: (id: string) => void;
     markAsRead: (id: string) => void;
-    markAllAsRead: () => void;
+    markAsUnread: (ids: string[]) => void;
+    markAllAsRead: () => string[];
     getUnreadCount: () => number;
     getNotificationsByTab: (tab: "all" | "unread" | "urgent") => Notification[];
 }
@@ -64,8 +65,16 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({childre
         updateNotification(id, {isRead: true});
     }
 
-    const markAllAsRead = () => {
+    const markAsUnread = (ids: string[]) => {
+        setNotifications(prev => prev.map(n =>
+            ids.includes(n.id) ? {...n, isRead: false} : n
+        ));
+    }
+
+    const markAllAsRead = (): string[] => {
+        const unreadIds = notifications.filter(n => !n.isRead).map(n => n.id);
         setNotifications(prev => prev.map(n => ({...n, isRead: true})));
+        return unreadIds;
     }
 
     const getUnreadCount = () => {
@@ -91,6 +100,7 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({childre
             deleteNotification,
             markAllAsRead,
             markAsRead,
+            markAsUnread,
             getUnreadCount,
             getNotificationsByTab,
         }}>{children}</NotificationContext.Provider>
