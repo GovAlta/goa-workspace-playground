@@ -708,3 +708,19 @@ goa-work-side-menu goa-tabs {
   opacity: 1;
 }
 
+/* Notification drawer content (mobile) - remove drawer's default content padding */
+goa-drawer .notification-drawer-content {
+  --goa-drawer-content-padding-vertical: 0;
+  --goa-drawer-content-padding-horizontal: 0;
+}
+
+/* Remove border-bottom from notification header on mobile (drawer already has border) */
+goa-drawer .notification-drawer-content .notification-header {
+  border-bottom: none;
+}
+
+/* Remove tabs bottom margin in drawer on mobile */
+goa-drawer goa-tabs {
+  --goa-tabs-margin-bottom: 0;
+}
+
