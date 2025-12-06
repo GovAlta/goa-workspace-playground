@@ -1,5 +1,5 @@
 import React, {useState, useMemo, useCallback, useEffect} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {
     GoabText,
     GoabButton,
@@ -22,6 +22,7 @@ import {
     GoabDropdownItem,
     GoabDrawer,
     GoabCircularProgress,
+    GoabSkeleton,
     GoabDivider, GoabMenuButton, GoALinkButton, GoabMenuAction,
 } from "@abgov/react-components";
 import emptyStateIllustration from "../assets/empty-state-illustration.svg";
@@ -42,7 +43,6 @@ import {mockFetch} from "../utils/mockApi";
 
 export function ClientsPage() {
     const {isMobile} = useMenu();
-    const navigate = useNavigate();
 
     // Memoize actions to prevent infinite re-renders
     const headerActions = useMemo(() => (
@@ -384,16 +384,8 @@ export function ClientsPage() {
             </div>
 
             {/* Table section - scroll container goes edge-to-edge, table has its own margins */}
-            {isLoading ? (
-                <div className="clients-content-padding">
-                    <div className="clients-loading-state">
-                        <GoabCircularProgress variant="inline" size="small" message="Loading clients..."
-                                              visible={true}/>
-                    </div>
-                </div>
-            ) : (
-                <ScrollContainer>
-                    <div className="clients-table-wrapper">
+            <ScrollContainer>
+                    <div className="table-wrapper">
                         <GoabDataGrid keyboardNav="table" keyboardIconPosition={"right"}>
                             <GoabTable width="100%" onSort={handleSort} variant={isMobile ? "normal" : "relaxed"}
                                        striped={true}>
@@ -436,7 +428,45 @@ export function ClientsPage() {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {filteredClients.length === 0 && clients.length > 0 ? (
+                                {isLoading ? (
+                                    [...Array(10)].map((_, i) => (
+                                        <tr key={i} data-grid="row">
+                                            <td data-grid="cell" className="goa-table-cell--checkbox">
+                                                <div style={{ width: "18px", height: "18px", borderRadius: "4px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                            <td data-grid="cell">
+                                                <div style={{ height: "22px", width: `${60 + (i % 3) * 15}px`, borderRadius: "12px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                            <td data-grid="cell">
+                                                <div style={{ height: "14px", width: `${50 + (i % 5) * 10}%`, borderRadius: "4px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                            <td data-grid="cell">
+                                                <div style={{ height: "14px", width: `${60 + (i % 4) * 10}%`, borderRadius: "4px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                            <td data-grid="cell">
+                                                <div style={{ height: "14px", width: `${70 + (i % 3) * 10}%`, borderRadius: "4px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                            <td data-grid="cell">
+                                                <div style={{ height: "14px", width: `${55 + (i % 4) * 12}%`, borderRadius: "4px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                            <td data-grid="cell">
+                                                <div style={{ height: "14px", width: `${65 + (i % 3) * 10}%`, borderRadius: "4px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                            <td data-grid="cell">
+                                                <div style={{ height: "14px", width: `${50 + (i % 4) * 12}%`, borderRadius: "4px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                            <td data-grid="cell">
+                                                <div style={{ height: "14px", width: `${45 + (i % 3) * 15}%`, borderRadius: "4px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                            <td data-grid="cell">
+                                                <div style={{ height: "14px", width: `${40 + (i % 5) * 12}%`, borderRadius: "4px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                            <td data-grid="cell">
+                                                <div style={{ width: "24px", height: "24px", borderRadius: "4px", backgroundColor: "var(--goa-color-greyscale-200)" }} />
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : filteredClients.length === 0 && clients.length > 0 ? (
                                     <tr>
                                         <td colSpan={11} className="clients-empty-state-cell">
                                             <div className="clients-empty-state">
@@ -456,10 +486,8 @@ export function ClientsPage() {
                                             key={client.id}
                                             data-grid="row"
                                             aria-selected={client.selected ? "true" : undefined}
-                                            onClick={() => navigate(`/client/${client.id}`)}
-                                            style={{cursor: 'pointer'}}
                                         >
-                                            <td data-grid="cell" className="goa-table-cell--checkbox" onClick={(e) => e.stopPropagation()}>
+                                            <td data-grid="cell" className="goa-table-cell--checkbox">
                                                 <GoabCheckbox
                                                     name={`select-${client.id}`}
                                                     checked={client.selected}
@@ -506,7 +534,7 @@ export function ClientsPage() {
                                                 style={{whiteSpace: 'nowrap', minWidth: '200px'}}>
                                                 {client.priority === 'high' ? 'Requires immediate attention' : client.priority ? 'Standard processing' : '—'}
                                             </td>
-                                            <td data-grid="cell" className="goa-table-cell--actions" onClick={(e) => e.stopPropagation()}>
+                                            <td data-grid="cell" className="goa-table-cell--actions">
                                                 {/*<GoabMenuButton leadingIcon={"ellipsis-horizontal"} */}
                                                 {/*                onAction={(e: GoabMenuButtonOnActionDetail) => onMenuActionButton(e.action, client.id)}>*/}
                                                 {/*    <GoabMenuAction text={"View client"} action={"view"}></GoabMenuAction>*/}
@@ -560,7 +588,6 @@ export function ClientsPage() {
                         </GoabDataGrid>
                     </div>
                 </ScrollContainer>
-            )}
 
             <GoabModal
                 heading="Delete client record"
