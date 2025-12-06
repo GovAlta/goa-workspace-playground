@@ -47,6 +47,13 @@ tr:hover .table-row-link:visited {
   color: var(--goa-color-text-default);
 }
 
+.table-row-link:focus,
+.table-row-link:focus-visible {
+  outline: 2px solid var(--goa-color-interactive-focus);
+  outline-offset: 2px;
+  border-radius: var(--goa-border-radius-s);
+}
+
 /* Error pages (404, 401, 500) */
 .error-page {
   display: flex;
@@ -117,13 +124,13 @@ tr:hover .table-row-link:visited {
 }
 
 /* Table wrapper - uses margin for scroll container compatibility */
-.clients-table-wrapper {
+.table-wrapper {
   margin-left: 16px;
   margin-right: 16px;
 }
 
 @media (min-width: 624px) {
-  .clients-table-wrapper {
+  .table-wrapper {
     margin-left: 32px;
     margin-right: 32px;
   }
@@ -135,7 +142,7 @@ tr:hover .table-row-link:visited {
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  margin-top: var(--goa-space-m);
+  margin-top: var(--goa-space-xs);
   margin-bottom: 16px;
   gap: var(--goa-space-xl);
 }
@@ -370,8 +377,10 @@ tr:hover .table-row-link:visited {
   display: none; /* Chrome/Safari/Opera */
 }
 
-/* Ensure the table inside doesn't shrink - margins handled by table wrapper */
+/* Ensure content fills container width OR fits content (whichever is larger) */
+/* flex-grow: 1 fills available space, min-width: max-content allows expansion for scroll */
 .scroll-container > *:not(.scroll-container-shadow) {
+  flex-grow: 1;
   min-width: max-content;
 }
 
@@ -419,8 +428,10 @@ tr:hover .table-row-link:visited {
 
 /* Header container base styles */
 .page-header {
+  position: relative; /* Required for ::after pseudo-element positioning */
   background-color: white;
-  transition: padding 0.2s ease, box-shadow 0.2s ease;
+  border-bottom: none; /* Explicit default - no border */
+  transition: padding 0.2s ease, box-shadow 0.2s ease, border-bottom 0.15s ease;
 }
 
 /* Desktop: Header states based on scroll position */
@@ -435,12 +446,22 @@ tr:hover .table-row-link:visited {
   /* Expanded state - at top or no scroll */
   .desktop-card-container .page-header--expanded {
     padding: 24px 32px 16px 32px;
+    border-bottom: none;
   }
 
   /* Collapsed state - middle or bottom scroll */
   .desktop-card-container .page-header--collapsed {
     padding: 12px 32px;
     border-bottom: 1px solid var(--goa-color-greyscale-150);
+  }
+
+  /* With tabs - no bottom padding */
+  .desktop-card-container .page-header--with-tabs.page-header--expanded {
+    padding-bottom: 0;
+  }
+
+  .desktop-card-container .page-header--with-tabs.page-header--collapsed {
+    padding-bottom: 0;
   }
 
 }
@@ -457,12 +478,22 @@ tr:hover .table-row-link:visited {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.08), transparent);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.15s ease;
+  visibility: hidden; /* Fully remove when not visible */
+  transition: opacity 0.15s ease, visibility 0.15s ease;
 }
 
+/* Shadow visible when content scrolls behind header */
 .page-header--middle::after,
 .page-header--atbottom::after {
   opacity: 1;
+  visibility: visible;
+}
+
+/* Explicitly hide shadow when at top or no scroll */
+.page-header--attop::after,
+.page-header--noscroll::after {
+  opacity: 0;
+  visibility: hidden;
 }
 
 /* Mobile header styles */
@@ -474,6 +505,7 @@ tr:hover .table-row-link:visited {
     background-color: white;
     padding: var(--goa-space-m) 16px;
     margin-bottom: 0;
+    border-bottom: none;
     transition: padding 0.2s ease, box-shadow 0.2s ease;
   }
 
@@ -635,6 +667,19 @@ tr:hover .table-row-link:visited {
   min-width: 0;
 }
 
+/* Page header tabs section */
+.page-header__tabs {
+  padding: 0;
+}
+
+.page-header--expanded .page-header__tabs {
+  margin-top: 8px;
+}
+
+.page-header--with-tabs {
+  padding-bottom: 0;
+}
+
 /* ============================================================================
    NOTIFICATION CENTRE
    ============================================================================ */
@@ -708,10 +753,10 @@ goa-work-side-menu goa-tabs {
   opacity: 1;
 }
 
-/* Notification drawer content (mobile) - remove drawer's default content padding */
+/* Notification drawer content (mobile) - adjust drawer padding */
 goa-drawer .notification-drawer-content {
   --goa-drawer-content-padding-vertical: 0;
-  --goa-drawer-content-padding-horizontal: 0;
+  --goa-drawer-content-padding-horizontal: 12px;
 }
 
 /* Remove border-bottom from notification header on mobile (drawer already has border) */
@@ -722,5 +767,32 @@ goa-drawer .notification-drawer-content .notification-header {
 /* Remove tabs bottom margin in drawer on mobile */
 goa-drawer goa-tabs {
   --goa-tabs-margin-bottom: 0;
+}
+
+/* Notification empty state */
+.notification-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--goa-space-3xl) var(--goa-space-m);
+  text-align: center;
+}
+
+.notification-empty-state__illustration {
+  width: 80px;
+  height: auto;
+  margin-bottom: var(--goa-space-l);
+}
+
+.notification-empty-state__heading {
+  font: var(--goa-typography-heading-2xs);
+  color: var(--goa-color-text-secondary);
+  margin-bottom: var(--goa-space-xs);
+}
+
+.notification-empty-state__subline {
+  font: var(--goa-typography-body-s);
+  color: var(--goa-color-greyscale-500);
 }
 
