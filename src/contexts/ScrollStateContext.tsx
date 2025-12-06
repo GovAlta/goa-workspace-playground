@@ -42,8 +42,8 @@ export function ScrollStateProvider({ children }: ScrollStateProviderProps) {
 
     // Hysteresis thresholds - different values for entering vs exiting states
     // This prevents jitter caused by layout shifts when padding changes
-    const enterThreshold = 5;   // Distance to ENTER a boundary state
-    const exitThreshold = 25;   // Distance to EXIT a boundary state (larger = more sticky)
+    const enterThreshold = 10;  // Distance to ENTER a boundary state (increased from 5 to account for layout shifts)
+    const exitThreshold = 30;   // Distance to EXIT a boundary state (larger = more sticky)
 
     setScrollPosition(prevPosition => {
       // At top logic - stay at-top until we scroll past exitThreshold
