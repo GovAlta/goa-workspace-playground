@@ -1,5 +1,5 @@
 import {useState, useRef, useCallback, useEffect} from "react";
-import {GoabIconButton, GoabTab, GoabTabs, GoabText} from "@abgov/react-components";
+import {GoabBadge, GoabIconButton, GoabTab, GoabTabs, GoabText} from "@abgov/react-components";
 import {useNotifications} from "../contexts/NotificationContext";
 import {useNavigate} from "react-router-dom";
 import {Notification} from "../types/Notification";
@@ -109,9 +109,9 @@ export const NotificationContent = () => {
 
     const getTabContent = () => {
         const tabConfig = {
-            1: {notifications: unreadNotifications, emptyMessage: "No unread notifications."},
-            2: {notifications: urgentNotifications, emptyMessage: "No urgent notifications."},
-            3: {notifications: allNotifications, emptyMessage: "No older notifications to display."},
+            1: {notifications: unreadNotifications, heading: "You're all caught up", subline: "No unread notifications"},
+            2: {notifications: urgentNotifications, heading: "No urgent notifications", subline: "Nothing requires your immediate attention"},
+            3: {notifications: allNotifications, heading: "No notifications", subline: "You don't have any notifications yet"},
         };
 
         const config = tabConfig[activeTab as keyof typeof tabConfig];
@@ -119,11 +119,13 @@ export const NotificationContent = () => {
 
         return config.notifications.length > 0
             ? renderGroupedNotifications(config.notifications.slice(0, MAX_NOTIFICATIONS))
-            : <EmptyState message={config.emptyMessage}/>;
+            : <EmptyState heading={config.heading} subline={config.subline}/>;
     };
 
     const showHeaderShadow = scrollPosition === 'middle' || scrollPosition === 'at-bottom';
     const showFooterShadow = scrollPosition === 'middle' || scrollPosition === 'at-top';
+
+    const urgentUnreadCount = urgentNotifications.filter(n => !n.isRead).length;
 
     const renderTabs = (stackOnMobile: boolean = true) => (
         <GoabTabs
@@ -134,8 +136,8 @@ export const NotificationContent = () => {
             onChange={(detail) => setActiveTab(detail.tab)}
             {...(!isMobile && {ml: "m", mr: "m"})}
         >
-            <GoabTab heading="Unread"><></></GoabTab>
-            <GoabTab heading="Urgent"><></></GoabTab>
+            <GoabTab heading={<>Unread {unreadCount > 0 && <GoabBadge type="default" content={`${unreadCount}`} emphasis="subtle" version="2" />}</>}><></></GoabTab>
+            <GoabTab heading={<>Urgent {urgentUnreadCount > 0 && <GoabBadge type="important" content={`${urgentUnreadCount}`} emphasis="subtle" version="2" />}</>}><></></GoabTab>
             <GoabTab heading="All"><></></GoabTab>
         </GoabTabs>
     );
@@ -156,6 +158,7 @@ export const NotificationContent = () => {
                     onClick={(e) => {
                         e.preventDefault();
                         navigate("/notifications");
+                        handleClose();
                     }}
                 >
                     See all notifications
@@ -187,7 +190,7 @@ export const NotificationContent = () => {
                             handleMarkAllAsRead();
                         }}
                     >
-                        Mark all as read ({unreadCount})
+                        Mark all as read
                     </a>
                 )}
             </div>
@@ -214,7 +217,7 @@ export const NotificationContent = () => {
                     ? {
                         height: "calc(80vh - 60px)",
                         maxHeight: "calc(80vh - 60px)",
-                        margin: "calc(-1 * var(--goa-space-l)) calc(-1 * var(--goa-space-xl))",
+                        margin: "calc(-1 * var(--goa-space-l)) calc(-1 * var(--goa-space-xl) + 12px)",
                     }
                     : {
                         height: "710px",

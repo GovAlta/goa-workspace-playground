@@ -1,11 +1,14 @@
-import {GoabText} from "@abgov/react-components";
+import emptyStateIllustration from "../assets/empty-state-illustration.svg";
 
 interface EmptyStateProps {
-    message: string;
+    heading: string;
+    subline: string;
 }
 
-export const EmptyState = ({message}: EmptyStateProps) => (
-    <div style={{textAlign: "center", padding: "var(--goa-space-xl)"}}>
-        <GoabText size="body-m" color="secondary">{message}</GoabText>
+export const EmptyState = ({heading, subline}: EmptyStateProps) => (
+    <div className="notification-empty-state">
+        <img src={emptyStateIllustration} alt="" className="notification-empty-state__illustration" />
+        <span className="notification-empty-state__heading">{heading}</span>
+        <span className="notification-empty-state__subline">{subline}</span>
     </div>
 );

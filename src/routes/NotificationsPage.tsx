@@ -1,130 +1,212 @@
-import React from "react";
+import React, {useState, useMemo, useEffect} from "react";
 import {
     GoabText,
-    GoabPageBlock,
     GoabBadge,
     GoabTabs,
     GoabTab,
-    GoabLink, GoabIconButton, GoabButtonGroup
+    GoabButton,
 } from "@abgov/react-components";
 import {useNotifications} from "../contexts/NotificationContext";
-import {PageHeader} from "../components/PageHeader";
-import {isToday, isYesterday} from "../utils/dateUtils";
+import {usePageHeader} from "../contexts/PageHeaderContext";
+import {getDateGroupLabel} from "../utils/dateUtils";
 import {Notification} from "../types/Notification";
 import {GoaxWorkSideNotificationCard} from "@abgov/react-components/experimental";
+import emptyStateIllustration from "../assets/empty-state-illustration.svg";
 
 export function NotificationsPage() {
-    const {getNotificationsByTab, markAsRead, markAllAsRead, getUnreadCount} = useNotifications();
+    const {getNotificationsByTab, markAsRead, markAllAsRead, markAsUnread, getUnreadCount} = useNotifications();
+
+    const [activeTab, setActiveTab] = useState(1);
+    const [showUndo, setShowUndo] = useState(false);
+    const [undoIds, setUndoIds] = useState<string[]>([]);
 
     const allNotifications = getNotificationsByTab("all");
     const unreadNotifications = getNotificationsByTab("unread");
     const urgentNotifications = getNotificationsByTab("urgent");
 
     const unreadCount = getUnreadCount();
-    const urgentCount = urgentNotifications.length;
+
+    // Reset undo when tab changes
+    useEffect(() => {
+        setShowUndo(false);
+        setUndoIds([]);
+    }, [activeTab]);
+
+    const handleMarkAllAsRead = () => {
+        const ids = markAllAsRead();
+        if (ids.length > 0) {
+            setUndoIds(ids);
+            setShowUndo(true);
+        }
+    };
+
+    const handleUndo = () => {
+        markAsUnread(undoIds);
+        setShowUndo(false);
+        setUndoIds([]);
+    };
+
+    const handleNotificationClick = (id: string) => {
+        markAsRead(id);
+        setShowUndo(false);
+        setUndoIds([]);
+    };
+
+    // Header actions
+    const headerActions = useMemo(() => (
+        showUndo ? (
+            <GoabButton
+                type="tertiary"
+                size="compact"
+                onClick={handleUndo}
+            >
+                Undo
+            </GoabButton>
+        ) : (
+            <GoabButton
+                type="tertiary"
+                size="compact"
+                disabled={unreadCount === 0}
+                onClick={handleMarkAllAsRead}
+            >
+                Mark all as read
+            </GoabButton>
+        )
+    ), [showUndo, unreadCount]);
+
+    // Header tabs
+    const headerTabs = useMemo(() => (
+        <GoabTabs
+            initialTab={1}
+            updateUrl={false}
+            mb="none"
+            stackOnMobile={false}
+            onChange={(detail) => setActiveTab(detail.tab)}
+        >
+            <GoabTab heading={<>Unread {unreadCount > 0 && <GoabBadge type="default" content={`${unreadCount}`} emphasis="subtle" version="2" />}</>}><></></GoabTab>
+            <GoabTab heading={<>Urgent {urgentNotifications.filter(n => !n.isRead).length > 0 && <GoabBadge type="important" content={`${urgentNotifications.filter(n => !n.isRead).length}`} emphasis="subtle" version="2" />}</>}><></></GoabTab>
+            <GoabTab heading="All"><></></GoabTab>
+        </GoabTabs>
+    ), [unreadCount, urgentNotifications.length]);
+
+    usePageHeader("All Notifications", { actions: headerActions, tabs: headerTabs });
 
     const groupNotificationsByDate = (notifications: Notification[]) => {
-        const groups: { [key: string]: Notification[] } = {
-            "Today": [],
-            "Yesterday": [],
-            "Older": []
-        };
+        const groups: { [key: string]: Notification[] } = {};
         notifications.forEach(notification => {
-            if (isToday(notification.timestamp)) {
-                groups["Today"].push(notification);
-            } else if (isYesterday(notification.timestamp)) {
-                groups["Yesterday"].push(notification);
-            } else {
-                groups["Older"].push(notification);
+            const groupLabel = getDateGroupLabel(notification.timestamp);
+            if (!groups[groupLabel]) {
+                groups[groupLabel] = [];
             }
+            groups[groupLabel].push(notification);
         });
-        return groups;
-    }
+
+        const orderedGroups: { [key: string]: Notification[] } = {};
+        if (groups["Today"]) orderedGroups["Today"] = groups["Today"];
+        if (groups["Yesterday"]) orderedGroups["Yesterday"] = groups["Yesterday"];
+
+        const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        weekdays.forEach(day => {
+            if (groups[day]) orderedGroups[day] = groups[day];
+        });
+
+        const fullDateGroups = Object.keys(groups).filter(
+            key => !["Today", "Yesterday", ...weekdays].includes(key)
+        );
+        fullDateGroups.forEach(dateGroup => {
+            orderedGroups[dateGroup] = groups[dateGroup];
+        });
+
+        return orderedGroups;
+    };
 
     const renderNotificationCard = (notification: Notification) => {
         const badge = notification.badgeContent ? (
-            <GoabBadge type={notification.badgeType} content={notification.badgeContent}></GoabBadge>
+            <GoabBadge type={notification.badgeType} content={notification.badgeContent} emphasis="subtle"/>
         ) : undefined;
+
         return (
-            <GoaxWorkSideNotificationCard id={notification.id}
-                                          key={notification.id}
-                                          type={notification.type}
-                                          title={notification.title}
-                                          description={notification.description}
-                                          timestamp={notification.timestamp}
-                                          unread={!notification.isRead}
-                                          badge={badge}
-                                          onClick={() => markAsRead(notification.id)}></GoaxWorkSideNotificationCard>
+            <GoaxWorkSideNotificationCard
+                id={notification.id}
+                key={notification.id}
+                type={notification.type}
+                title={notification.title}
+                description={notification.description}
+                timestamp={notification.timestamp}
+                unread={!notification.isRead}
+                urgent={notification.isUrgent}
+                badge={badge}
+                onClick={() => handleNotificationClick(notification.id)}
+            />
         );
-    }
+    };
 
     const renderGroupedNotifications = (notifications: Notification[]) => {
         const grouped = groupNotificationsByDate(notifications);
         return (
             <>
-                {Object.entries(grouped).map(([dateGroup, notifications]) => (
-                    <div key={dateGroup}>
-                        <GoabText tag={"h3"} size={"heading-s"} color={"secondary"} mb={"m"} ml={"l"}>
-                            {dateGroup}
-                        </GoabText>
-                        {notifications.map((notification: Notification) => renderNotificationCard(notification))}
-                    </div>
+                {Object.entries(grouped).map(([dateGroup, groupNotifications]) => (
+                    groupNotifications.length > 0 && (
+                        <div key={dateGroup}>
+                            <h4 style={{
+                                font: "var(--goa-typography-heading-2xs)",
+                                color: "var(--goa-color-greyscale-600)",
+                                paddingLeft: "var(--goa-space-m)",
+                                paddingRight: "var(--goa-space-m)",
+                                marginTop: "var(--goa-space-l)",
+                                marginBottom: 0,
+                                paddingBottom: "var(--goa-space-s)",
+                                borderBottom: "1px solid var(--goa-color-greyscale-100)"
+                            }}>
+                                {dateGroup}
+                            </h4>
+                            {groupNotifications.map(renderNotificationCard)}
+                        </div>
+                    )
                 ))}
             </>
-        )
-    }
+        );
+    };
 
-    const renderNoNotifications = () => {
-        return (
-            <div style={{textAlign: "center"}}>
-                <GoabText size={"body-m"} color={"secondary"}>
-                    No notifications to display
-                </GoabText>
-            </div>
-        )
-    }
+    const renderEmptyState = (heading: string, subline: string) => (
+        <div className="notification-empty-state">
+            <img src={emptyStateIllustration} alt="" className="notification-empty-state__illustration" />
+            <span className="notification-empty-state__heading">{heading}</span>
+            <span className="notification-empty-state__subline">{subline}</span>
+        </div>
+    );
+
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 1:
+                return unreadNotifications.length > 0
+                    ? renderGroupedNotifications(unreadNotifications)
+                    : renderEmptyState("You're all caught up", "No unread notifications");
+            case 2:
+                return urgentNotifications.length > 0
+                    ? renderGroupedNotifications(urgentNotifications)
+                    : renderEmptyState("No urgent notifications", "Nothing requires your immediate attention");
+            case 3:
+                return allNotifications.length > 0
+                    ? renderGroupedNotifications(allNotifications)
+                    : renderEmptyState("No notifications", "You don't have any notifications yet");
+            default:
+                return null;
+        }
+    };
 
     return (
-        <GoabPageBlock width={"full"}>
-            <PageHeader title={"All Notifications"}  actions={
-                <GoabButtonGroup alignment={"start"}>
-                    {unreadCount > 0 && <GoabLink>
-                        <a href={"#"} onClick={(e) => {
-                            e.preventDefault();
-                            markAllAsRead();
-                        }}>Mark all as read</a>
-                    </GoabLink>}
-                    <GoabIconButton icon={"filter"} onClick={() => console.log("click")}></GoabIconButton>
-                </GoabButtonGroup>}></PageHeader>
-
-            <GoabTabs initialTab={1}>
-                <GoabTab heading={"All"}>
-                    {allNotifications.length > 0 ?
-                        renderGroupedNotifications(allNotifications) :
-                        renderNoNotifications()}
-                </GoabTab>
-
-                <GoabTab heading={
-                    <>
-                        Unread
-                        {unreadCount > 0 ?
-                            <GoabBadge type={"information"} content={`${unreadCount}`}/> : null}
-                    </>
-                }>
-                    {unreadNotifications.length > 0 ? renderGroupedNotifications(unreadNotifications) : renderNoNotifications()}
-                </GoabTab>
-
-                <GoabTab heading={
-                    <>
-                        Urgent
-                        {urgentCount > 0 ?
-                            <GoabBadge type={"important"} content={`${urgentCount}`}/> : null}
-                    </>
-                }>
-                    {urgentCount > 0 ? renderGroupedNotifications(urgentNotifications) : renderNoNotifications()}
-                </GoabTab>
-
-            </GoabTabs>
-        </GoabPageBlock>
+        <div style={{padding: "16px var(--goa-space-xl) var(--goa-space-xl) var(--goa-space-xl)"}}>
+            <div
+                className="notifications-page-content"
+                style={{
+                    border: "1px solid #e7e7e7",
+                    borderRadius: "16px",
+                    overflow: "hidden"
+                }}
+            >
+                {renderTabContent()}
+            </div>
+        </div>
     );
 }
