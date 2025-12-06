@@ -6,9 +6,9 @@ import { SearchResult, TypeBadgeProps } from "../types/SearchResult";
  */
 export const getTypeBadgeProps = (type: SearchResult['type']): TypeBadgeProps => {
   const badgeMap: Record<SearchResult['type'], TypeBadgeProps> = {
-    client: { type: 'information', content: 'Client' },
-    application: { type: 'success', content: 'Application' },
-    document: { type: 'midtone', content: 'Document' }
+    client: { type: 'lilac', content: 'Client' },
+    application: { type: 'pasture', content: 'Application' },
+    document: { type: 'sky', content: 'Document' }
   };
   return badgeMap[type];
 };
