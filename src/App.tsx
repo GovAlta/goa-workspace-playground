@@ -47,11 +47,26 @@ function WorkspaceContent() {
   );
 }
 
+const MENU_STATE_KEY = 'workspace-menu-open';
+
+function getInitialMenuState(): boolean {
+  // On mobile, always start closed
+  if (window.innerWidth < MOBILE_BREAKPOINT) {
+    return false;
+  }
+  // On desktop, check localStorage for saved preference
+  const saved = localStorage.getItem(MENU_STATE_KEY);
+  if (saved !== null) {
+    return saved === 'true';
+  }
+  // Default to open on desktop
+  return true;
+}
+
 export function App() {
   const navigate = useNavigate();
 
-  // On mobile (< MOBILE_BREAKPOINT), start with menu closed; on desktop, start with menu open
-  const [menuOpen, setMenuOpen] = useState(window.innerWidth >= MOBILE_BREAKPOINT);
+  const [menuOpen, setMenuOpen] = useState(getInitialMenuState);
   const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BREAKPOINT);
 
   const { getUnreadCount } = useNotifications();
@@ -64,21 +79,34 @@ export function App() {
   };
 
   // Single resize handler - manages both isMobile state and menu visibility
+  // Closes menu when window shrinks to give more room for content
   useEffect(() => {
+    let previousWidth = window.innerWidth;
+
     const handleResize = () => {
       const width = window.innerWidth;
       const mobile = width < MOBILE_BREAKPOINT;
 
       setIsMobile(mobile);
 
-      if (mobile) {
+      // Close menu when window shrinks (any direction, not just crossing mobile breakpoint)
+      if (width < previousWidth) {
         setMenuOpen(false);
       }
+
+      previousWidth = width;
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Persist menu state to localStorage (desktop only)
+  useEffect(() => {
+    if (!isMobile) {
+      localStorage.setItem(MENU_STATE_KEY, String(menuOpen));
+    }
+  }, [menuOpen, isMobile]);
 
   console.log('[App] Rendering, menuOpen:', menuOpen, 'isMobile:', isMobile);
 
