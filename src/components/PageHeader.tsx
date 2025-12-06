@@ -7,16 +7,18 @@ import { useScrollState } from '../contexts/ScrollStateContext';
 interface PageHeaderProps {
   title?: string;
   actions?: React.ReactNode;
+  tabs?: React.ReactNode;
 }
 
-export function PageHeader({ title: propTitle, actions: propActions }: PageHeaderProps) {
+export function PageHeader({ title: propTitle, actions: propActions, tabs: propTabs }: PageHeaderProps) {
   const { isMobile, setMenuOpen } = useMenu();
-  const { title: contextTitle, actions: contextActions } = usePageHeaderContext();
+  const { title: contextTitle, actions: contextActions, tabs: contextTabs } = usePageHeaderContext();
   const { scrollPosition, isScrollable } = useScrollState();
 
   // Use props if provided, otherwise use context
   const title = propTitle ?? contextTitle;
   const actions = propActions ?? contextActions;
+  const tabs = propTabs ?? contextTabs;
 
   // Derive header state from scroll position
   // Collapsed when scrolled into middle or bottom
@@ -30,7 +32,8 @@ export function PageHeader({ title: propTitle, actions: propActions }: PageHeade
   const headerClasses = [
     'page-header',
     isCollapsed ? 'page-header--collapsed' : 'page-header--expanded',
-    isScrollable && scrollPosition ? `page-header--${scrollPosition.replace('-', '')}` : ''
+    isScrollable && scrollPosition ? `page-header--${scrollPosition.replace('-', '')}` : '',
+    tabs ? 'page-header--with-tabs' : ''
   ].filter(Boolean).join(' ');
 
   return (
@@ -63,6 +66,11 @@ export function PageHeader({ title: propTitle, actions: propActions }: PageHeade
             <div className="page-header__actions">{actions}</div>
           )}
         </div>
+        {tabs && (
+          <div className="page-header__tabs" style={{"--goa-tabs-margin-bottom": "0"} as React.CSSProperties}>
+            {tabs}
+          </div>
+        )}
     </div>
   );
 }
