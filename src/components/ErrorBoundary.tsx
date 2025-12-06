@@ -1,6 +1,6 @@
-import { ReactNode, useState, useCallback } from "react";
+import { ReactNode, useCallback } from "react";
 import { ErrorBoundary as ReactErrorBoundary, FallbackProps } from "react-error-boundary";
-import { GoabButton, GoabText, GoabBlock } from "@abgov/react-components";
+import { GoabButton, GoabText, GoabIcon } from "@abgov/react-components";
 
 interface ErrorBoundaryProps {
     children: ReactNode;
@@ -9,25 +9,48 @@ interface ErrorBoundaryProps {
 
 /**
  * Default fallback component shown when an error occurs.
+ * Uses the same styling as ErrorPage for consistency.
  */
 function DefaultFallback({ error, resetErrorBoundary }: FallbackProps) {
     return (
-        <GoabBlock gap="l" mt="3xl" mb="3xl" alignment="center">
-            <GoabText tag="h2" size="heading-m">
-                Something went wrong
-            </GoabText>
-            <GoabText>
-                An unexpected error occurred. Please try again or contact support if the problem persists.
-            </GoabText>
-            {error && (
-                <GoabText size="body-s" mt="m">
-                    Error: {error.message}
+        <div className="error-page">
+            <div className="error-page-content">
+                {/* Icon with circular background */}
+                <div className="error-page-icon-wrapper">
+                    <GoabIcon type="warning" size="xlarge" />
+                </div>
+
+                {/* Error label */}
+                <GoabText size="body-m" mt="m" mb="none" color="secondary">
+                    Application error
                 </GoabText>
-            )}
-            <GoabButton type="primary" onClick={resetErrorBoundary}>
-                Try again
-            </GoabButton>
-        </GoabBlock>
+
+                {/* Blue underline */}
+                <div className="error-page-underline" />
+
+                {/* Main heading */}
+                <GoabText tag="h1" size="heading-l" mt="xl" mb="none">
+                    Something went wrong
+                </GoabText>
+
+                {/* Description */}
+                <GoabText size="body-m" mt="l" mb="none" style={{ maxWidth: '500px', textAlign: 'center' }}>
+                    An unexpected error occurred. Please try again or contact support if the problem persists.
+                </GoabText>
+
+                {/* Error details (development only) */}
+                {error && (
+                    <GoabText size="body-xs" mt="m" mb="none" color="secondary" style={{ maxWidth: '500px', textAlign: 'center' }}>
+                        {error.message}
+                    </GoabText>
+                )}
+
+                {/* Action button */}
+                <GoabButton type="primary" size="compact" mt="xl" onClick={resetErrorBoundary}>
+                    Try again
+                </GoabButton>
+            </div>
+        </div>
     );
 }
 
