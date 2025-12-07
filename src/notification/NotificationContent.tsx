@@ -1,5 +1,5 @@
 import {useState, useRef, useCallback, useEffect} from "react";
-import {GoabBadge, GoabIconButton, GoabTab, GoabTabs, GoabText} from "@abgov/react-components";
+import {GoabBadge, GoabIconButton, GoabLink, GoabTab, GoabTabs, GoabText} from "@abgov/react-components";
 import {useNotifications} from "../contexts/NotificationContext";
 import {useNavigate} from "react-router-dom";
 import {Notification} from "../types/Notification";
@@ -61,10 +61,6 @@ export const NotificationContent = () => {
     }, [activeTab]);
 
     // Event handlers
-    const handleClose = () => {
-        scrollRef.current?.dispatchEvent(new CustomEvent('close', {bubbles: true}));
-    };
-
     const handleMarkAllAsRead = () => {
         const ids = markAllAsRead();
         if (ids.length > 0) {
@@ -152,17 +148,19 @@ export const NotificationContent = () => {
             }}
         >
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <a
-                    href="#"
-                    className="notification-action-link"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        navigate("/notifications");
-                        handleClose();
-                    }}
-                >
-                    See all notifications
-                </a>
+                <GoabLink action="close">
+                    <a
+                        href="#"
+                        className="notification-action-link"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            navigate("/notifications");
+                        }}
+                    >
+                        See all notifications
+                    </a>
+                </GoabLink>
+
                 {showUndo ? (
                     <a
                         href="#"
@@ -242,7 +240,7 @@ export const NotificationContent = () => {
                             size="medium"
                             variant="dark"
                             mr="s"
-                            onClick={handleClose}
+                            action="close"
                         />
                     </div>
                 )}

@@ -694,15 +694,12 @@ goa-work-side-menu goa-tabs {
   --goa-tabs-margin-bottom: 0;
 }
 
-/* Notification centre action links (no underline by default) */
+/* Notification centre action links */
 .notification-action-link {
   color: var(--goa-color-text-default);
-  text-decoration: none;
-  font: var(--goa-typography-body-s);
 }
 .notification-action-link:hover {
   color: var(--goa-color-interactive-hover);
-  text-decoration: underline;
 }
 
 /* Header shadow - appears when content scrolls behind */
