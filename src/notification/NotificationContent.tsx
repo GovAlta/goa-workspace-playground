@@ -162,34 +162,38 @@ export const NotificationContent = () => {
                 </GoabLink>
 
                 {showUndo ? (
-                    <a
-                        href="#"
-                        className="notification-action-link"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleUndo();
-                        }}
-                    >
-                        Undo
-                    </a>
+                    <GoabLink>
+                        <a
+                            href="#"
+                            className="notification-action-link"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleUndo();
+                            }}
+                        >
+                            Undo
+                        </a>
+                    </GoabLink>
                 ) : (
-                    <a
-                        href="#"
-                        className="notification-action-link"
-                        tabIndex={unreadCount === 0 ? -1 : 0}
-                        aria-disabled={unreadCount === 0}
-                        style={{
-                            opacity: unreadCount === 0 ? 0.5 : 1,
-                            cursor: unreadCount === 0 ? "not-allowed" : "pointer",
-                            pointerEvents: unreadCount === 0 ? "none" : "auto",
-                        }}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleMarkAllAsRead();
-                        }}
-                    >
-                        Mark all as read
-                    </a>
+                    <GoabLink>
+                        <a
+                            href="#"
+                            className="notification-action-link"
+                            tabIndex={unreadCount === 0 ? -1 : 0}
+                            aria-disabled={unreadCount === 0}
+                            style={{
+                                opacity: unreadCount === 0 ? 0.5 : 1,
+                                cursor: unreadCount === 0 ? "not-allowed" : "pointer",
+                                pointerEvents: unreadCount === 0 ? "none" : "auto",
+                            }}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleMarkAllAsRead();
+                            }}
+                        >
+                            Mark all as read
+                        </a>
+                    </GoabLink>
                 )}
             </div>
         </div>
