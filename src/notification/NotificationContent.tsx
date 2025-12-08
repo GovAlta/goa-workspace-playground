@@ -1,5 +1,5 @@
 import {useState, useRef, useCallback, useEffect} from "react";
-import {GoabBadge, GoabIconButton, GoabLink, GoabTab, GoabTabs, GoabText} from "@abgov/react-components";
+import {GoabBadge, GoabDataGrid, GoabIconButton, GoabLink, GoabTab, GoabTabs, GoabText} from "@abgov/react-components";
 import {useNotifications} from "../contexts/NotificationContext";
 import {useNavigate} from "react-router-dom";
 import {Notification} from "../types/Notification";
@@ -84,22 +84,25 @@ export const NotificationContent = () => {
     const renderGroupedNotifications = (notifications: Notification[]) => {
         const grouped = groupNotificationsByDate(notifications);
         return (
-            <>
+            <GoabDataGrid keyboardNav="table" keyboardIcon={false}>
                 {Object.entries(grouped).map(([dateGroup, items]) => (
                     items.length > 0 && (
                         <div key={dateGroup}>
                             <DateGroupHeader label={dateGroup}/>
                             {items.map(notification => (
-                                <NotificationCard
-                                    key={notification.id}
-                                    notification={notification}
-                                    onClick={handleNotificationClick}
-                                />
+                                <div key={notification.id} data-grid="row">
+                                    <div data-grid="cell">
+                                        <NotificationCard
+                                            notification={notification}
+                                            onClick={handleNotificationClick}
+                                        />
+                                    </div>
+                                </div>
                             ))}
                         </div>
                     )
                 ))}
-            </>
+            </GoabDataGrid>
         );
     };
 
