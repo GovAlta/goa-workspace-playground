@@ -535,50 +535,12 @@ export function ClientsPage() {
                                                 {client.priority === 'high' ? 'Requires immediate attention' : client.priority ? 'Standard processing' : '—'}
                                             </td>
                                             <td data-grid="cell" className="goa-table-cell--actions">
-                                                {/*<GoabMenuButton leadingIcon={"ellipsis-horizontal"} */}
-                                                {/*                onAction={(e: GoabMenuButtonOnActionDetail) => onMenuActionButton(e.action, client.id)}>*/}
-                                                {/*    <GoabMenuAction text={"View client"} action={"view"}></GoabMenuAction>*/}
-                                                {/*    <GoabMenuAction text={"Edit"} action={"edit"}></GoabMenuAction>*/}
-                                                {/*    <GoabMenuAction text={"Delete"} icon={"trash"} action={"delete"}></GoabMenuAction>*/}
-                                                {/*</GoabMenuButton>*/}
-                                                <div className="row-action-wrapper">
-                                                    <GoabPopover
-                                                        padded={true}
-                                                        minWidth="0"
-                                                        position="right"
-                                                        target={
-                                                            <button
-                                                                className="row-action-trigger"
-                                                                aria-label={`Actions for ${client.name}`}
-                                                            >
-                                                                <GoabIcon type="ellipsis-horizontal" theme="filled"
-                                                                          size="medium"/>
-                                                            </button>
-                                                        }
-                                                    >
-                                                        <div className="row-action-menu">
-                                                            <button
-                                                                className="row-action-menu__item"
-                                                                onClick={(e) => handleRowAction('view', client.id, e.nativeEvent)}
-                                                            >
-                                                                View client
-                                                            </button>
-                                                            <button
-                                                                className="row-action-menu__item"
-                                                                onClick={(e) => handleRowAction('edit', client.id, e.nativeEvent)}
-                                                            >
-                                                                Edit
-                                                            </button>
-                                                            <button
-                                                                className="row-action-menu__item row-action-menu__item--destructive"
-                                                                onClick={(e) => handleRowAction('delete', client.id, e.nativeEvent)}
-                                                            >
-                                                                <GoabIcon type="trash" size="small"/>
-                                                                Delete
-                                                            </button>
-                                                        </div>
-                                                    </GoabPopover>
-                                                </div>
+                                                <GoabMenuButton leadingIcon={"ellipsis-horizontal"} size="compact"
+                                                                onAction={(e: GoabMenuButtonOnActionDetail) => onMenuActionButton(e.action, client.id)}>
+                                                    <GoabMenuAction text={"View client"} action={"view"}></GoabMenuAction>
+                                                    <GoabMenuAction text={"Edit"} action={"edit"}></GoabMenuAction>
+                                                    <GoabMenuAction text={"Delete"} icon={"trash"} action={"delete"} variant={"destructive"}></GoabMenuAction>
+                                                </GoabMenuButton>
                                             </td>
                                         </tr>
                                     ))
