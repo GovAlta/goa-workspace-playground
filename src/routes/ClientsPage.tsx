@@ -535,7 +535,7 @@ export function ClientsPage() {
                                                 {client.priority === 'high' ? 'Requires immediate attention' : client.priority ? 'Standard processing' : '—'}
                                             </td>
                                             <td data-grid="cell" className="goa-table-cell--actions">
-                                                <GoabMenuButton leadingIcon={"ellipsis-horizontal"} size="compact"
+                                                <GoabMenuButton leadingIcon={"ellipsis-horizontal"} leadingIconTheme={"filled"} size="compact"
                                                                 onAction={(e: GoabMenuButtonOnActionDetail) => onMenuActionButton(e.action, client.id)}>
                                                     <GoabMenuAction text={"View client"} action={"view"}></GoabMenuAction>
                                                     <GoabMenuAction text={"Edit"} action={"edit"}></GoabMenuAction>
