@@ -13,9 +13,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@abgov/react-components": "/Users/tom/Projects/Design-system/ui-components/dist/libs/react-components",
-    "@abgov/ui-components-common": "/Users/tom/Projects/Design-system/ui-components/dist/libs/common",
-    "@abgov/web-components": "/Users/tom/Projects/Design-system/ui-components/dist/libs/web-components",
+    "@abgov/react-components": "/Users/thytran142/WebstormProjects/ui-components/dist/libs/react-components",
+    "@abgov/ui-components-common": "/Users/thytran142/WebstormProjects/ui-components/dist/libs/common",
+    "@abgov/web-components": "/Users/thytran142/WebstormProjects/ui-components/dist/libs/web-components",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-error-boundary": "^4.1.2",
