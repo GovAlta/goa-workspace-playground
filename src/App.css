@@ -793,3 +793,96 @@ goa-drawer goa-tabs {
   color: var(--goa-color-greyscale-500);
 }
 
+/* ============================================================================
+   VIEW TOGGLE - Table/Card view switcher
+   ============================================================================ */
+
+.view-toggle {
+  display: flex;
+  gap: var(--goa-space-2xs);
+  padding: var(--goa-space-2xs);
+  background-color: var(--goa-color-greyscale-100);
+  border-radius: var(--goa-border-radius-m);
+}
+
+/* ============================================================================
+   CLIENT CARD VIEW - Card-based display for clients using GoabContainer
+   ============================================================================ */
+
+.clients-card-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-m);
+  position: relative;
+}
+
+/* Ensure GoabDataGrid keyboard navigation indicator is not clipped in card view */
+.clients-content-padding goa-data-grid {
+  overflow: visible;
+}
+
+/* Title slot content - name and badges */
+.client-card__title {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-s);
+  flex-wrap: wrap;
+}
+
+.client-card__name {
+  font: var(--goa-typography-heading-s);
+  color: var(--goa-color-interactive-default);
+  text-decoration: none;
+}
+
+.client-card__name:hover {
+  text-decoration: underline;
+}
+
+/* Actions slot content - View link and menu */
+.client-card__header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-m);
+}
+
+/* Body content - field rows */
+.client-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-l);
+}
+
+.client-card__row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--goa-space-m) var(--goa-space-xl);
+}
+
+.client-card__row--4col {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Responsive grid for card content on smaller screens */
+@media (max-width: 623px) {
+  .client-card__row,
+  .client-card__row--4col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.client-card__label {
+  font: var(--goa-typography-body-xs);
+  color: var(--goa-color-text-secondary);
+}
+
+.client-card__value {
+  font: var(--goa-typography-body-s);
+  color: var(--goa-color-text-default);
+}
+
+/* Skeleton loading state */
+.client-card--skeleton {
+  pointer-events: none;
+}
+

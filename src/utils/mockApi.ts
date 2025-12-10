@@ -3,7 +3,7 @@
  * This helps demonstrate loading states in the template.
  */
 
-const DEFAULT_DELAY_MS = 1500;
+const DEFAULT_DELAY_MS = 1000;
 
 /**
  * Simulates a network request with configurable delay.

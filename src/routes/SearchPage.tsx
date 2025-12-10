@@ -5,31 +5,28 @@ import {
   GoabInput,
   GoabButton,
   GoabFilterChip,
-  GoabTable,
-  GoabTableSortHeader,
   GoabBadge,
-  GoabDataGrid,
-  GoabCircularProgress,
   GoabBlock,
   GoabIcon,
 } from "@abgov/react-components";
-import { SearchResult, SortConfig } from "../types/SearchResult";
+import { SearchResult } from "../types/SearchResult";
+import { TableColumn } from "../types/TableColumn";
 import mockData from "../data/mockSearchResults.json";
-import { filterData, sortData, getEventValue, getEventKey } from "../utils/searchUtils";
+import { filterData, sortData, getEventKey } from "../utils/searchUtils";
 import { getTypeBadgeProps } from "../utils/badgeUtils";
-import { GoabInputOnChangeDetail } from "@abgov/ui-components-common";
+import { GoabInputOnChangeDetail, GoabTableOnSortDetail } from "@abgov/ui-components-common";
 import { usePageHeader } from "../contexts/PageHeaderContext";
 import { useMenu } from "../contexts/MenuContext";
-import { ScrollContainer } from "../components/ScrollContainer";
 import { mockFetch } from "../utils/mockApi";
 import emptyStateIllustration from "../assets/empty-state-illustration.svg";
+import { DataTable } from "../components/DataTable";
 
 export function SearchPage() {
   const { isMobile } = useMenu();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchErrorMessage, setSearchErrorMessage] = useState('');
   const [typedChips, setTypedChips] = useState<string[]>([]);
-  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: '', direction: 'none' });
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' | 'none' }>({ key: '', direction: 'none' });
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -65,10 +62,10 @@ export function SearchPage() {
     setSearchErrorMessage("");
   }, [searchKeyword, typedChips]);
 
-  const handleSort = useCallback((event: CustomEvent | { detail: { sortBy: string; sortDir: number } }) => {
-    const { sortBy, sortDir } = event.detail || event;
+  const handleSort = useCallback((event: GoabTableOnSortDetail) => {
+    const { sortBy, sortDir } = event;
     setSortConfig({
-      key: sortBy as keyof SearchResult,
+      key: sortBy,
       direction: sortDir === 1 ? 'asc' : sortDir === -1 ? 'desc' : 'none'
     });
   }, []);
@@ -120,6 +117,68 @@ export function SearchPage() {
 
   usePageHeader("Search", headerActions);
 
+  // Table column definitions
+  const searchColumns: TableColumn<SearchResult>[] = useMemo(() => [
+    {
+      key: 'name',
+      header: 'Name',
+      type: 'link',
+      render: (result) => (
+        <Link to={`/client/${result.id}`} className="table-row-link">
+          {result.name}
+        </Link>
+      ),
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      type: 'badge',
+      sortable: true,
+      render: (result) => (
+        <GoabBadge type={result.status} content={result.statusText} emphasis="subtle" icon={true} />
+      ),
+    },
+    {
+      key: 'staff',
+      header: 'Staff',
+      type: 'text',
+      render: (result) => result.staff,
+    },
+    {
+      key: 'dueDate',
+      header: 'Due date',
+      type: 'text',
+      sortable: true,
+      render: (result) => result.dueDate,
+    },
+    {
+      key: 'fileNumber',
+      header: 'File number',
+      type: 'text',
+      render: (result) => result.fileNumber,
+    },
+    {
+      key: 'type',
+      header: 'Type',
+      type: 'badge',
+      sortable: true,
+      render: (result) => (
+        <GoabBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" icon={true} />
+      ),
+    },
+  ], []);
+
+  const emptyStateContent = (
+    <div className="clients-empty-state">
+      <img src={emptyStateIllustration} alt="" className="clients-empty-state__illustration" />
+      <span className="clients-empty-state__heading">No results found</span>
+      <span className="clients-empty-state__subline">Try adjusting your search or filters.</span>
+      <GoabButton type="tertiary" size="compact" onClick={clearAllChips}>
+        Clear filters
+      </GoabButton>
+    </div>
+  );
+
   return (
     <div style={{maxWidth: "100%", overflow: "hidden", paddingBottom: "32px"}}>
       <div className="clients-content-padding">
@@ -139,81 +198,30 @@ export function SearchPage() {
           </div>
         )}
       </div>
-      {isLoading ? (
-        <div className="clients-content-padding">
-          <div className="clients-loading-state">
-            <GoabCircularProgress variant="inline" size="small" message="Loading search results..." visible={true} />
-          </div>
-        </div>
-      ) : (
-          <>
-            <ScrollContainer>
-                <div className="table-wrapper">
-                    <GoabDataGrid keyboardNav="table" keyboardIconPosition="right">
-                        <GoabTable width="100%" onSort={handleSort} variant={isMobile ? "normal" : "relaxed"} striped={true}>
-                            <thead>
-                            <tr data-grid="row">
-                                <th data-grid="cell">Name</th>
-                                <th data-grid="cell"><GoabTableSortHeader name="status">Status</GoabTableSortHeader></th>
-                                <th data-grid="cell">Staff</th>
-                                <th data-grid="cell"><GoabTableSortHeader name="dueDate">Due date</GoabTableSortHeader></th>
-                                <th data-grid="cell">File number</th>
-                                <th data-grid="cell"><GoabTableSortHeader name="type">Type</GoabTableSortHeader></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {filteredResults.length === 0 && searchResults.length > 0 && typedChips.length > 0 ? (
-                                <tr>
-                                    <td colSpan={6} className="clients-empty-state-cell">
-                                        <div className="clients-empty-state">
-                                            <img src={emptyStateIllustration} alt="" className="clients-empty-state__illustration"/>
-                                            <span className="clients-empty-state__heading">No results found</span>
-                                            <span className="clients-empty-state__subline">Try adjusting your search or filters.</span>
-                                            <GoabButton type="tertiary" size="compact" onClick={clearAllChips}>
-                                                Clear filters
-                                            </GoabButton>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ) : (
-                                filteredResults.map((result) => (
-                                    <tr key={result.id} data-grid="row">
-                                        <td data-grid="cell" className="goa-table-cell--text" style={{whiteSpace: 'nowrap'}}>
-                                            <Link to={`/client/${result.id}`} className="table-row-link">
-                                                {result.name}
-                                            </Link>
-                                        </td>
-                                        <td data-grid="cell" className="goa-table-cell--badge"><GoabBadge type={result.status} content={result.statusText} emphasis="subtle" version="2" /></td>
-                                        <td data-grid="cell" className="goa-table-cell--text">{result.staff}</td>
-                                        <td data-grid="cell" className="goa-table-cell--text">{result.dueDate}</td>
-                                        <td data-grid="cell" className="goa-table-cell--text">{result.fileNumber}</td>
-                                        <td data-grid="cell" className="goa-table-cell--badge">
-                                            <GoabBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" version="2" />
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                            </tbody>
-                        </GoabTable>
-                    </GoabDataGrid>
-                </div>
-            </ScrollContainer>
+      <DataTable
+        columns={searchColumns}
+        data={filteredResults}
+        isLoading={isLoading}
+        skeletonRows={10}
+        onSort={handleSort}
+        sortConfig={sortConfig}
+        emptyState={searchResults.length > 0 && typedChips.length > 0 ? emptyStateContent : undefined}
+        getRowKey={(result) => result.id}
+      />
 
-            {searchResults.length === 0 && (
-              <GoabBlock mt="l" mb="l" alignment="center">
-                <GoabText size="body-m" mt="none" mb="s">No search results available</GoabText>
-                <GoabText size="body-s" mt="none" mb="none">All results have been deleted</GoabText>
-              </GoabBlock>
-            )}
+      {!isLoading && searchResults.length === 0 && (
+        <GoabBlock mt="l" mb="l" alignment="center">
+          <GoabText size="body-m" mt="none" mb="s">No search results available</GoabText>
+          <GoabText size="body-s" mt="none" mb="none">All results have been deleted</GoabText>
+        </GoabBlock>
+      )}
 
-            {searchResults.length > 0 && filteredResults.length === 0 && typedChips.length === 0 && (
-              <GoabBlock mt="l" mb="l" alignment="center">
-                <GoabText size="body-m" mt="none" mb="s">Start typing to search across all records</GoabText>
-                <GoabText size="body-s" mt="none" mb="none">Search clients, applications, documents, and more</GoabText>
-              </GoabBlock>
-            )}
-          </>
-        )}
+      {!isLoading && searchResults.length > 0 && filteredResults.length === 0 && typedChips.length === 0 && (
+        <GoabBlock mt="l" mb="l" alignment="center">
+          <GoabText size="body-m" mt="none" mb="s">Start typing to search across all records</GoabText>
+          <GoabText size="body-s" mt="none" mb="none">Search clients, applications, documents, and more</GoabText>
+        </GoabBlock>
+      )}
     </div>
   );
 }
