@@ -132,6 +132,7 @@ export const NotificationContent = () => {
             updateUrl={false}
             mb="none"
             stackOnMobile={stackOnMobile}
+            variant="segmented"
             onChange={(detail) => setActiveTab(detail.tab)}
             {...(!isMobile && {ml: "m", mr: "m"})}
         >
@@ -151,24 +152,22 @@ export const NotificationContent = () => {
             }}
         >
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <GoabLink action="close">
+                <GoabLink action="close" color="dark">
                     <a
                         href="#"
-                        className="notification-action-link"
                         onClick={(e) => {
                             e.preventDefault();
                             navigate("/notifications");
                         }}
                     >
-                        See all notifications
+                        View all
                     </a>
                 </GoabLink>
 
                 {showUndo ? (
-                    <GoabLink>
+                    <GoabLink color="dark">
                         <a
                             href="#"
-                            className="notification-action-link"
                             onClick={(e) => {
                                 e.preventDefault();
                                 handleUndo();
@@ -178,10 +177,9 @@ export const NotificationContent = () => {
                         </a>
                     </GoabLink>
                 ) : (
-                    <GoabLink>
+                    <GoabLink color="dark">
                         <a
                             href="#"
-                            className="notification-action-link"
                             tabIndex={unreadCount === 0 ? -1 : 0}
                             aria-disabled={unreadCount === 0}
                             style={{

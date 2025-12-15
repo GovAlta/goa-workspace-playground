@@ -7,7 +7,7 @@ export interface SearchResult {
   fileNumber: string;
   status: 'information' | 'success' | 'important' | 'emergency';
   statusText: string;
-  type: 'client' | 'application' | 'document';
+  type: 'client' | 'case' | 'application' | 'document';
   selected: boolean;
 }
 
@@ -18,7 +18,7 @@ export interface SortConfig {
   direction: SortDirection;
 }
 
-export type BadgeType = 'information' | 'success' | 'important' | 'emergency' | 'midtone';
+export type BadgeType = 'information' | 'success' | 'important' | 'emergency' | 'midtone' | 'sky' | 'prairie' | 'lilac' | 'pasture' | 'sunset' | 'dawn';
 
 export interface TypeBadgeProps {
   type: BadgeType;

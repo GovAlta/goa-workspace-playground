@@ -39,10 +39,9 @@
   font-weight: var(--goa-font-weight-semi-bold, 600);
 }
 
+/* Only underline on direct link hover, not row hover */
 .table-row-link:hover,
-.table-row-link:visited:hover,
-tr:hover .table-row-link,
-tr:hover .table-row-link:visited {
+.table-row-link:visited:hover {
   text-decoration: underline;
   color: var(--goa-color-text-default);
 }
@@ -110,14 +109,14 @@ tr:hover .table-row-link:visited {
 
 /* Content padding - responsive left/right padding */
 /* Also serves as container query context for child layouts */
-.clients-content-padding {
+.cases-content-padding {
   container-type: inline-size;
   padding-left: 16px;
   padding-right: 16px;
 }
 
 @media (min-width: 624px) {
-  .clients-content-padding {
+  .cases-content-padding {
     padding-left: 32px;
     padding-right: 32px;
   }
@@ -137,7 +136,7 @@ tr:hover .table-row-link:visited {
 }
 
 /* Filter section - contains search input and filter button */
-.clients-filter-section {
+.cases-filter-section {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -149,69 +148,95 @@ tr:hover .table-row-link:visited {
 
 /* Container query: Stack search above tabs when container is narrow */
 @container (max-width: 960px) {
-  .clients-filter-section {
+  .cases-filter-section {
     flex-direction: column-reverse;
     gap: var(--goa-space-s);
   }
 
-  .clients-filter-section goa-form-item {
+  .cases-filter-section goa-form-item {
     max-width: none !important;
     width: 100%;
   }
 
-  .clients-filter-section goa-tabs {
+  .cases-filter-section goa-tabs {
     width: 100%;
   }
 }
 
 /* Mobile: Fix spacing when in mobile viewport */
 @media (max-width: 623px) {
-  .clients-filter-section {
+  .cases-filter-section {
     margin-top: 8px;
     margin-bottom: 8px;
     gap: 16px;
   }
 }
 
-.clients-filter-section goa-form-item {
+.cases-filter-section goa-form-item {
   flex: 1;
   max-width: 80ch;
 }
 
-.clients-search-row {
+/* Toolbar row - tabs on left, search on right */
+.cases-toolbar-row {
   display: flex;
-  flex-wrap: nowrap;
-  column-gap: var(--goa-space-xl);
-  row-gap: var(--goa-space-s);
+  align-items: flex-start;
+  gap: var(--goa-space-l);
   width: 100%;
 }
 
-/* Allow search row to wrap when space is tight */
-@container (max-width: 580px) {
-  .clients-search-row {
-    flex-wrap: wrap;
+.cases-toolbar-row goa-tabs {
+  flex-shrink: 0;
+  --goa-tabs-margin-bottom: 0;
+}
+
+.cases-toolbar-row .cases-search-row {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Wrap to stacked layout when viewport is narrow */
+@media (max-width: 1000px) {
+  .cases-toolbar-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--goa-space-m);
   }
 }
 
-.clients-search-group {
+/* Hide tabs in sticky/collapsed header */
+.page-header--collapsed .cases-toolbar-row goa-tabs {
+  display: none;
+}
+
+.cases-search-row {
   display: flex;
-  flex: 1 1 280px; /* grow, shrink, min basis before wrapping */
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: var(--goa-space-m);
+  width: 100%;
+}
+
+.cases-search-group {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 120px; /* minimum search field width */
   gap: var(--goa-space-xs);
 }
 
-.clients-search-group goa-input {
+.cases-search-group goa-form-item {
   flex: 1;
-  min-width: 0; /* allow input to shrink below content size */
+  min-width: 0; /* allow form-item to shrink below content size */
 }
 
-.clients-actions-group {
+.cases-actions-group {
   display: flex;
   flex-shrink: 0;
   gap: var(--goa-space-s);
 }
 
 /* Tabs in filter section - remove bottom margin from shadow DOM */
-.clients-filter-section goa-tabs {
+.cases-filter-section goa-tabs {
   margin-bottom: -2rem; /* Counteract the internal 2rem margin */
 }
 
@@ -232,21 +257,21 @@ tr:hover .table-row-link:visited {
 }
 
 /* Filter chips container */
-.clients-chips-container {
+.cases-chips-container {
   display: flex;
   align-items: center;
   gap: var(--goa-space-s);
-  margin-top: var(--goa-space-m);
+  margin-top: 0; /* toolbar already provides 16px gap */
   margin-bottom: var(--goa-space-m);
 }
 
 /* Empty state - inside table body */
-.clients-empty-state-cell {
+.cases-empty-state-cell {
   padding: 0 !important;
   border: none !important;
 }
 
-.clients-empty-state {
+.cases-empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -256,26 +281,26 @@ tr:hover .table-row-link:visited {
   text-align: center;
 }
 
-.clients-empty-state__illustration {
+.cases-empty-state__illustration {
   width: 100px;
   height: auto;
   margin-bottom: 32px;
 }
 
-.clients-empty-state__heading {
+.cases-empty-state__heading {
   font: var(--goa-typography-heading-2xs);
   color: var(--goa-color-text-secondary);
   margin-bottom: 16px;
 }
 
-.clients-empty-state__subline {
+.cases-empty-state__subline {
   font: var(--goa-typography-body-s);
   color: var(--goa-color-greyscale-500);
   margin-bottom: 32px;
 }
 
 /* Loading state - shown while data is being fetched */
-.clients-loading-state {
+.cases-loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -464,6 +489,14 @@ tr:hover .table-row-link:visited {
     padding-bottom: 0;
   }
 
+  /* With toolbar expanded - spacing below header */
+  .desktop-card-container .page-header--with-toolbar.page-header--expanded {
+    padding-bottom: var(--goa-space-m);
+  }
+
+  /* Collapsed header with toolbar - keep equal padding (sticky header) */
+  /* The default collapsed padding (12px 32px) provides equal spacing */
+
 }
 
 /* Page header scroll shadow - gradient fade when content scrolls behind */
@@ -514,6 +547,11 @@ tr:hover .table-row-link:visited {
     padding: var(--goa-space-s) var(--goa-space-m);
     border-bottom: 1px solid var(--goa-color-greyscale-150);
   }
+
+  /* Collapsed header with toolbar - 12px gap below */
+  .page-header--collapsed.page-header--with-toolbar {
+    padding-bottom: 12px;
+  }
 }
 
 /* Header content container */
@@ -554,18 +592,158 @@ tr:hover .table-row-link:visited {
 }
 
 /* Hide spacer when actions contain expandable search */
-.page-header__content:has(.page-header-search) .page-header__spacer {
+.page-header__content:has(.page-header-search) .page-header__spacer,
+.page-header__content:has(.search-header-filters) .page-header__spacer {
   display: none;
 }
 
 /* Gap between title and search input */
-.page-header__content:has(.page-header-search) {
+.page-header__content:has(.page-header-search),
+.page-header__content:has(.search-header-filters) {
   gap: 32px;
 }
 
 @media (min-width: 624px) {
-  .page-header__content:has(.page-header-search) {
+  .page-header__content:has(.page-header-search),
+  .page-header__content:has(.search-header-filters) {
     gap: 48px;
+  }
+}
+
+/* ============================================================================
+   SEARCH PAGE HEADER
+   Desktop: inline [Search] [Dropdowns]
+   Tablet (624-700px): wrapped, search below title row
+   Mobile expanded: 3 rows - title, search, dropdowns
+   Mobile collapsed: single row - menu, search, dropdowns inline
+   ============================================================================ */
+
+/* Desktop: Search input and dropdowns inline */
+.search-header-filters {
+  display: flex;
+  gap: var(--goa-space-s);
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.search-header-filters__dropdowns {
+  display: flex;
+  gap: var(--goa-space-s);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.search-header-filters__search {
+  flex: 1;
+  min-width: 150px;
+}
+
+.page-header__actions:has(.search-header-filters) {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Tablet (624-700px): Search drops below title row */
+@media (max-width: 700px) {
+  .page-header__content:has(.search-header-filters) {
+    flex-wrap: wrap;
+    row-gap: var(--goa-space-m);
+  }
+
+  .page-header__content:has(.search-header-filters) .page-header__spacer {
+    display: none;
+  }
+
+  .page-header__actions:has(.search-header-filters) {
+    flex: 1 0 100%;
+  }
+
+  .search-header-filters {
+    flex-wrap: wrap;
+    row-gap: var(--goa-space-s);
+  }
+
+  .search-header-filters__dropdowns {
+    flex: 0 0 auto;
+  }
+
+  .search-header-filters__search {
+    flex: 1 0 100%;
+  }
+}
+
+/* All sizes: Hide title text when collapsed, remove gap */
+.page-header--collapsed .page-header__content:has(.search-header-filters) .page-header__title-container goa-text {
+  display: none;
+}
+
+.page-header--collapsed .page-header__content:has(.search-header-filters) {
+  gap: 0;
+}
+
+/* Mobile (623px and below) */
+@media (max-width: 623px) {
+  /* Expanded: 3-row grid layout */
+  .page-header__content:has(.search-header-filters) {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: var(--goa-space-s);
+    align-items: center;
+  }
+
+  .page-header__content:has(.search-header-filters) .page-header__title-container {
+    grid-row: 1;
+  }
+
+  .page-header__actions:has(.search-header-filters) {
+    display: contents;
+  }
+
+  .search-header-filters {
+    display: contents;
+  }
+
+  .search-header-filters__search {
+    grid-row: 2;
+  }
+
+  .search-header-filters__dropdowns {
+    grid-row: 3;
+    display: flex;
+    gap: var(--goa-space-s);
+  }
+
+  /* Collapsed: single row inline layout */
+  .page-header--collapsed .page-header__content:has(.search-header-filters) {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--goa-space-xs);
+  }
+
+  .page-header--collapsed .page-header__content:has(.search-header-filters) .page-header__title-container {
+    flex: 0 0 auto;
+  }
+
+  .page-header--collapsed .search-header-filters {
+    display: flex;
+    flex: 1;
+    gap: var(--goa-space-xs);
+    align-items: center;
+    min-width: 0;
+  }
+
+  .page-header--collapsed .search-header-filters__search {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .page-header--collapsed .search-header-filters__dropdowns {
+    flex: 0 0 auto;
+    display: flex;
+    gap: var(--goa-space-xs);
   }
 }
 
@@ -680,6 +858,103 @@ tr:hover .table-row-link:visited {
   padding-bottom: 0;
 }
 
+/* Page header toolbar section (search/sort/filter) */
+.page-header__toolbar {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--goa-space-s);
+  flex: 1;
+  min-width: 0;
+}
+
+.page-header__toolbar--expanded {
+  margin-top: var(--goa-space-m);
+  margin-bottom: 0;
+  padding: 0;
+}
+
+/* Toolbar search row in header */
+.page-header__toolbar .cases-search-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: var(--goa-space-m);
+  width: 100%;
+}
+
+.page-header__toolbar .cases-search-group {
+  flex: 1;
+  min-width: 120px;
+}
+
+.page-header__toolbar .cases-actions-group {
+  flex-shrink: 0;
+}
+
+/* Collapsed header with toolbar - hide title, tabs, actions */
+.page-header--collapsed.page-header--with-toolbar .page-header__title-container goa-text,
+.page-header--collapsed.page-header--with-toolbar .page-header__spacer,
+.page-header--collapsed.page-header--with-toolbar .page-header__actions,
+.page-header--collapsed.page-header--with-toolbar .page-header__tabs {
+  display: none;
+}
+
+/* Hide title on scroll option - rearranges to single row with tabs left, actions right */
+.page-header--collapsed.page-header--hide-title-on-scroll {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--goa-space-m);
+}
+
+.desktop-card-container .page-header--collapsed.page-header--hide-title-on-scroll,
+.desktop-card-container .page-header--with-tabs.page-header--collapsed.page-header--hide-title-on-scroll {
+  padding-bottom: var(--goa-space-xs);
+}
+
+/* Hide title and spacer, keep actions */
+.page-header--collapsed.page-header--hide-title-on-scroll .page-header__title-container,
+.page-header--collapsed.page-header--hide-title-on-scroll .page-header__spacer {
+  display: none;
+}
+
+/* Content container just holds actions now */
+.page-header--collapsed.page-header--hide-title-on-scroll .page-header__content {
+  order: 2;
+  flex-shrink: 0;
+}
+
+/* Tabs take left side */
+.page-header--collapsed.page-header--hide-title-on-scroll .page-header__tabs {
+  order: 1;
+  flex: 1;
+}
+
+/* Toolbar adjustments when collapsed */
+.page-header--collapsed.page-header--with-toolbar .page-header__toolbar {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Mobile collapsed: menu icon and toolbar on same row */
+@media (max-width: 623px) {
+  .page-header--collapsed.page-header--with-toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--goa-space-m);
+  }
+
+  .page-header--collapsed.page-header--with-toolbar .page-header__content {
+    flex-shrink: 0;
+  }
+
+  .page-header--collapsed.page-header--with-toolbar .page-header__toolbar {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 /* ============================================================================
    NOTIFICATION CENTRE
    ============================================================================ */
@@ -694,17 +969,10 @@ goa-work-side-menu goa-tabs {
   --goa-tabs-margin-bottom: 0;
 }
 
-/* Notification centre action links */
-.notification-action-link {
-  color: var(--goa-color-text-default);
-}
-.notification-action-link:hover {
-  color: var(--goa-color-interactive-hover);
-}
-
 /* Header shadow - appears when content scrolls behind */
 .notification-header {
   position: relative;
+  padding-bottom: var(--goa-space-xs);
 }
 
 .notification-header::after {
@@ -794,95 +1062,423 @@ goa-drawer goa-tabs {
 }
 
 /* ============================================================================
-   VIEW TOGGLE - Table/Card view switcher
+   EXPANDABLE LIST VIEW - Accordion-style rows with expand/collapse
    ============================================================================ */
 
-.view-toggle {
+.expandable-list {
   display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-xs);
+}
+
+.expandable-list__item {
+  background: white;
+  border: 1px solid var(--goa-color-greyscale-200);
+  border-radius: var(--goa-border-radius-xl);
+}
+
+.expandable-list__header {
+  display: flex;
+  align-items: flex-start;
+  padding: var(--goa-space-xs) var(--goa-space-l) var(--goa-space-xs) var(--goa-space-s);
   gap: var(--goa-space-2xs);
-  padding: var(--goa-space-2xs);
   background-color: var(--goa-color-greyscale-100);
-  border-radius: var(--goa-border-radius-m);
+  border-radius: var(--goa-border-radius-xl);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.expandable-list__header:hover {
+  background-color: var(--goa-color-greyscale-200);
+}
+
+/* When expanded, only round top corners of header */
+.expandable-list__item--expanded .expandable-list__header {
+  border-radius: var(--goa-border-radius-xl) var(--goa-border-radius-xl) 0 0;
+}
+
+.expandable-list__toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--goa-space-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--goa-border-radius-s);
+  transition: background-color 0.15s ease;
+}
+
+/* Toggle hover removed - header has hover state now */
+
+.expandable-list__toggle:focus-visible {
+  outline: 2px solid var(--goa-color-interactive-focus);
+  outline-offset: 2px;
+}
+
+.expandable-list__heading-group {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-m);
+  flex-wrap: wrap;
+  padding: var(--goa-space-xs) 0;
+}
+
+.expandable-list__title {
+  font-weight: var(--goa-font-weight-bold);
+  flex-shrink: 0;
+}
+
+.expandable-list__name {
+  font: var(--goa-typography-heading-xs);
+}
+
+/* Responsive: stack badge under name on small screens */
+@media (max-width: 623px) {
+  .expandable-list__heading-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--goa-space-xs);
+  }
+}
+
+.expandable-list__right-group {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-s);
+}
+
+.expandable-list__secondary {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-s);
+}
+
+.expandable-list__actions {
+  flex-shrink: 0;
+}
+
+.expandable-list__header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-m);
+}
+
+.expandable-list__header-actions goa-link {
+  white-space: nowrap;
+}
+
+.expandable-list__content {
+  padding: var(--goa-space-m) var(--goa-space-l) var(--goa-space-l) var(--goa-space-l);
+  border-top: 1px solid var(--goa-color-greyscale-200);
+}
+
+.expandable-list__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-m);
+}
+
+.expandable-list__detail-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--goa-space-l);
+}
+
+.expandable-list__detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-2xs);
+}
+
+.expandable-list__detail-label {
+  font: var(--goa-typography-body-xs);
+  color: var(--goa-color-text-secondary);
+}
+
+.expandable-list__detail-value {
+  font: var(--goa-typography-body-s);
+  color: var(--goa-color-text-default);
+}
+
+.expandable-list__note {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-xs);
+  padding: var(--goa-space-s) var(--goa-space-m);
+  background-color: var(--goa-color-warning-100);
+  border-radius: var(--goa-border-radius-s);
+  color: var(--goa-color-text-default);
+  font: var(--goa-typography-body-s);
 }
 
 /* ============================================================================
    CLIENT CARD VIEW - Card-based display for clients using GoabContainer
    ============================================================================ */
 
-.clients-card-grid {
+.cases-card-grid {
   display: flex;
   flex-direction: column;
-  gap: var(--goa-space-m);
+  gap: var(--goa-space-s);
   position: relative;
 }
 
 /* Ensure GoabDataGrid keyboard navigation indicator is not clipped in card view */
-.clients-content-padding goa-data-grid {
+.cases-content-padding goa-data-grid {
   overflow: visible;
 }
 
 /* Title slot content - name and badges */
-.client-card__title {
+.case-card__title {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--goa-space-s);
   flex-wrap: wrap;
+  padding: var(--goa-space-xs) 0;
 }
 
-.client-card__name {
+.case-card__name {
   font: var(--goa-typography-heading-s);
   color: var(--goa-color-interactive-default);
   text-decoration: none;
 }
 
-.client-card__name:hover {
+.case-card__name:hover {
   text-decoration: underline;
 }
 
-/* Actions slot content - View link and menu */
-.client-card__header-actions {
+/* Actions slot content - comments link and View button */
+.case-card__actions {
   display: flex;
   align-items: center;
   gap: var(--goa-space-m);
 }
 
-/* Body content - field rows */
-.client-card__body {
+.case-card__actions goa-link {
+  white-space: nowrap;
+}
+
+/* Body content - grouped sections */
+.case-card__body {
   display: flex;
   flex-direction: column;
   gap: var(--goa-space-l);
 }
 
-.client-card__row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+/* Sections container - two columns that wrap */
+.case-card__sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--goa-space-l);
+}
+
+/* Individual section */
+.case-card__section {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Section heading - gray with underline */
+.case-card__section-heading {
+  font: var(--goa-typography-heading-2xs);
+  color: var(--goa-color-greyscale-600);
+  padding-bottom: var(--goa-space-xs);
+  border-bottom: 1px solid var(--goa-color-greyscale-400);
+  margin-bottom: var(--goa-space-s);
+}
+
+/* Fields within a section */
+.case-card__section-fields {
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--goa-space-m) var(--goa-space-xl);
 }
 
-.client-card__row--4col {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-/* Responsive grid for card content on smaller screens */
-@media (max-width: 623px) {
-  .client-card__row,
-  .client-card__row--4col {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.client-card__label {
-  font: var(--goa-typography-body-xs);
+.case-card__label {
+  font: var(--goa-typography-heading-2xs);
   color: var(--goa-color-text-secondary);
 }
 
-.client-card__value {
+.case-card__value {
   font: var(--goa-typography-body-s);
   color: var(--goa-color-text-default);
 }
 
 /* Skeleton loading state */
-.client-card--skeleton {
+.case-card--skeleton {
   pointer-events: none;
+}
+
+/* ============================================================================
+   SEARCH FILTER BAR - Enhanced filter UI for Search page
+   ============================================================================ */
+
+.search-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-m);
+  margin-top: var(--goa-space-m);
+  margin-bottom: var(--goa-space-m);
+}
+
+.search-filter-bar__indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-xs);
+  color: var(--goa-color-text-secondary);
+  font: var(--goa-typography-body-s);
+}
+
+.search-filter-bar__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--goa-space-m);
+  align-items: flex-end;
+}
+
+.search-filter-bar__date-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-filter-bar__date-field goa-form-item {
+  margin-bottom: 0;
+}
+
+.search-filter-bar__search {
+  flex: 1;
+  min-width: 150px;
+}
+
+.search-filter-bar__tabs {
+  margin-top: var(--goa-space-xs);
+}
+
+.search-filter-bar__tabs goa-tabs {
+  --goa-tabs-margin-bottom: 0;
+}
+
+/* Responsive adjustments for filter bar */
+@media (max-width: 768px) {
+  .search-filter-bar__controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-filter-bar__controls > * {
+    width: 100%;
+  }
+
+  .search-filter-bar__controls goa-dropdown {
+    width: 100% !important;
+  }
+
+  .search-filter-bar__search {
+    max-width: none;
+  }
+
+  .search-filter-bar__date-field {
+    width: 100%;
+  }
+
+  .search-filter-bar__date-field goa-date-picker {
+    width: 100% !important;
+  }
+}
+
+/* ============================================================================
+   BUTTON-STYLE TABS - Tabs styled like a button group (toggle pills)
+   ============================================================================
+   Usage: Wrap GoabTabs in a div with class "tabs--button-style"
+
+   Example:
+   <div className="tabs--button-style">
+     <GoabTabs>...</GoabTabs>
+   </div>
+   ============================================================================ */
+
+.tabs--button-style goa-tabs {
+  --goa-tabs-margin-bottom: 0;
+}
+
+/* Override the tabs container - remove underline, add gap */
+.tabs--button-style goa-tabs::part(tabs),
+.tabs--button-style [role="tablist"] .tabs {
+  border-bottom: none;
+  gap: var(--goa-space-xs);
+}
+
+/* Target tabs via shadow DOM and direct styling */
+.tabs--button-style [role="tab"] {
+  /* Reset default tab styling */
+  border-bottom: none !important;
+
+  /* Button-like appearance */
+  border: 1px solid var(--goa-color-interactive-default);
+  border-radius: var(--goa-border-radius-m);
+  background: transparent;
+  padding: var(--goa-space-xs) var(--goa-space-m);
+
+  /* Typography */
+  font: var(--goa-typography-body-s);
+  font-weight: var(--goa-font-weight-regular);
+  color: var(--goa-color-interactive-default);
+
+  /* Transitions */
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Remove the ::after indicator from V2 tabs */
+.tabs--button-style [role="tab"]::after {
+  display: none !important;
+}
+
+/* Hover state - unselected */
+.tabs--button-style [role="tab"]:hover:not([aria-selected="true"]) {
+  background: var(--goa-color-interactive-hover);
+  border-color: var(--goa-color-interactive-hover);
+  color: white;
+}
+
+/* Selected state - filled button */
+.tabs--button-style [role="tab"][aria-selected="true"] {
+  background: var(--goa-color-interactive-default);
+  border-color: var(--goa-color-interactive-default);
+  color: white;
+  font-weight: var(--goa-font-weight-bold);
+}
+
+/* Focus state - accessibility */
+.tabs--button-style [role="tab"]:focus-visible {
+  outline: var(--goa-border-width-l) solid var(--goa-color-interactive-focus);
+  outline-offset: 2px;
+}
+
+/* Ensure badges inside tabs maintain proper styling */
+.tabs--button-style [role="tab"] goa-badge {
+  vertical-align: middle;
+}
+
+/* Mobile adjustments - keep horizontal for button-style tabs */
+@media (max-width: 623px) {
+  .tabs--button-style goa-tabs::part(tabs),
+  .tabs--button-style [role="tablist"] .tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-left: none;
+    padding-bottom: 0;
+  }
+
+  .tabs--button-style [role="tab"] {
+    border-left: none !important;
+    border: 1px solid var(--goa-color-interactive-default);
+    white-space: nowrap;
+  }
+
+  .tabs--button-style [role="tab"][aria-selected="true"] {
+    background: var(--goa-color-interactive-default);
+    border-left: none;
+  }
 }
 

@@ -136,9 +136,9 @@ export function App() {
 
               <GoabxWorkSideMenuItem
                   icon="list"
-                  label="Clients"
-                  url={"/clients"}
-                  onClick={() => handleNavigate("/clients")}
+                  label="Cases"
+                  url={"/cases"}
+                  onClick={() => handleNavigate("/cases")}
               />
 
               <GoabxWorkSideMenuItem

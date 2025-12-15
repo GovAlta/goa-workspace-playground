@@ -24,35 +24,79 @@ export const filterData = <T extends Record<string, unknown>>(
 };
 
 /**
- * Sort data based on a key and direction
+ * Interface for a sort level configuration
+ */
+export interface SortLevel {
+  key: string;
+  direction: 'asc' | 'desc';
+}
+
+/**
+ * Interface for two-level sort configuration
+ */
+export interface SortConfig {
+  primary: SortLevel | null;
+  secondary: SortLevel | null;
+}
+
+/**
+ * Compare two values for sorting
+ */
+const compareValues = <T>(
+  a: T,
+  b: T,
+  key: string,
+  direction: 'asc' | 'desc'
+): number => {
+  const aValue = (a as Record<string, unknown>)[key];
+  const bValue = (b as Record<string, unknown>)[key];
+  const sortDir = direction === 'asc' ? 1 : -1;
+
+  // Handle null/undefined values
+  if (aValue == null && bValue == null) return 0;
+  if (aValue == null) return 1;
+  if (bValue == null) return -1;
+
+  // Special handling for date sorting
+  if (key === 'dueDate') {
+    const aDate = new Date(aValue as string);
+    const bDate = new Date(bValue as string);
+
+    if (isNaN(aDate.getTime()) || isNaN(bDate.getTime())) {
+      return 0;
+    }
+
+    return (aDate.getTime() - bDate.getTime()) * sortDir;
+  }
+
+  // Default comparison
+  if (aValue > bValue) return 1 * sortDir;
+  if (aValue < bValue) return -1 * sortDir;
+  return 0;
+};
+
+/**
+ * Sort data based on primary and optional secondary sort configuration
  */
 export const sortData = <T extends Record<string, unknown>>(
   data: T[],
-  sortKey: keyof T | '',
-  direction: 'asc' | 'desc' | 'none'
+  primaryKey: string | null,
+  primaryDirection: 'asc' | 'desc' | 'none',
+  secondaryKey?: string | null,
+  secondaryDirection?: 'asc' | 'desc'
 ): T[] => {
-  if (direction === 'none' || !sortKey) return data;
+  if (primaryDirection === 'none' || !primaryKey) return data;
 
-  const sortDir = direction === 'asc' ? 1 : -1;
   return [...data].sort((a: T, b: T) => {
-    const aValue = a[sortKey as keyof T];
-    const bValue = b[sortKey as keyof T];
+    // Primary sort
+    const primaryCompare = compareValues(a, b, primaryKey, primaryDirection as 'asc' | 'desc');
 
-    // Special handling for date sorting
-    if (sortKey === 'dueDate') {
-      const aDate = new Date(aValue as string);
-      const bDate = new Date(bValue as string);
-
-      // Validate dates
-      if (isNaN(aDate.getTime()) || isNaN(bDate.getTime())) {
-        return 0; // Keep original order if dates are invalid
-      }
-
-      return (aDate.getTime() - bDate.getTime()) * sortDir;
+    // If equal and secondary sort exists, use it
+    if (primaryCompare === 0 && secondaryKey && secondaryDirection) {
+      return compareValues(a, b, secondaryKey, secondaryDirection);
     }
 
-    // Default string comparison
-    return (aValue > bValue ? 1 : -1) * sortDir;
+    return primaryCompare;
   });
 };
 

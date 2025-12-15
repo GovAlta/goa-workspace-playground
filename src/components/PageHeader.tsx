@@ -8,17 +8,21 @@ interface PageHeaderProps {
   title?: string;
   actions?: React.ReactNode;
   tabs?: React.ReactNode;
+  toolbar?: React.ReactNode;
+  hideTitleOnScroll?: boolean;
 }
 
-export function PageHeader({ title: propTitle, actions: propActions, tabs: propTabs }: PageHeaderProps) {
+export function PageHeader({ title: propTitle, actions: propActions, tabs: propTabs, toolbar: propToolbar, hideTitleOnScroll: propHideTitleOnScroll }: PageHeaderProps) {
   const { isMobile, setMenuOpen } = useMenu();
-  const { title: contextTitle, actions: contextActions, tabs: contextTabs } = usePageHeaderContext();
+  const { title: contextTitle, actions: contextActions, tabs: contextTabs, toolbar: contextToolbar, hideTitleOnScroll: contextHideTitleOnScroll } = usePageHeaderContext();
   const { scrollPosition, isScrollable } = useScrollState();
 
   // Use props if provided, otherwise use context
   const title = propTitle ?? contextTitle;
   const actions = propActions ?? contextActions;
   const tabs = propTabs ?? contextTabs;
+  const toolbar = propToolbar ?? contextToolbar;
+  const hideTitleOnScroll = propHideTitleOnScroll ?? contextHideTitleOnScroll;
 
   // Derive header state from scroll position
   // Collapsed when scrolled into middle or bottom
@@ -33,9 +37,12 @@ export function PageHeader({ title: propTitle, actions: propActions, tabs: propT
     'page-header',
     isCollapsed ? 'page-header--collapsed' : 'page-header--expanded',
     isScrollable && scrollPosition ? `page-header--${scrollPosition.replace('-', '')}` : '',
-    tabs ? 'page-header--with-tabs' : ''
+    tabs ? 'page-header--with-tabs' : '',
+    toolbar ? 'page-header--with-toolbar' : '',
+    hideTitleOnScroll ? 'page-header--hide-title-on-scroll' : ''
   ].filter(Boolean).join(' ');
 
+  // Single DOM structure - CSS handles show/hide with transitions
   return (
     <div className={headerClasses}>
         <div className="page-header__content">
@@ -69,6 +76,11 @@ export function PageHeader({ title: propTitle, actions: propActions, tabs: propT
         {tabs && (
           <div className="page-header__tabs" style={{"--goa-tabs-margin-bottom": "0"} as React.CSSProperties}>
             {tabs}
+          </div>
+        )}
+        {toolbar && (
+          <div className="page-header__toolbar page-header__toolbar--expanded">
+            {toolbar}
           </div>
         )}
     </div>

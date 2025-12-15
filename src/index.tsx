@@ -6,8 +6,8 @@ import "@abgov/web-components";
 
 // Import all page components
 import { SearchPage } from './routes/SearchPage';
-import { ClientsPage } from './routes/ClientsPage';
-import { ClientDetailPage } from './routes/ClientDetailPage';
+import { CasesPage } from './routes/CasesPage';
+import { CaseDetailPage } from './routes/CaseDetailPage';
 import { SchedulePage } from './routes/SchedulePage';
 import { DocumentsPage } from './routes/DocumentsPage';
 import { TeamPage } from './routes/TeamPage';
@@ -41,8 +41,8 @@ root.render(
                 <Route path="/" element={<App />}>
                     <Route index element={<Navigate to="/search" replace />} />
                     <Route path="search" element={<SearchPage />} />
-                    <Route path="clients" element={<ClientsPage />} />
-                    <Route path="client/:id" element={<ClientDetailPage />} />
+                    <Route path="cases" element={<CasesPage />} />
+                    <Route path="case/:id" element={<CaseDetailPage />} />
                     <Route path="schedule" element={<SchedulePage />} />
                     <Route path="documents" element={<DocumentsPage />} />
                     <Route path="documents/sub1" element={<SubMenuItem1Page />} />

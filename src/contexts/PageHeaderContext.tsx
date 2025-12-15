@@ -4,12 +4,16 @@ interface PageHeaderValuesType {
   title: string;
   actions?: ReactNode;
   tabs?: ReactNode;
+  toolbar?: ReactNode; // Search, sort, filter controls that appear in collapsed header
+  hideTitleOnScroll?: boolean; // Hide title when header is collapsed
 }
 
 interface PageHeaderSettersType {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setActions: React.Dispatch<React.SetStateAction<ReactNode>>;
   setTabs: React.Dispatch<React.SetStateAction<ReactNode>>;
+  setToolbar: React.Dispatch<React.SetStateAction<ReactNode>>;
+  setHideTitleOnScroll: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }
 
 // Separate contexts - setters are stable, values change
@@ -20,12 +24,16 @@ export function PageHeaderProvider({ children }: { children: ReactNode }) {
   const [title, setTitle] = useState('');
   const [actions, setActions] = useState<ReactNode>(undefined);
   const [tabs, setTabs] = useState<ReactNode>(undefined);
+  const [toolbar, setToolbar] = useState<ReactNode>(undefined);
+  const [hideTitleOnScroll, setHideTitleOnScroll] = useState<boolean | undefined>(undefined);
 
   // Setters are stable - this object never changes
   const setters = useMemo(() => ({
     setTitle,
     setActions,
     setTabs,
+    setToolbar,
+    setHideTitleOnScroll,
   }), []);
 
   // Values change when state changes
@@ -33,7 +41,9 @@ export function PageHeaderProvider({ children }: { children: ReactNode }) {
     title,
     actions,
     tabs,
-  }), [title, actions, tabs]);
+    toolbar,
+    hideTitleOnScroll,
+  }), [title, actions, tabs, toolbar, hideTitleOnScroll]);
 
   return (
     <PageHeaderSettersContext.Provider value={setters}>
@@ -47,6 +57,8 @@ export function PageHeaderProvider({ children }: { children: ReactNode }) {
 interface UsePageHeaderOptions {
   actions?: ReactNode;
   tabs?: ReactNode;
+  toolbar?: ReactNode; // Search, sort, filter controls
+  hideTitleOnScroll?: boolean; // Hide title when header is collapsed
 }
 
 export function usePageHeader(title: string, options?: UsePageHeaderOptions | ReactNode) {
@@ -56,10 +68,12 @@ export function usePageHeader(title: string, options?: UsePageHeaderOptions | Re
     throw new Error('usePageHeader must be used within PageHeaderProvider');
   }
 
-  // Support both old signature (title, actions) and new signature (title, { actions, tabs })
-  const isOptionsObject = options && typeof options === 'object' && ('actions' in options || 'tabs' in options);
+  // Support both old signature (title, actions) and new signature (title, { actions, tabs, toolbar, hideTitleOnScroll })
+  const isOptionsObject = options && typeof options === 'object' && ('actions' in options || 'tabs' in options || 'toolbar' in options || 'hideTitleOnScroll' in options);
   const actions = isOptionsObject ? (options as UsePageHeaderOptions).actions : options as ReactNode;
   const tabs = isOptionsObject ? (options as UsePageHeaderOptions).tabs : undefined;
+  const toolbar = isOptionsObject ? (options as UsePageHeaderOptions).toolbar : undefined;
+  const hideTitleOnScroll = isOptionsObject ? (options as UsePageHeaderOptions).hideTitleOnScroll : undefined;
 
   // Update context when values change - setters are stable so no loop
   useLayoutEffect(() => {
@@ -73,6 +87,14 @@ export function usePageHeader(title: string, options?: UsePageHeaderOptions | Re
   useLayoutEffect(() => {
     setters.setTabs(tabs);
   }, [tabs, setters]);
+
+  useLayoutEffect(() => {
+    setters.setToolbar(toolbar);
+  }, [toolbar, setters]);
+
+  useLayoutEffect(() => {
+    setters.setHideTitleOnScroll(hideTitleOnScroll);
+  }, [hideTitleOnScroll, setters]);
 }
 
 export function usePageHeaderContext() {

@@ -81,6 +81,7 @@ export function NotificationsPage() {
             updateUrl={false}
             mb="none"
             stackOnMobile={false}
+            variant="segmented"
             onChange={(detail) => setActiveTab(detail.tab)}
         >
             <GoabTab heading={<>Unread {unreadCount > 0 && <GoabBadge type="default" content={`${unreadCount}`} emphasis="subtle" version="2" />}</>}><></></GoabTab>
@@ -89,7 +90,7 @@ export function NotificationsPage() {
         </GoabTabs>
     ), [unreadCount, urgentNotifications.length]);
 
-    usePageHeader("All Notifications", { actions: headerActions, tabs: headerTabs });
+    usePageHeader("All Notifications", { actions: headerActions, tabs: headerTabs, hideTitleOnScroll: true });
 
     const groupNotificationsByDate = (notifications: Notification[]) => {
         const groups: { [key: string]: Notification[] } = {};
