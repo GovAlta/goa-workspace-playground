@@ -38,3 +38,9 @@ coverage
 
 # Local Netlify folder
 .netlify
+
+# Local documentation (not tracked in repo)
+docs/
+PAGE-IMPLEMENTATION-GUIDE.md
+PENDING-COMMITS.md
+WORKSPACE-SETUP.md
