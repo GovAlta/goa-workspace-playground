@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {
     GoabText,
     GoabButton,
+    GoabIconButton,
     GoabTabs,
     GoabTab,
     GoabFormItem,
@@ -15,13 +16,16 @@ import {
     GoabButtonGroup,
     GoabDrawer,
     GoabSkeleton,
-    GoabDivider, GoabMenuButton, GoabMenuAction, GoabContainer, GoabBlock, GoabDataGrid, GoabLink,
+    GoabDivider, GoabMenuButton, GoabMenuAction, GoabContainer, GoabBlock, GoabDataGrid, GoabLink, GoabTable,
 } from "@abgov/react-components";
 import {filterData, sortData} from "../utils/searchUtils";
 import {getPriorityBadgeProps} from "../utils/badgeUtils";
 import {usePageHeader} from "../contexts/PageHeaderContext";
+import {usePageFooter} from "../contexts/PageFooterContext";
 import {useMenu} from "../contexts/MenuContext";
 import {useTwoLevelSort} from "../hooks/useTwoLevelSort";
+import {useCompactToolbar} from "../hooks/useViewport";
+import {useViewSettings} from "../hooks/useViewSettings";
 import {
     GoabInputOnChangeDetail,
     GoabInputOnKeyPressDetail,
@@ -34,6 +38,7 @@ import {mockFetch} from "../utils/mockApi";
 import {DataTable} from "../components/DataTable";
 import {ExpandableListView} from "../components/ExpandableListView";
 import {EmptyState} from "../components/EmptyState";
+import {SettingsPopover, ViewSettings, LayoutType, GroupByField} from "../components/SettingsPopover";
 
 export function CasesPage() {
     const [activeTab, setActiveTab] = useState('all');
@@ -50,16 +55,49 @@ export function CasesPage() {
     // Get mobile state from MenuContext
     const { isMobile } = useMenu();
 
-    // Compute view mode based on active tab and mobile state
-    // - "complete" tab: always list view (responsive, works on mobile)
-    // - "todo" and "progress" tabs: always card view
-    // - "all" tab: table on desktop, card on mobile
-    const viewMode = useMemo((): 'table' | 'card' | 'list' => {
-        if (activeTab === 'complete') return 'list';
-        if (activeTab === 'todo' || activeTab === 'progress') return 'card';
-        if (isMobile) return 'card';
+    // Detect if toolbar should show compact (icon-only) buttons
+    const isCompactToolbar = useCompactToolbar();
+
+    // Get the default layout for a given tab
+    const getDefaultLayout = useCallback((tab: string): LayoutType => {
+        if (tab === 'complete') return 'list';
+        if (tab === 'todo' || tab === 'progress') return 'card';
         return 'table';
-    }, [activeTab, isMobile]);
+    }, []);
+
+    // View settings with localStorage persistence
+    const {
+        viewSettings,
+        setViewSettings,
+        layoutCustomized,
+        setLayoutCustomized,
+        handleSettingsChange,
+        resetSettings,
+    } = useViewSettings({
+        pageKey: 'cases',
+        getDefaultLayout,
+        initialTab: 'all',
+    });
+
+    // Current tab's default layout
+    const defaultLayout = useMemo(() => getDefaultLayout(activeTab), [activeTab, getDefaultLayout]);
+
+    // When tab changes, reset to default layout if not customized
+    useEffect(() => {
+        if (!layoutCustomized) {
+            setViewSettings({
+                ...viewSettings,
+                layout: defaultLayout,
+            });
+        }
+    }, [activeTab, defaultLayout, layoutCustomized]);
+
+    // Compute view mode based on settings and mobile state
+    const viewMode = useMemo((): 'table' | 'card' | 'list' => {
+        // On mobile, table becomes card
+        if (isMobile && viewSettings.layout === 'table') return 'card';
+        return viewSettings.layout;
+    }, [isMobile, viewSettings.layout]);
 
     // Simulate fetching cases from an API
     useEffect(() => {
@@ -166,6 +204,67 @@ export function CasesPage() {
         );
     }, [cases, activeTab, typedChips, sortConfig, appliedFilters]);
 
+    // Group cases by the selected field
+    const groupedCases = useMemo(() => {
+        if (!viewSettings.groupBy) return null;
+
+        const groups: { key: string; label: string; cases: Case[] }[] = [];
+        const groupMap = new Map<string, Case[]>();
+
+        filteredCases.forEach(caseItem => {
+            let groupKey: string;
+            switch (viewSettings.groupBy) {
+                case 'status':
+                    groupKey = caseItem.statusText || 'Unknown';
+                    break;
+                case 'priority':
+                    groupKey = caseItem.priority || 'None';
+                    break;
+                case 'staff':
+                    groupKey = caseItem.staff || 'Unassigned';
+                    break;
+                case 'jurisdiction':
+                    groupKey = caseItem.jurisdiction || 'Unknown';
+                    break;
+                default:
+                    groupKey = 'Unknown';
+            }
+
+            if (!groupMap.has(groupKey)) {
+                groupMap.set(groupKey, []);
+            }
+            groupMap.get(groupKey)!.push(caseItem);
+        });
+
+        groupMap.forEach((cases, key) => {
+            groups.push({ key, label: key, cases });
+        });
+
+        return groups;
+    }, [filteredCases, viewSettings.groupBy]);
+
+    // Track which groups are expanded (all expanded by default)
+    const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+
+    // Initialize expanded groups when grouping changes
+    useEffect(() => {
+        if (groupedCases) {
+            setExpandedGroups(new Set(groupedCases.map(g => g.key)));
+        }
+    }, [viewSettings.groupBy]); // Only re-initialize when groupBy changes, not when groups update
+
+    const toggleGroup = useCallback((groupKey: string) => {
+        setExpandedGroups(prev => {
+            const next = new Set(prev);
+            if (next.has(groupKey)) {
+                next.delete(groupKey);
+            } else {
+                next.add(groupKey);
+            }
+            return next;
+        });
+    }, []);
+
     // Calculate counts for each tab category
     const myCasesCount = useMemo(() => cases.filter(c => c.category === 'todo').length, [cases]);
     const inProgressCount = useMemo(() => cases.filter(c => c.category === 'progress').length, [cases]);
@@ -199,6 +298,8 @@ export function CasesPage() {
         const tabIndex = event.detail?.tab || event.tab;
         const tabMap = ['all', 'todo', 'progress', 'complete'];
         setActiveTab(tabMap[tabIndex - 1] || 'all');
+        // Clear selections when switching tabs
+        setCases(prev => prev.map(c => ({ ...c, selected: false })));
     };
 
     // Sort field labels for display
@@ -217,17 +318,6 @@ export function CasesPage() {
         }
         const key = action.replace('sort-', '');
         sortByKey(key);
-    };
-
-    // Get sort button label
-    const getSortButtonLabel = (): string => {
-        if (!sortConfig.primary) return 'Sort';
-        const primaryLabel = sortFieldLabels[sortConfig.primary.key] || sortConfig.primary.key;
-        if (sortConfig.secondary) {
-            const secondaryLabel = sortFieldLabels[sortConfig.secondary.key] || sortConfig.secondary.key;
-            return `${primaryLabel}, ${secondaryLabel}`;
-        }
-        return primaryLabel;
     };
 
     // Get indicator for menu item
@@ -276,11 +366,9 @@ export function CasesPage() {
     const onMenuActionButton = (action: string, caseId: string) => {
         switch (action) {
             case 'edit':
-                console.log('Edit case:', caseId);
                 // TODO: Navigate to edit page or open edit modal
                 break;
             case 'view':
-                console.log('View case details:', caseId);
                 // TODO: Navigate to details page
                 break;
             case 'delete':
@@ -309,12 +397,15 @@ export function CasesPage() {
     // Memoize toolbar with tabs + search/sort/filter for header
     const headerToolbar = useMemo(() => (
         <div className="cases-toolbar-row">
-            <GoabTabs initialTab={1} onChange={handleTabChange} stackOnMobile={false} variant="segmented">
-                <GoabTab heading="All"/>
-                <GoabTab heading={<>Assigned to me <GoabBadge type="information" content={String(myCasesCount)} emphasis="subtle" /></>}/>
-                <GoabTab heading={<>In progress <GoabBadge type="important" content={String(inProgressCount)} emphasis="subtle" /></>}/>
-                <GoabTab heading="Complete"/>
-            </GoabTabs>
+            <div className="cases-toolbar-tabs">
+                <GoabTabs initialTab={1} onChange={handleTabChange} stackOnMobile={false} variant="segmented">
+                    <GoabTab heading="Unassigned"/>
+                    <GoabTab heading={<>Assigned to me <GoabBadge type="information" content={String(myCasesCount)} emphasis="subtle" /></>}/>
+                    <GoabTab heading={<>In progress <GoabBadge type="important" content={String(inProgressCount)} emphasis="subtle" /></>}/>
+                    <GoabTab heading="Complete"/>
+                </GoabTabs>
+                <div className="cases-toolbar-tabs__spacer" aria-hidden="true" />
+            </div>
             <div className="cases-search-row">
                 <div className="cases-search-group">
                     <GoabFormItem id="filterInput" error={inputError} labelSize="compact">
@@ -339,7 +430,8 @@ export function CasesPage() {
                     <GoabMenuButton
                         size="compact"
                         type="tertiary"
-                        text="Sort"
+                        leadingIcon={isCompactToolbar ? "swap-vertical" : undefined}
+                        text={isCompactToolbar ? undefined : "Sort"}
                         onAction={(e: GoabMenuButtonOnActionDetail) => handleSortAction(e.action)}
                     >
                         <GoabMenuAction
@@ -370,26 +462,85 @@ export function CasesPage() {
                             />
                         )}
                     </GoabMenuButton>
-                    <GoabButton
-                        type="tertiary"
-                        leadingIcon="filter-lines"
-                        size="compact"
-                        onClick={() => {
-                            setPendingFilters(appliedFilters);
-                            setFilterDrawerOpen(true);
-                        }}
-                    >
-                        Filter
-                    </GoabButton>
+                    {isCompactToolbar ? (
+                        <GoabIconButton
+                            icon="filter-lines"
+                            size="medium"
+                            variant="dark"
+                            ariaLabel="Filter"
+                            onClick={() => {
+                                setPendingFilters(appliedFilters);
+                                setFilterDrawerOpen(true);
+                            }}
+                        />
+                    ) : (
+                        <GoabButton
+                            type="tertiary"
+                            leadingIcon="filter-lines"
+                            size="compact"
+                            onClick={() => {
+                                setPendingFilters(appliedFilters);
+                                setFilterDrawerOpen(true);
+                            }}
+                        >
+                            Filter
+                        </GoabButton>
+                    )}
+                    <SettingsPopover
+                        settings={viewSettings}
+                        onSettingsChange={(newSettings) => handleSettingsChange(newSettings, defaultLayout)}
+                        defaultLayout={defaultLayout}
+                        isMobile={isMobile}
+                        isCompact={isCompactToolbar}
+                    />
                 </div>
             </div>
         </div>
-    ), [myCasesCount, inProgressCount, inputValue, inputError, sortConfig, appliedFilters, handleTabChange, handleSortAction, getSortIndicator, getSortIcon, handleInputKeyPress, setPendingFilters, setFilterDrawerOpen, setInputValue, setInputError]);
+    ), [myCasesCount, inProgressCount, inputValue, inputError, sortConfig, appliedFilters, viewSettings, defaultLayout, isMobile, isCompactToolbar, handleTabChange, handleSortAction, getSortIndicator, getSortIcon, handleInputKeyPress, setPendingFilters, setFilterDrawerOpen, setInputValue, setInputError, handleSettingsChange]);
 
     // Set up page header with title, actions, and toolbar (tabs now inside toolbar)
     usePageHeader("Cases", {
         actions: headerActions,
         toolbar: headerToolbar
+    });
+
+    // Set up page footer with bulk actions (visible when items are selected)
+    usePageFooter({
+        content: (
+            <GoabButtonGroup gap="compact" alignment="start">
+                <GoabButton
+                    type="tertiary"
+                    size="compact"
+                    onClick={() => {
+                        setCases(prev => prev.map(c => ({ ...c, selected: false })));
+                    }}
+                >
+                    Clear selection ({selectedCount})
+                </GoabButton>
+                <GoabButton
+                    type="primary"
+                    size="compact"
+                    onClick={() => {
+                        // TODO: Implement assign to me functionality
+                    }}
+                >
+                    Assign to me
+                </GoabButton>
+                <GoabButton
+                    type="primary"
+                    size="compact"
+                    variant="destructive"
+                    onClick={() => {
+                        // TODO: In production, show confirmation modal first
+                        setCases(prev => prev.filter(c => !c.selected));
+                    }}
+                >
+                    Delete selected
+                </GoabButton>
+            </GoabButtonGroup>
+        ),
+        visibleWhen: 'selection',
+        hasSelection: selectedCount > 0,
     });
 
     // Table column definitions
@@ -490,13 +641,136 @@ export function CasesPage() {
         },
     ], [isAllSelected, isIndeterminate, setCases, onMenuActionButton]);
 
+    // Filter columns based on visibility settings
+    // select and actions columns are always visible
+    const visibleCaseColumns = useMemo(() => {
+        return caseColumns.filter(col =>
+            col.key === 'select' ||
+            col.key === 'actions' ||
+            viewSettings.visibleColumns.includes(col.key)
+        );
+    }, [caseColumns, viewSettings.visibleColumns]);
+
+    // Helper function to render a case card
+    const renderCaseCard = useCallback((caseItem: Case) => (
+        <GoabContainer
+            key={caseItem.id}
+            accent="thick"
+            type="non-interactive"
+            padding="compact"
+            mb="none"
+            data-grid="row"
+            heading={
+                <div className="case-card__title">
+                    {activeTab === 'all' && (
+                        <GoabCheckbox
+                            name={`select-card-${caseItem.id}`}
+                            checked={caseItem.selected}
+                            onChange={() => {
+                                setCases(prev => prev.map(c =>
+                                    c.id === caseItem.id ? { ...c, selected: !c.selected } : c
+                                ));
+                            }}
+                            ariaLabel={`Select ${caseItem.name}`}
+                        />
+                    )}
+                    <GoabText size="heading-xs" mt={"none"} mb={"none"} data-grid={"cell-1"}>{caseItem.name}</GoabText>
+                    <GoabBadge data-grid={"cell-2"}
+                        type={caseItem.status}
+                        content={caseItem.statusText}
+                        emphasis="subtle"
+                        icon={true}
+                    />
+                </div>
+            }
+            actions={
+                <div data-grid={"cell-3"} className="case-card__actions">
+                    {caseItem.comments > 0 && (
+                        <GoabLink leadingIcon="chatbox" color="dark" size="small">
+                            <a href="#">{caseItem.comments} comment{caseItem.comments === 1 ? '' : 's'}</a>
+                        </GoabLink>
+                    )}
+                    {activeTab === 'all' ? (
+                        <GoabMenuButton
+                            leadingIcon="ellipsis-horizontal"
+                            leadingIconTheme="filled"
+                            size="compact"
+                            onAction={(e: GoabMenuButtonOnActionDetail) => onMenuActionButton(e.action, caseItem.id)}
+                        >
+                            <GoabMenuAction text="View" action="view" />
+                            <GoabMenuAction text="Assign me" action="assign" />
+                        </GoabMenuButton>
+                    ) : activeTab === 'todo' ? (
+                        <GoabButton
+                            type="tertiary"
+                            size="compact"
+                            onClick={() => onMenuActionButton('start', caseItem.id)}
+                        >
+                            Start
+                        </GoabButton>
+                    ) : (
+                        <GoabMenuButton
+                            leadingIcon="ellipsis-horizontal"
+                            leadingIconTheme="filled"
+                            size="compact"
+                            onAction={(e: GoabMenuButtonOnActionDetail) => onMenuActionButton(e.action, caseItem.id)}
+                        >
+                            <GoabMenuAction text="Continue" action="continue" />
+                            <GoabMenuAction text="Unassign me" action="unassign" />
+                            <GoabMenuAction text="Mark as complete" action="complete" />
+                        </GoabMenuButton>
+                    )}
+                </div>
+            }
+        >
+            <div className="case-card__body">
+                <div className="case-card__sections">
+                    <div className="case-card__section">
+                        <div className="case-card__section-heading">Identification</div>
+                        <div className="case-card__section-fields">
+                            <GoabBlock direction="column" gap="xs" data-grid="cell-4">
+                                <span className="case-card__label">File number</span>
+                                <span className="case-card__value">{caseItem.fileNumber || '—'}</span>
+                            </GoabBlock>
+                            <GoabBlock direction="column" gap="xs" data-grid="cell-5">
+                                <span className="case-card__label">Jurisdiction</span>
+                                <span className="case-card__value">{caseItem.jurisdiction || '—'}</span>
+                            </GoabBlock>
+                        </div>
+                    </div>
+                    <div className="case-card__section">
+                        <div className="case-card__section-heading">Assignment</div>
+                        <div className="case-card__section-fields">
+                            <GoabBlock direction="column" gap="xs" data-grid="cell-6">
+                                <span className="case-card__label">Assigned to</span>
+                                <span className="case-card__value">{caseItem.staff || '—'}</span>
+                            </GoabBlock>
+                            <GoabBlock direction="column" gap="xs" data-grid="cell-7">
+                                <span className="case-card__label">Due date</span>
+                                <span className="case-card__value">{caseItem.dueDate || '—'}</span>
+                            </GoabBlock>
+                            <GoabBlock direction="column" gap="xs" data-grid="cell-8">
+                                <span className="case-card__label">Category</span>
+                                <span className="case-card__value">
+                                    {caseItem.category === 'todo' ? 'To do' :
+                                        caseItem.category === 'progress' ? 'In progress' :
+                                            caseItem.category === 'complete' ? 'Complete' :
+                                                caseItem.category || '—'}
+                                </span>
+                            </GoabBlock>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </GoabContainer>
+    ), [activeTab, setCases, onMenuActionButton]);
+
     const emptyStateContent = (
         <EmptyState onButtonClick={clearAllChips} />
     );
 
-    // @ts-ignore
     return (
-        <div style={{maxWidth: "100%", overflow: "hidden", paddingBottom: "32px"}}>
+        <div style={{maxWidth: "100%", overflow: "hidden", paddingBottom: "16px"}}>
             {/* Filter chips section (shown below header) */}
             <div className="cases-content-padding">
                 {(typedChips.length > 0 || filterChips.length > 0 || sortConfig.primary) && (
@@ -559,29 +833,176 @@ export function CasesPage() {
 
             {/* Table/List/Card view section */}
             {viewMode === 'table' && (
-                <DataTable
-                    columns={caseColumns}
-                    data={filteredCases}
-                    isLoading={isLoading}
-                    skeletonRows={10}
-                    onSort={handleTableSort}
-                    sortConfig={sortConfig}
-                    emptyState={cases.length > 0 ? emptyStateContent : undefined}
-                    getRowKey={(caseItem) => caseItem.id}
-                    getRowSelected={(caseItem) => caseItem.selected}
-                    onRowClick={(caseItem) => {
-                        setCases(prev => prev.map(c =>
-                            c.id === caseItem.id ? { ...c, selected: !c.selected } : c
-                        ));
-                    }}
-                />
+                groupedCases ? (
+                    /* Grouped table view - single table with group rows */
+                    <div className="table-wrapper">
+                        <GoabTable width="100%" variant="normal" striped={true}>
+                            <thead>
+                                <tr>
+                                    {visibleCaseColumns.map((column) => (
+                                        <th key={column.key}>
+                                            {column.headerRender ? column.headerRender() : column.header || null}
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            {groupedCases.map((group) => (
+                                <tbody key={group.key}>
+                                    <tr
+                                        className="table-group-row"
+                                        onClick={() => toggleGroup(group.key)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <td colSpan={visibleCaseColumns.length}>
+                                            <div className="table-group-row__content">
+                                                <GoabIcon
+                                                    type={expandedGroups.has(group.key) ? "chevron-down" : "chevron-forward"}
+                                                    size="small"
+                                                />
+                                                <span className="table-group-row__label">{group.label}</span>
+                                                <GoabBadge type="default" content={String(group.cases.length)} emphasis="subtle" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {expandedGroups.has(group.key) && group.cases.map((caseItem) => (
+                                        <tr
+                                            key={caseItem.id}
+                                            aria-selected={caseItem.selected ? "true" : undefined}
+                                            onClick={() => {
+                                                setCases(prev => prev.map(c =>
+                                                    c.id === caseItem.id ? { ...c, selected: !c.selected } : c
+                                                ));
+                                            }}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            {visibleCaseColumns.map((column) => (
+                                                <td key={column.key}>
+                                                    {column.render?.(caseItem, 0)}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            ))}
+                        </GoabTable>
+                    </div>
+                ) : (
+                    /* Flat table view */
+                    <DataTable
+                        columns={visibleCaseColumns}
+                        data={filteredCases}
+                        isLoading={isLoading}
+                        skeletonRows={10}
+                        onSort={handleTableSort}
+                        sortConfig={sortConfig}
+                        emptyState={cases.length > 0 ? emptyStateContent : undefined}
+                        getRowKey={(caseItem) => caseItem.id}
+                        getRowSelected={(caseItem) => caseItem.selected}
+                        onRowClick={(caseItem) => {
+                            setCases(prev => prev.map(c =>
+                                c.id === caseItem.id ? { ...c, selected: !c.selected } : c
+                            ));
+                        }}
+                    />
+                )
             )}
 
             {viewMode === 'list' && (
                 <div className="cases-content-padding">
                     {filteredCases.length === 0 && cases.length > 0 ? (
                         emptyStateContent
+                    ) : groupedCases ? (
+                        /* Grouped list view */
+                        <div className="cases-grouped-view">
+                            {groupedCases.map((group) => (
+                                <div key={group.key} className="cases-group">
+                                    <button
+                                        className="cases-group__header"
+                                        onClick={() => toggleGroup(group.key)}
+                                        aria-expanded={expandedGroups.has(group.key)}
+                                    >
+                                        <GoabIcon
+                                            type={expandedGroups.has(group.key) ? "chevron-down" : "chevron-forward"}
+                                            size="small"
+                                        />
+                                        <span className="cases-group__label">{group.label}</span>
+                                        <GoabBadge type="default" content={String(group.cases.length)} emphasis="subtle" />
+                                    </button>
+                                    {expandedGroups.has(group.key) && (
+                                        <div className="cases-group__list">
+                                            <ExpandableListView
+                                                data={group.cases}
+                                                isLoading={isLoading}
+                                                getRowKey={(caseItem) => caseItem.id}
+                                                renderCollapsed={(caseItem) => ({
+                                                    title: <span className="expandable-list__name">{caseItem.name}</span>,
+                                                    badge: <GoabBadge type={caseItem.status} content={caseItem.statusText} emphasis="subtle" icon={true} />,
+                                                    secondaryInfo: (
+                                                        <div className="expandable-list__header-actions">
+                                                            {caseItem.comments > 0 && (
+                                                                <GoabLink leadingIcon="chatbox" color="dark" size="small">
+                                                                    <a href="#">{caseItem.comments} comment{caseItem.comments === 1 ? '' : 's'}</a>
+                                                                </GoabLink>
+                                                            )}
+                                                        </div>
+                                                    ),
+                                                    actions: (
+                                                        <GoabButton
+                                                            type="tertiary"
+                                                            size="compact"
+                                                            onClick={() => onMenuActionButton('view', caseItem.id)}
+                                                        >
+                                                            View
+                                                        </GoabButton>
+                                                    ),
+                                                })}
+                                                renderExpanded={(caseItem) => (
+                                                    <div className="case-card__sections">
+                                                        <div className="case-card__section">
+                                                            <div className="case-card__section-heading">Identification</div>
+                                                            <div className="case-card__section-fields">
+                                                                <GoabBlock direction="column" gap="xs">
+                                                                    <span className="case-card__label">File number</span>
+                                                                    <span className="case-card__value">{caseItem.fileNumber || '—'}</span>
+                                                                </GoabBlock>
+                                                                <GoabBlock direction="column" gap="xs">
+                                                                    <span className="case-card__label">Jurisdiction</span>
+                                                                    <span className="case-card__value">{caseItem.jurisdiction || '—'}</span>
+                                                                </GoabBlock>
+                                                            </div>
+                                                        </div>
+                                                        <div className="case-card__section">
+                                                            <div className="case-card__section-heading">Assignment</div>
+                                                            <div className="case-card__section-fields">
+                                                                <GoabBlock direction="column" gap="xs">
+                                                                    <span className="case-card__label">Assigned to</span>
+                                                                    <span className="case-card__value">{caseItem.staff || '—'}</span>
+                                                                </GoabBlock>
+                                                                <GoabBlock direction="column" gap="xs">
+                                                                    <span className="case-card__label">Due date</span>
+                                                                    <span className="case-card__value">{caseItem.dueDate || '—'}</span>
+                                                                </GoabBlock>
+                                                                <GoabBlock direction="column" gap="xs">
+                                                                    <span className="case-card__label">Category</span>
+                                                                    <span className="case-card__value">
+                                                                        {caseItem.category === 'todo' ? 'To do' :
+                                                                            caseItem.category === 'progress' ? 'In progress' :
+                                                                                caseItem.category === 'complete' ? 'Complete' :
+                                                                                    caseItem.category || '—'}
+                                                                    </span>
+                                                                </GoabBlock>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     ) : (
+                        /* Flat list view */
                         <ExpandableListView
                             data={filteredCases}
                             isLoading={isLoading}
@@ -610,7 +1031,6 @@ export function CasesPage() {
                             })}
                             renderExpanded={(caseItem) => (
                                 <div className="case-card__sections">
-                                    {/* Identification section */}
                                     <div className="case-card__section">
                                         <div className="case-card__section-heading">Identification</div>
                                         <div className="case-card__section-fields">
@@ -624,7 +1044,6 @@ export function CasesPage() {
                                             </GoabBlock>
                                         </div>
                                     </div>
-                                    {/* Assignment section */}
                                     <div className="case-card__section">
                                         <div className="case-card__section-heading">Assignment</div>
                                         <div className="case-card__section-fields">
@@ -713,100 +1132,35 @@ export function CasesPage() {
                         </div>
                     ) : filteredCases.length === 0 && cases.length > 0 ? (
                         <EmptyState onButtonClick={clearAllChips} />
-                    ) : (
-                        <div className="cases-card-grid">
-                            {filteredCases.map((caseItem) => (
-                                <GoabContainer
-                                    key={caseItem.id}
-                                    accent="thick"
-                                    type="non-interactive"
-                                    padding="compact"
-                                    mb="none"
-                                    data-grid="row"
-                                    heading={
-                                        <div className="case-card__title">
-                                            <GoabText size="heading-xs" mt={"none"} mb={"none"} data-grid={"cell-1"}>{caseItem.name}</GoabText>
-                                            <GoabBadge data-grid={"cell-2"}
-                                                type={caseItem.status}
-                                                content={caseItem.statusText}
-                                                emphasis="subtle"
-                                                icon={true}
-                                            />
+                    ) : groupedCases ? (
+                        /* Grouped card view */
+                        <div className="cases-grouped-view">
+                            {groupedCases.map((group) => (
+                                <div key={group.key} className="cases-group">
+                                    <button
+                                        className="cases-group__header"
+                                        onClick={() => toggleGroup(group.key)}
+                                        aria-expanded={expandedGroups.has(group.key)}
+                                    >
+                                        <GoabIcon
+                                            type={expandedGroups.has(group.key) ? "chevron-down" : "chevron-forward"}
+                                            size="small"
+                                        />
+                                        <span className="cases-group__label">{group.label}</span>
+                                        <GoabBadge type="default" content={String(group.cases.length)} emphasis="subtle" />
+                                    </button>
+                                    {expandedGroups.has(group.key) && (
+                                        <div className="cases-card-grid">
+                                            {group.cases.map(renderCaseCard)}
                                         </div>
-                                    }
-                                    actions={
-                                    <div data-grid={"cell-3"} className="case-card__actions">
-                                        {caseItem.comments > 0 && (
-                                            <GoabLink leadingIcon="chatbox" color="dark" size="small">
-                                                <a href="#">{caseItem.comments} comment{caseItem.comments === 1 ? '' : 's'}</a>
-                                            </GoabLink>
-                                        )}
-                                        {activeTab === 'todo' ? (
-                                            <GoabButton
-                                                type="tertiary"
-                                                size="compact"
-                                                onClick={() => onMenuActionButton('start', caseItem.id)}
-                                            >
-                                                Start
-                                            </GoabButton>
-                                        ) : (
-                                            <GoabMenuButton
-                                                leadingIcon="ellipsis-horizontal"
-                                                leadingIconTheme="filled"
-                                                size="compact"
-                                                onAction={(e: GoabMenuButtonOnActionDetail) => onMenuActionButton(e.action, caseItem.id)}
-                                            >
-                                                <GoabMenuAction text="Continue" action="continue" />
-                                                <GoabMenuAction text="Unassign me" action="unassign" />
-                                                <GoabMenuAction text="Mark as complete" action="complete" />
-                                            </GoabMenuButton>
-                                        )}
-                                    </div>
-                                    }
-                                >
-                                    <div className="case-card__body">
-                                        <div className="case-card__sections">
-                                            {/* Identification section */}
-                                            <div className="case-card__section">
-                                                <div className="case-card__section-heading">Identification</div>
-                                                <div className="case-card__section-fields">
-                                                    <GoabBlock direction="column" gap="xs" data-grid="cell-4">
-                                                        <span className="case-card__label">File number</span>
-                                                        <span className="case-card__value">{caseItem.fileNumber || '—'}</span>
-                                                    </GoabBlock>
-                                                    <GoabBlock direction="column" gap="xs" data-grid="cell-5">
-                                                        <span className="case-card__label">Jurisdiction</span>
-                                                        <span className="case-card__value">{caseItem.jurisdiction || '—'}</span>
-                                                    </GoabBlock>
-                                                </div>
-                                            </div>
-                                            {/* Assignment section */}
-                                            <div className="case-card__section">
-                                                <div className="case-card__section-heading">Assignment</div>
-                                                <div className="case-card__section-fields">
-                                                    <GoabBlock direction="column" gap="xs" data-grid="cell-6">
-                                                        <span className="case-card__label">Assigned to</span>
-                                                        <span className="case-card__value">{caseItem.staff || '—'}</span>
-                                                    </GoabBlock>
-                                                    <GoabBlock direction="column" gap="xs" data-grid="cell-7">
-                                                        <span className="case-card__label">Due date</span>
-                                                        <span className="case-card__value">{caseItem.dueDate || '—'}</span>
-                                                    </GoabBlock>
-                                                    <GoabBlock direction="column" gap="xs" data-grid="cell-8">
-                                                        <span className="case-card__label">Category</span>
-                                                        <span className="case-card__value">
-                                                            {caseItem.category === 'todo' ? 'To do' :
-                                                                caseItem.category === 'progress' ? 'In progress' :
-                                                                    caseItem.category === 'complete' ? 'Complete' :
-                                                                        caseItem.category || '—'}
-                                                        </span>
-                                                    </GoabBlock>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </GoabContainer>
+                                    )}
+                                </div>
                             ))}
+                        </div>
+                    ) : (
+                        /* Flat card view */
+                        <div className="cases-card-grid">
+                            {filteredCases.map(renderCaseCard)}
                         </div>
                     )}
                     </GoabDataGrid>

@@ -14,18 +14,21 @@ import {
   GoabSkeleton,
   GoabDataGrid,
   GoabLink,
+  GoabMenuButton,
+  GoabMenuAction,
 } from "@abgov/react-components";
 import { SearchResult } from "../types/SearchResult";
 import { TableColumn } from "../types/TableColumn";
 import mockData from "../data/mockSearchResults.json";
 import { filterData, sortData, getEventKey } from "../utils/searchUtils";
 import { getTypeBadgeProps } from "../utils/badgeUtils";
-import { GoabInputOnChangeDetail } from "@abgov/ui-components-common";
+import { GoabInputOnChangeDetail, GoabMenuButtonOnActionDetail } from "@abgov/ui-components-common";
 import { usePageHeader } from "../contexts/PageHeaderContext";
 import { useMenu } from "../contexts/MenuContext";
 import { useTwoLevelSort } from "../hooks/useTwoLevelSort";
 import { mockFetch } from "../utils/mockApi";
 import { DataTable } from "../components/DataTable";
+import { ExpandableListView } from "../components/ExpandableListView";
 import { EmptyState } from "../components/EmptyState";
 
 // Filter state structure
@@ -35,11 +38,14 @@ interface SearchFilters {
   searchText: string;  // Free text search
 }
 
+type ViewMode = 'table' | 'card' | 'list';
+
 export function SearchPage() {
   const [typedChips, setTypedChips] = useState<string[]>([]);
   const { sortConfig, handleTableSort, clearSort } = useTwoLevelSort();
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<ViewMode>('table');
 
   // Get mobile state from MenuContext
   const { isMobile } = useMenu();
@@ -150,6 +156,30 @@ export function SearchPage() {
     clearSort();
   }, [clearSort]);
 
+  // Handle view change
+  const handleViewChange = useCallback((action: string) => {
+    if (action === 'table' || action === 'card' || action === 'list') {
+      setViewMode(action);
+    }
+  }, []);
+
+  // Get view label and icon for menu button
+  const getViewLabel = () => {
+    switch (viewMode) {
+      case 'table': return 'Table';
+      case 'card': return 'Card';
+      case 'list': return 'List';
+    }
+  };
+
+  const getViewIcon = (): string => {
+    switch (viewMode) {
+      case 'table': return 'menu';
+      case 'card': return 'grid';
+      case 'list': return 'list';
+    }
+  };
+
   // Header actions with search input and filter dropdowns
   const headerActions = useMemo(() => (
     <div className="search-header-filters">
@@ -194,9 +224,33 @@ export function SearchPage() {
             <GoabDropdownItem key={status} value={status} label={status} />
           ))}
         </GoabDropdown>
+
+        <GoabMenuButton
+          size="compact"
+          type="tertiary"
+          leadingIcon={getViewIcon()}
+          text={getViewLabel()}
+          onAction={(e: GoabMenuButtonOnActionDetail) => handleViewChange(e.action)}
+        >
+          <GoabMenuAction
+            text="Table"
+            action="table"
+            icon={viewMode === 'table' ? 'checkmark' : undefined}
+          />
+          <GoabMenuAction
+            text="Card"
+            action="card"
+            icon={viewMode === 'card' ? 'checkmark' : undefined}
+          />
+          <GoabMenuAction
+            text="List"
+            action="list"
+            icon={viewMode === 'list' ? 'checkmark' : undefined}
+          />
+        </GoabMenuButton>
       </div>
     </div>
-  ), [filters, statusOptions, handleSearchKeywordPress, isMobile]);
+  ), [filters, statusOptions, handleSearchKeywordPress, isMobile, viewMode, handleViewChange, getViewLabel, getViewIcon]);
 
   usePageHeader("Search", headerActions);
 
@@ -253,7 +307,7 @@ export function SearchPage() {
       key: 'actions',
       type: 'actions',
       render: (result) => (
-        <GoabLink color="dark" mt="2xs">
+        <GoabLink color="dark" mt="xs">
           <Link to={`/case/${result.id}`}>View</Link>
         </GoabLink>
       ),
@@ -270,7 +324,7 @@ export function SearchPage() {
         {/* Active filter chips */}
         {(typedChips.length > 0 || filters.entity !== 'all' || filters.status !== 'all') && (
           <div className="cases-chips-container">
-            <GoabIcon type="filter" size="small" fillColor="var(--goa-color-text-secondary)" mr="2xs"/>
+            <GoabIcon type="filter-lines" size="small" fillColor="var(--goa-color-text-secondary)" mr="2xs"/>
             {filters.entity !== 'all' && (
               <GoabFilterChip
                 content={filters.entity === 'client' ? 'Clients' : filters.entity === 'case' ? 'Cases' : filters.entity === 'application' ? 'Applications' : 'Documents'}
@@ -290,15 +344,23 @@ export function SearchPage() {
                 onClick={() => removeChip(chip)}
               />
             ))}
-            <GoabButton type="tertiary" size="compact" onClick={clearAllFilters}>
-              Clear all
-            </GoabButton>
+            <GoabLink color="dark" size="small">
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  clearAllFilters();
+                }}
+              >
+                Clear all
+              </a>
+            </GoabLink>
           </div>
         )}
       </div>
 
-      {/* Table view for desktop */}
-      {!isMobile && (
+      {/* Table view */}
+      {viewMode === 'table' && (
         <DataTable
           columns={searchColumns}
           data={filteredResults}
@@ -311,8 +373,8 @@ export function SearchPage() {
         />
       )}
 
-      {/* Card view for mobile */}
-      {isMobile && (
+      {/* Card view */}
+      {viewMode === 'card' && (
         <div className="cases-content-padding">
           <GoabDataGrid keyboardNav="layout" keyboardIconPosition="right">
             {isLoading ? (
@@ -412,6 +474,64 @@ export function SearchPage() {
               </div>
             )}
           </GoabDataGrid>
+        </div>
+      )}
+
+      {/* List view */}
+      {viewMode === 'list' && (
+        <div className="cases-content-padding">
+          {filteredResults.length === 0 && searchResults.length > 0 ? (
+            emptyStateContent
+          ) : (
+            <ExpandableListView
+              data={filteredResults}
+              isLoading={isLoading}
+              getRowKey={(result) => result.id}
+              renderCollapsed={(result) => ({
+                title: <span className="expandable-list__name">{result.name}</span>,
+                badge: <GoabBadge type={result.status} content={result.statusText} emphasis="subtle" icon={true} />,
+                secondaryInfo: (
+                  <GoabBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" version="2" />
+                ),
+                actions: (
+                  <GoabButton
+                    type="tertiary"
+                    size="compact"
+                    onClick={() => console.log('View result:', result.id)}
+                  >
+                    View
+                  </GoabButton>
+                ),
+              })}
+              renderExpanded={(result) => (
+                <div className="case-card__sections">
+                  <div className="case-card__section">
+                    <div className="case-card__section-heading">Details</div>
+                    <div className="case-card__section-fields">
+                      <GoabBlock direction="column" gap="xs">
+                        <span className="case-card__label">Staff</span>
+                        <span className="case-card__value">{result.staff || '—'}</span>
+                      </GoabBlock>
+                      <GoabBlock direction="column" gap="xs">
+                        <span className="case-card__label">Due date</span>
+                        <span className="case-card__value">{result.dueDate || '—'}</span>
+                      </GoabBlock>
+                      <GoabBlock direction="column" gap="xs">
+                        <span className="case-card__label">File number</span>
+                        <span className="case-card__value">{result.fileNumber || '—'}</span>
+                      </GoabBlock>
+                      <GoabBlock direction="column" gap="xs">
+                        <span className="case-card__label">Type</span>
+                        <span className="case-card__value">
+                          <GoabBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" icon={true} />
+                        </span>
+                      </GoabBlock>
+                    </div>
+                  </div>
+                </div>
+              )}
+            />
+          )}
         </div>
       )}
 
