@@ -14,8 +14,8 @@ interface ScrollStateProviderProps {
   children: ReactNode;
 }
 
-// Transition lock duration - must be longer than CSS transition (0.2s = 200ms)
-const TRANSITION_LOCK_MS = 300;
+// No delay - hysteresis thresholds handle flickering prevention
+const TRANSITION_LOCK_MS = 0;
 
 export function ScrollStateProvider({ children }: ScrollStateProviderProps) {
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>('no-scroll');
