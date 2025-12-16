@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-d
 import "@abgov/web-components";
 
 // Import all page components
+import { DashboardPage } from './routes/DashboardPage';
 import { SearchPage } from './routes/SearchPage';
 import { CasesPage } from './routes/CasesPage';
 import { CaseDetailPage } from './routes/CaseDetailPage';
@@ -39,7 +40,7 @@ root.render(
         <NotificationProvider>
             <Routes>
                 <Route path="/" element={<App />}>
-                    <Route index element={<Navigate to="/search" replace />} />
+                    <Route index element={<DashboardPage />} />
                     <Route path="search" element={<SearchPage />} />
                     <Route path="cases" element={<CasesPage />} />
                     <Route path="case/:id" element={<CaseDetailPage />} />
