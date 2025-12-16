@@ -45,10 +45,17 @@ export function SearchPage() {
   const { sortConfig, handleTableSort, clearSort } = useTwoLevelSort();
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [selectedView, setSelectedView] = useState<ViewMode>('table');
 
   // Get mobile state from MenuContext
   const { isMobile } = useMenu();
+
+  // Compute view mode based on selected view and mobile state
+  // On mobile, table becomes card automatically
+  const viewMode = useMemo((): ViewMode => {
+    if (isMobile && selectedView === 'table') return 'card';
+    return selectedView;
+  }, [isMobile, selectedView]);
 
   // Enhanced filter state
   const [filters, setFilters] = useState<SearchFilters>({
@@ -159,7 +166,7 @@ export function SearchPage() {
   // Handle view change
   const handleViewChange = useCallback((action: string) => {
     if (action === 'table' || action === 'card' || action === 'list') {
-      setViewMode(action);
+      setSelectedView(action);
     }
   }, []);
 
@@ -235,22 +242,22 @@ export function SearchPage() {
           <GoabMenuAction
             text="Table"
             action="table"
-            icon={viewMode === 'table' ? 'checkmark' : undefined}
+            icon={selectedView === 'table' ? 'checkmark' : undefined}
           />
           <GoabMenuAction
             text="Card"
             action="card"
-            icon={viewMode === 'card' ? 'checkmark' : undefined}
+            icon={selectedView === 'card' ? 'checkmark' : undefined}
           />
           <GoabMenuAction
             text="List"
             action="list"
-            icon={viewMode === 'list' ? 'checkmark' : undefined}
+            icon={selectedView === 'list' ? 'checkmark' : undefined}
           />
         </GoabMenuButton>
       </div>
     </div>
-  ), [filters, statusOptions, handleSearchKeywordPress, isMobile, viewMode, handleViewChange, getViewLabel, getViewIcon]);
+  ), [filters, statusOptions, handleSearchKeywordPress, isMobile, viewMode, selectedView, handleViewChange, getViewLabel, getViewIcon]);
 
   usePageHeader("Search", headerActions);
 
@@ -416,60 +423,62 @@ export function SearchPage() {
             ) : (
               <div className="cases-card-grid">
                 {filteredResults.map((result) => (
-                  <GoabContainer
-                    key={result.id}
-                    accent="thick"
-                    type="non-interactive"
-                    padding="compact"
-                    mb="none"
-                    data-grid="row"
-                    heading={
-                      <div className="case-card__title">
-                        <GoabText size="heading-xs" mt="none" mb="none" data-grid="cell-1">{result.name}</GoabText>
-                        <GoabBadge
-                          data-grid="cell-2"
-                          type={result.status}
-                          content={result.statusText}
-                          emphasis="subtle"
-                          icon={true}
-                        />
+                  <div key={result.id} data-grid="row">
+                    <GoabContainer
+                      accent="thick"
+                      type="non-interactive"
+                      padding="compact"
+                      mb="none"
+                      heading={
+                        <div className="case-card__title">
+                          <GoabText size="heading-xs" mt="none" mb="none" data-grid="cell-1">{result.name}</GoabText>
+                          <GoabBadge
+                            data-grid="cell-2"
+                            type={result.status}
+                            content={result.statusText}
+                            emphasis="subtle"
+                            icon={true}
+                          />
+                        </div>
+                      }
+                      actions={
+                        <div data-grid="cell-3">
+                          <GoabButton
+                            type="tertiary"
+                            size="compact"
+                            onClick={() => {
+                              // TODO: Navigate to result detail
+                            }}
+                          >
+                            View
+                          </GoabButton>
+                        </div>
+                      }
+                    >
+                      <div className="case-card__body">
+                        <div className="case-card__section-fields">
+                              <GoabBlock direction="column" gap="xs" data-grid="cell-4">
+                                <span className="case-card__label">Staff</span>
+                                <span className="case-card__value">{result.staff || '—'}</span>
+                              </GoabBlock>
+                              <GoabBlock direction="column" gap="xs" data-grid="cell-5">
+                                <span className="case-card__label">Due date</span>
+                                <span className="case-card__value">{result.dueDate || '—'}</span>
+                              </GoabBlock>
+                              <GoabBlock direction="column" gap="xs" data-grid="cell-6">
+                                <span className="case-card__label">File number</span>
+                                <span className="case-card__value">{result.fileNumber || '—'}</span>
+                              </GoabBlock>
+                              <GoabBlock direction="column" gap="xs" data-grid="cell-7">
+                                <span className="case-card__label">Type</span>
+                                <span className="case-card__value">
+                                  <GoabBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" icon={true} />
+                                </span>
+                              </GoabBlock>
+                        </div>
                       </div>
-                    }
-                    actions={
-                      <div data-grid="cell-3">
-                        <GoabButton
-                          type="tertiary"
-                          size="compact"
-                          onClick={() => console.log('View result:', result.id)}
-                        >
-                          View
-                        </GoabButton>
-                      </div>
-                    }
-                  >
-                    <div className="case-card__body">
-                      <div className="case-card__section-fields">
-                            <GoabBlock direction="column" gap="xs">
-                              <span className="case-card__label">Staff</span>
-                              <span className="case-card__value">{result.staff || '—'}</span>
-                            </GoabBlock>
-                            <GoabBlock direction="column" gap="xs">
-                              <span className="case-card__label">Due date</span>
-                              <span className="case-card__value">{result.dueDate || '—'}</span>
-                            </GoabBlock>
-                            <GoabBlock direction="column" gap="xs">
-                              <span className="case-card__label">File number</span>
-                              <span className="case-card__value">{result.fileNumber || '—'}</span>
-                            </GoabBlock>
-                            <GoabBlock direction="column" gap="xs">
-                              <span className="case-card__label">Type</span>
-                              <span className="case-card__value">
-                                <GoabBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" icon={true} />
-                              </span>
-                            </GoabBlock>
-                      </div>
-                    </div>
-                  </GoabContainer>
+                    </GoabContainer>
+                  </div>
                 ))}
               </div>
             )}
@@ -477,7 +486,7 @@ export function SearchPage() {
         </div>
       )}
 
-      {/* List view */}
+      {/* List view - ExpandableListView has built-in GoabDataGrid with keyboard nav */}
       {viewMode === 'list' && (
         <div className="cases-content-padding">
           {filteredResults.length === 0 && searchResults.length > 0 ? (
@@ -508,19 +517,19 @@ export function SearchPage() {
                   <div className="case-card__section">
                     <div className="case-card__section-heading">Details</div>
                     <div className="case-card__section-fields">
-                      <GoabBlock direction="column" gap="xs">
+                      <GoabBlock direction="column" gap="xs" data-grid="cell-6">
                         <span className="case-card__label">Staff</span>
                         <span className="case-card__value">{result.staff || '—'}</span>
                       </GoabBlock>
-                      <GoabBlock direction="column" gap="xs">
+                      <GoabBlock direction="column" gap="xs" data-grid="cell-7">
                         <span className="case-card__label">Due date</span>
                         <span className="case-card__value">{result.dueDate || '—'}</span>
                       </GoabBlock>
-                      <GoabBlock direction="column" gap="xs">
+                      <GoabBlock direction="column" gap="xs" data-grid="cell-8">
                         <span className="case-card__label">File number</span>
                         <span className="case-card__value">{result.fileNumber || '—'}</span>
                       </GoabBlock>
-                      <GoabBlock direction="column" gap="xs">
+                      <GoabBlock direction="column" gap="xs" data-grid="cell-9">
                         <span className="case-card__label">Type</span>
                         <span className="case-card__value">
                           <GoabBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" icon={true} />

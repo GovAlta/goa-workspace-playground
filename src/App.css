@@ -699,8 +699,8 @@
   min-width: 0;
 }
 
-/* Tablet (624-700px): Search drops below title row */
-@media (max-width: 700px) {
+/* Tablet (624-880px): Search drops below title row */
+@media (max-width: 880px) {
   .page-header__content:has(.search-header-filters) {
     flex-wrap: wrap;
     row-gap: var(--goa-space-m);

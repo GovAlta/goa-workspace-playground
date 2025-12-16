@@ -36,12 +36,12 @@ interface ActivityItem {
   icon: string;
 }
 
-// GoA Design System extended palette colors for charts
-// These map to: --goa-color-extended-{name}-default tokens
+// GoA Design System extended palette colors for charts (adjusted for contrast)
+// Based on: --goa-color-extended-{name} tokens
 const GOA_CHART_COLORS = {
-  lilac: "#d4c2ff",    // extended-lilac-default (new cases)
-  pasture: "#afe274",  // extended-pasture-default (completed)
-  sunset: "#f7ac71",   // extended-sunset-default (updated)
+  lilac: "#be8cfb",    // extended-lilac (new cases)
+  pasture: "#8ac340",  // extended-pasture (completed)
+  sunset: "#f0963e",   // extended-sunset (updated)
 };
 
 // Get time-aware greeting
@@ -338,7 +338,12 @@ export function DashboardPage() {
       {/* Personalized Greeting */}
       <div className="dashboard-greeting">
         <div className="dashboard-greeting__content">
-          <GoabText size={isMobile ? "heading-s" : "heading-m"} mt="none" mb="none">
+          <GoabText
+            size={isMobile ? "heading-s" : "heading-m"}
+            mt="none"
+            mb="none"
+            color={isMobile ? "secondary" : undefined}
+          >
             {getGreeting()}, Edna
           </GoabText>
 {!isMobile && (
