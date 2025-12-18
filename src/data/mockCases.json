@@ -10,6 +10,7 @@
     "priority":"high",
     "jurisdiction":"Calgary",
     "category":"todo",
+    "comments":3,
     "selected":false
   },
   {
@@ -23,6 +24,7 @@
     "priority":"medium",
     "jurisdiction":"Edmonton",
     "category":"progress",
+    "comments":7,
     "selected":false
   },
   {
@@ -36,6 +38,7 @@
     "priority":"low",
     "jurisdiction":"Red Deer",
     "category":"complete",
+    "comments":1,
     "selected":false
   },
   {
@@ -49,6 +52,7 @@
     "priority":"high",
     "jurisdiction":"Lethbridge",
     "category":"todo",
+    "comments":12,
     "selected":false
   },
   {
@@ -62,6 +66,7 @@
     "priority":"medium",
     "jurisdiction":"Calgary",
     "category":"todo",
+    "comments":0,
     "selected":false
   },
   {
@@ -75,6 +80,7 @@
     "priority":"high",
     "jurisdiction":"Edmonton",
     "category":"progress",
+    "comments":5,
     "selected":false
   },
   {
@@ -88,6 +94,7 @@
     "priority":"low",
     "jurisdiction":"Medicine Hat",
     "category":"complete",
+    "comments":2,
     "selected":false
   },
   {
@@ -100,6 +107,7 @@
     "statusText":"Email sent",
     "jurisdiction":"Fort McMurray",
     "category":"todo",
+    "comments":9,
     "selected":false
   },
   {
@@ -113,6 +121,7 @@
     "priority":"medium",
     "jurisdiction":"Calgary",
     "category":"progress",
+    "comments":4,
     "selected":false
   },
   {
@@ -125,6 +134,7 @@
     "priority":"high",
     "jurisdiction":"Edmonton",
     "category":"todo",
+    "comments":0,
     "selected":false
   },
   {
@@ -138,6 +148,7 @@
     "priority":"low",
     "jurisdiction":"Red Deer",
     "category":"complete",
+    "comments":6,
     "selected":false
   },
   {
@@ -151,6 +162,7 @@
     "priority":"medium",
     "jurisdiction":"Lethbridge",
     "category":"progress",
+    "comments":1,
     "selected":false
   },
   {
@@ -164,6 +176,7 @@
     "priority":"high",
     "jurisdiction":"Calgary",
     "category":"todo",
+    "comments":8,
     "selected":false
   },
   {
@@ -177,6 +190,7 @@
     "priority":"high",
     "jurisdiction":"Edmonton",
     "category":"progress",
+    "comments":2,
     "selected":false
   },
   {
@@ -190,6 +204,7 @@
     "priority":"low",
     "jurisdiction":"Grande Prairie",
     "category":"complete",
+    "comments":0,
     "selected":false
   },
   {
@@ -203,6 +218,7 @@
     "priority":"medium",
     "jurisdiction":"Airdrie",
     "category":"todo",
+    "comments":11,
     "selected":false
   },
   {
@@ -216,6 +232,7 @@
     "priority":"high",
     "jurisdiction":"Calgary",
     "category":"todo",
+    "comments":3,
     "selected":false
   },
   {
@@ -229,6 +246,7 @@
     "priority":"high",
     "jurisdiction":"Edmonton",
     "category":"progress",
+    "comments":0,
     "selected":false
   },
   {
@@ -242,6 +260,7 @@
     "priority":"low",
     "jurisdiction":"Spruce Grove",
     "category":"complete",
+    "comments":4,
     "selected":false
   },
   {
@@ -255,6 +274,7 @@
     "priority":"medium",
     "jurisdiction":"St. Albert",
     "category":"progress",
+    "comments":7,
     "selected":false
   }
 ]

@@ -7,8 +7,10 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { MenuContext, useMenu } from './contexts/MenuContext';
 import { PageHeaderProvider } from './contexts/PageHeaderContext';
+import { PageFooterProvider } from './contexts/PageFooterContext';
 import { ScrollStateProvider, useScrollState } from './contexts/ScrollStateContext';
 import { PageHeader } from './components/PageHeader';
+import { PageFooter } from './components/PageFooter';
 import {NotificationContent} from "./notification/NotificationContent";
 import { useNotifications } from "./contexts/NotificationContext";
 import { MOBILE_BREAKPOINT } from "./constants/breakpoints";
@@ -31,6 +33,7 @@ function WorkspaceContent() {
       >
         <PageHeader />
         <Outlet />
+        <PageFooter />
       </div>
     );
   }
@@ -43,6 +46,7 @@ function WorkspaceContent() {
     >
       <PageHeader />
       <Outlet />
+      <PageFooter />
     </div>
   );
 }
@@ -74,7 +78,6 @@ export function App() {
 
   // Navigate and close menu on mobile
   const handleNavigate = (path: string) => {
-    console.log("handleNavigate is clicked ", path);
     navigate(path);
   };
 
@@ -108,11 +111,10 @@ export function App() {
     }
   }, [menuOpen, isMobile]);
 
-  console.log('[App] Rendering, menuOpen:', menuOpen, 'isMobile:', isMobile);
-
   return (
     <MenuContext.Provider value={{ menuOpen, setMenuOpen, isMobile }}>
     <PageHeaderProvider>
+    <PageFooterProvider>
     <ScrollStateProvider>
     <div className="app-layout">
       <GoabxWorkSideMenu
@@ -121,12 +123,16 @@ export function App() {
           userName="Edna Mode"
           userSecondaryText="edna.mode@example.com"
           open={menuOpen}
-          onToggle={() => {
-            console.log('[App] onToggle called, toggling menuOpen from', menuOpen, 'to', !menuOpen);
-            setMenuOpen(prev => !prev);
-          }}
+          onToggle={() => setMenuOpen(prev => !prev)}
           primaryContent={
             <>
+              <GoabxWorkSideMenuItem
+                  icon="grid"
+                  label="Dashboard"
+                  url={"/"}
+                  onClick={() => handleNavigate("/")}
+              />
+
               <GoabxWorkSideMenuItem
                   icon="search"
                   label="Search"
@@ -136,9 +142,9 @@ export function App() {
 
               <GoabxWorkSideMenuItem
                   icon="list"
-                  label="Clients"
-                  url={"/clients"}
-                  onClick={() => handleNavigate("/clients")}
+                  label="Cases"
+                  url={"/cases"}
+                  onClick={() => handleNavigate("/cases")}
               />
 
               <GoabxWorkSideMenuItem
@@ -202,6 +208,7 @@ export function App() {
       </div>
     </div>
     </ScrollStateProvider>
+    </PageFooterProvider>
     </PageHeaderProvider>
     </MenuContext.Provider>
   );

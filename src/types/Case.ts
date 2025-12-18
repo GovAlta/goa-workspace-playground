@@ -1,4 +1,4 @@
-export interface Client {
+export interface Case {
     [key: string]: unknown;
     id: string;
     name: string;
@@ -10,5 +10,6 @@ export interface Client {
     priority: 'high' | 'medium' | 'low';
     jurisdiction: string;
     category: 'todo' | 'progress' | 'complete';
+    comments: number;
     selected: boolean;
 }

@@ -5,9 +5,10 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-d
 import "@abgov/web-components";
 
 // Import all page components
+import { DashboardPage } from './routes/DashboardPage';
 import { SearchPage } from './routes/SearchPage';
-import { ClientsPage } from './routes/ClientsPage';
-import { ClientDetailPage } from './routes/ClientDetailPage';
+import { CasesPage } from './routes/CasesPage';
+import { CaseDetailPage } from './routes/CaseDetailPage';
 import { SchedulePage } from './routes/SchedulePage';
 import { DocumentsPage } from './routes/DocumentsPage';
 import { TeamPage } from './routes/TeamPage';
@@ -39,10 +40,10 @@ root.render(
         <NotificationProvider>
             <Routes>
                 <Route path="/" element={<App />}>
-                    <Route index element={<Navigate to="/search" replace />} />
+                    <Route index element={<DashboardPage />} />
                     <Route path="search" element={<SearchPage />} />
-                    <Route path="clients" element={<ClientsPage />} />
-                    <Route path="client/:id" element={<ClientDetailPage />} />
+                    <Route path="cases" element={<CasesPage />} />
+                    <Route path="case/:id" element={<CaseDetailPage />} />
                     <Route path="schedule" element={<SchedulePage />} />
                     <Route path="documents" element={<DocumentsPage />} />
                     <Route path="documents/sub1" element={<SubMenuItem1Page />} />

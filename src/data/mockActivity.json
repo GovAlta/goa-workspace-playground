@@ -1,0 +1,42 @@
+[
+  {
+    "id": "1",
+    "timestamp": "2024-12-15T09:15:00",
+    "action": "Status updated to Accepted",
+    "caseId": "1",
+    "caseName": "Gilbert Barton",
+    "icon": "checkmark-circle"
+  },
+  {
+    "id": "2",
+    "timestamp": "2024-12-15T08:45:00",
+    "action": "Comment added",
+    "caseId": "2",
+    "caseName": "Shelley Leffler",
+    "icon": "chatbox"
+  },
+  {
+    "id": "3",
+    "timestamp": "2024-12-14T16:30:00",
+    "action": "Case assigned to you",
+    "caseId": "10",
+    "caseName": "Wendy Cormier",
+    "icon": "person"
+  },
+  {
+    "id": "4",
+    "timestamp": "2024-12-14T14:20:00",
+    "action": "Document uploaded",
+    "caseId": "3",
+    "caseName": "Randal Sanford",
+    "icon": "document"
+  },
+  {
+    "id": "5",
+    "timestamp": "2024-12-14T11:00:00",
+    "action": "Due date updated",
+    "caseId": "4",
+    "caseName": "Bonnie Metz",
+    "icon": "calendar"
+  }
+]

@@ -1,5 +1,10 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 
+export interface ScrollState {
+  scrolledLeft: boolean;
+  scrolledRight: boolean;
+}
+
 interface ScrollContainerProps {
   children: React.ReactNode;
   className?: string;

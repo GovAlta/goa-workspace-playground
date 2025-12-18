@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState, useCallback, useMemo } from "react";
 import {
     GoabTable,
     GoabTableSortHeader,
@@ -10,10 +10,7 @@ import { TableColumn } from "../types/TableColumn";
 import { ScrollContainer } from "./ScrollContainer";
 import { useMenu } from "../contexts/MenuContext";
 
-export interface SortConfig {
-    key: string;
-    direction: 'asc' | 'desc' | 'none';
-}
+import { SortConfig } from "../utils/searchUtils";
 
 export interface DataTableProps<T> {
     columns: TableColumn<T>[];
@@ -21,11 +18,12 @@ export interface DataTableProps<T> {
     isLoading?: boolean;
     skeletonRows?: number;
     onSort?: (event: GoabTableOnSortDetail) => void;
-    sortConfig?: SortConfig;
+    sortConfig?: SortConfig;  // Two-level sort config
     emptyState?: ReactNode;
     getRowKey: (item: T) => string;
     getRowSelected?: (item: T) => boolean;
     striped?: boolean;
+    onRowClick?: (item: T) => void;
 }
 
 export function DataTable<T>({
@@ -39,6 +37,7 @@ export function DataTable<T>({
     getRowKey,
     getRowSelected,
     striped = true,
+    onRowClick,
 }: DataTableProps<T>) {
     const { isMobile } = useMenu();
 
@@ -71,6 +70,32 @@ export function DataTable<T>({
         }
     };
 
+    // Get sort direction for a column (checks both primary and secondary)
+    const getColumnSortDirection = (columnKey: string): 'asc' | 'desc' | 'none' => {
+        if (sortConfig?.primary?.key === columnKey) {
+            return sortConfig.primary.direction;
+        }
+        if (sortConfig?.secondary?.key === columnKey) {
+            return sortConfig.secondary.direction;
+        }
+        return 'none';
+    };
+
+    // Get sort order for a column ("1", "2", or undefined)
+    const getColumnSortOrder = (columnKey: string): string | undefined => {
+        // Only show numbers if there are two sorts active
+        if (!sortConfig?.primary || !sortConfig?.secondary) {
+            return undefined;
+        }
+        if (sortConfig.primary.key === columnKey) {
+            return "1";
+        }
+        if (sortConfig.secondary.key === columnKey) {
+            return "2";
+        }
+        return undefined;
+    };
+
     const renderHeader = (column: TableColumn<T>) => {
         // Custom header render takes priority
         if (column.headerRender) {
@@ -80,7 +105,8 @@ export function DataTable<T>({
             return (
                 <GoabTableSortHeader
                     name={column.key}
-                    direction={sortConfig.key === column.key ? sortConfig.direction : 'none'}
+                    direction={getColumnSortDirection(column.key)}
+                    sortOrder={getColumnSortOrder(column.key)}
                 >
                     {column.header}
                 </GoabTableSortHeader>
@@ -96,7 +122,7 @@ export function DataTable<T>({
                     <GoabTable
                         width="100%"
                         onSort={onSort}
-                        variant={isMobile ? "normal" : "relaxed"}
+                        variant="normal"
                         striped={striped}
                     >
                         <thead>
@@ -140,6 +166,23 @@ export function DataTable<T>({
                                         key={getRowKey(item)}
                                         data-grid="row"
                                         aria-selected={getRowSelected?.(item) ? "true" : undefined}
+                                        onClick={(e) => {
+                                            if (!onRowClick) return;
+                                            // Don't trigger if clicking on interactive elements
+                                            const target = e.target as HTMLElement;
+                                            if (
+                                                target.closest('button') ||
+                                                target.closest('a') ||
+                                                target.closest('input[type="checkbox"]') ||
+                                                target.closest('goa-checkbox') ||
+                                                target.closest('goa-menu-button') ||
+                                                target.closest('goa-popover')
+                                            ) {
+                                                return;
+                                            }
+                                            onRowClick(item);
+                                        }}
+                                        style={{ cursor: onRowClick ? 'pointer' : undefined }}
                                     >
                                         {columns.map((column) => (
                                             <td

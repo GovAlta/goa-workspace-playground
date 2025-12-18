@@ -5,13 +5,13 @@ import {
   GoabPageBlock,
 } from "@abgov/react-components";
 
-export function ClientDetailPage() {
+export function CaseDetailPage() {
   const { id } = useParams<{ id: string }>();
 
   return (
     <GoabPageBlock width="full">
       <GoabText tag="h1" size="heading-xl" mt="none" mb="l">
-        Client Detail {id} (To be continue)
+        Case Detail {id} (To be continued)
       </GoabText>
     </GoabPageBlock>
   );

@@ -2,13 +2,14 @@ import { SearchResult, TypeBadgeProps } from "../types/SearchResult";
 
 /**
  * Get badge properties based on the result type
- * Maps result types (client, application, document) to their badge visual styles
+ * Maps result types (client, case, application, document) to their badge visual styles
  */
 export const getTypeBadgeProps = (type: SearchResult['type']): TypeBadgeProps => {
   const badgeMap: Record<SearchResult['type'], TypeBadgeProps> = {
     client: { type: 'lilac', content: 'Client' },
+    case: { type: 'lilac', content: 'Case' },
     application: { type: 'pasture', content: 'Application' },
-    document: { type: 'sky', content: 'Document' }
+    document: { type: 'dawn', content: 'Document' }
   };
   return badgeMap[type];
 };
