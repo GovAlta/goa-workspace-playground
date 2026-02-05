@@ -128,7 +128,6 @@ export function CaseToolbar({
         </div>
         <div className="cases-actions-group">
           <GoabMenuButton
-            size="compact"
             type="tertiary"
             leadingIcon={isCompactToolbar ? "swap-vertical" : undefined}
             text={isCompactToolbar ? undefined : "Sort"}
@@ -146,7 +145,6 @@ export function CaseToolbar({
               <GoabMenuAction
                 text="Clear sort"
                 action="clear-sort"
-                variant="destructive"
               />
             )}
           </GoabMenuButton>

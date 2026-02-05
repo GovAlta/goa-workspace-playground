@@ -67,9 +67,8 @@ export function CaseCard({
           )}
           {activeTab === "all" ? (
             <GoabMenuButton
-              leadingIcon="ellipsis-horizontal"
-              leadingIconTheme="filled"
-              size="compact"
+              text={""}
+              leadingIcon="ellipsis-horizontal:filled"
               onAction={(e: GoabMenuButtonOnActionDetail) =>
                 onMenuAction(e.action, caseItem.id)
               }
@@ -87,9 +86,8 @@ export function CaseCard({
             </GoabxButton>
           ) : (
             <GoabMenuButton
-              leadingIcon="ellipsis-horizontal"
-              leadingIconTheme="filled"
-              size="compact"
+              text={""}
+              leadingIcon="ellipsis-horizontal:filled"
               onAction={(e: GoabMenuButtonOnActionDetail) =>
                 onMenuAction(e.action, caseItem.id)
               }

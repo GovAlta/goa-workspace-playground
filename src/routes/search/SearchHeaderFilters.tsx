@@ -2,6 +2,7 @@ import React from "react";
 import { GoabMenuButton, GoabMenuAction } from "@abgov/react-components";
 import { GoabxInput, GoabxDropdown, GoabxDropdownItem } from "@abgov/react-components/experimental";
 import {
+  GoabIconType,
   GoabInputOnChangeDetail,
   GoabMenuButtonOnActionDetail,
 } from "@abgov/ui-components-common";
@@ -29,7 +30,7 @@ function getViewLabel(viewMode: ViewMode): string {
   }
 }
 
-function getViewIcon(viewMode: ViewMode): string {
+function getViewIcon(viewMode: ViewMode): GoabIconType {
   switch (viewMode) {
     case "table":
       return "menu";
@@ -98,7 +99,6 @@ export function SearchHeaderFilters({
         </GoabxDropdown>
 
         <GoabMenuButton
-          size="compact"
           type="tertiary"
           leadingIcon={getViewIcon(viewMode)}
           text={getViewLabel(viewMode)}
