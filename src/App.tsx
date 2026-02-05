@@ -36,21 +36,18 @@ export function App() {
                     icon="grid"
                     label="Dashboard"
                     url={"/"}
-                    onClick={() => handleNavigate("/")}
                   />
 
                   <GoabxWorkSideMenuItem
                     icon="search"
                     label="Search"
                     url={"/search"}
-                    onClick={() => handleNavigate("/search")}
                   />
 
                   <GoabxWorkSideMenuItem
                     icon="list"
                     label="Cases"
                     url={"/cases"}
-                    onClick={() => handleNavigate("/cases")}
                   />
 
                   <GoabxWorkSideMenuItem
@@ -59,22 +56,18 @@ export function App() {
                     type="success"
                     badge="New"
                     url={"/documents"}
-                    onClick={() => handleNavigate("/documents")}
                   >
                     <GoabxWorkSideMenuItem
                       label="Sub menu item 1"
                       url={"/documents/sub1"}
-                      onClick={() => handleNavigate("/documents/sub1")}
                     />
                     <GoabxWorkSideMenuItem
                       label="Sub menu item 2"
                       url={"/documents/sub2"}
-                      onClick={() => handleNavigate("/documents/sub2")}
                     />
                     <GoabxWorkSideMenuItem
                       label="Sub menu item 3"
                       url={"/documents/sub3"}
-                      onClick={() => handleNavigate("/documents/sub3")}
                     />
                   </GoabxWorkSideMenuItem>
                 </>
@@ -83,11 +76,10 @@ export function App() {
                 <>
                   <GoabxWorkSideMenuItem
                     badge="Pending"
-                    type="midtone"
+                    type="emergency"
                     icon="notifications"
                     label="Notifications"
                     url={"/notifications"}
-                    onClick={() => handleNavigate("/notifications")}
                   />
                 </>
               }
@@ -97,13 +89,11 @@ export function App() {
                     icon="settings"
                     label="Settings"
                     url="/settings"
-                    onClick={() => handleNavigate("/settings")}
                   />
                   <GoabxWorkSideMenuItem
                     icon="log-out"
                     label="Log out"
                     url="/logout"
-                    onClick={() => handleNavigate("/logout")}
                   />
                 </>
               }
