@@ -488,6 +488,7 @@ export function CasesPage() {
           <GoabMenuButton
             leadingIcon="ellipsis-horizontal"
             size="compact"
+            text=""
             onAction={(e: GoabMenuButtonOnActionDetail) =>
               onMenuActionButton(e.action, caseItem.id)
             }
