@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { GoabButton } from "@abgov/react-components";
+import { GoabxButton } from "@abgov/react-components/experimental";
 import { GoabIconType } from "@abgov/ui-components-common";
 import { ErrorLayout } from "./ErrorLayout";
 
@@ -29,9 +29,9 @@ export function ErrorPage({
       heading={heading}
       description={description}
       action={
-        <GoabButton type="primary" size="compact" onClick={() => navigate(buttonLink)}>
+        <GoabxButton type="primary" size="compact" onClick={() => navigate(buttonLink)}>
           {buttonText}
-        </GoabButton>
+        </GoabxButton>
       }
     />
   );

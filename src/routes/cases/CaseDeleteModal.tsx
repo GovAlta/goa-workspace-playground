@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  GoabModal,
-  GoabButtonGroup,
-  GoabButton,
-  GoabText,
-} from "@abgov/react-components";
+import { GoabButtonGroup, GoabText } from "@abgov/react-components";
+import { GoabxModal, GoabxButton } from "@abgov/react-components/experimental";
 
 interface CaseDeleteModalProps {
   open: boolean;
@@ -14,29 +10,29 @@ interface CaseDeleteModalProps {
 
 export function CaseDeleteModal({ open, onConfirm, onCancel }: CaseDeleteModalProps) {
   return (
-    <GoabModal
+    <GoabxModal
       heading="Delete case record"
       open={open}
       calloutVariant="emergency"
       actions={
         <GoabButtonGroup alignment="end">
-          <GoabButton type="tertiary" size="compact" onClick={onCancel}>
+          <GoabxButton type="tertiary" size="compact" onClick={onCancel}>
             Cancel
-          </GoabButton>
-          <GoabButton
+          </GoabxButton>
+          <GoabxButton
             type="primary"
             size="compact"
             variant="destructive"
             onClick={onConfirm}
           >
             Delete
-          </GoabButton>
+          </GoabxButton>
         </GoabButtonGroup>
       }
     >
       <GoabText mt="none" mb="none">
         Are you sure you want to delete this case record? This action cannot be undone.
       </GoabText>
-    </GoabModal>
+    </GoabxModal>
   );
 }

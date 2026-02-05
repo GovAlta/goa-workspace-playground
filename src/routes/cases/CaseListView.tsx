@@ -1,11 +1,6 @@
 import { ReactNode } from "react";
-import {
-  GoabIcon,
-  GoabBadge,
-  GoabLink,
-  GoabButton,
-  GoabBlock,
-} from "@abgov/react-components";
+import { GoabIcon, GoabBlock } from "@abgov/react-components";
+import { GoabxBadge, GoabxLink, GoabxButton } from "@abgov/react-components/experimental";
 import { ExpandableListView } from "../../components/ExpandableListView";
 import { Case } from "../../types/Case";
 import { GroupedCase } from "./types";
@@ -26,26 +21,26 @@ function renderCaseCollapsed(
 ) {
   return {
     title: <span className="expandable-list__name">{caseItem.name}</span>,
-    badge: <GoabBadge type={caseItem.status} content={caseItem.statusText} icon={true} />,
+    badge: <GoabxBadge type={caseItem.status} content={caseItem.statusText} icon={true} />,
     secondaryInfo: (
       <div className="expandable-list__header-actions">
         {caseItem.comments > 0 && (
-          <GoabLink leadingIcon="chatbox" size="small">
+          <GoabxLink leadingIcon="chatbox" size="small">
             <a href="#">
               {caseItem.comments} comment{caseItem.comments === 1 ? "" : "s"}
             </a>
-          </GoabLink>
+          </GoabxLink>
         )}
       </div>
     ),
     actions: (
-      <GoabButton
+      <GoabxButton
         type="tertiary"
         size="compact"
         onClick={() => onMenuAction("view", caseItem.id)}
       >
         View
-      </GoabButton>
+      </GoabxButton>
     ),
   };
 }
@@ -127,7 +122,7 @@ export function CaseListView({
                   size="small"
                 />
                 <span className="cases-group__label">{group.label}</span>
-                <GoabBadge type="information" content={String(group.cases.length)} />
+                <GoabxBadge type="information" content={String(group.cases.length)} />
               </button>
               {expandedGroups.has(group.key) && (
                 <div className="cases-group__list">

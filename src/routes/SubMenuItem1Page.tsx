@@ -1,5 +1,6 @@
 import React from "react";
-import { GoabText, GoabPageBlock, GoabBadge } from "@abgov/react-components";
+import { GoabText, GoabPageBlock } from "@abgov/react-components";
+import { GoabxBadge } from "@abgov/react-components/experimental";
 
 export function SubMenuItem1Page() {
   return (

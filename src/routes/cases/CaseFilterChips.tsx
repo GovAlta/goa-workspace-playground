@@ -1,4 +1,5 @@
-import { GoabFilterChip, GoabIcon, GoabLink } from "@abgov/react-components";
+import { GoabIcon } from "@abgov/react-components";
+import { GoabxFilterChip, GoabxLink } from "@abgov/react-components/experimental";
 import { FilterChip, SORT_FIELD_LABELS } from "./types";
 import { SortConfig } from "../../utils/searchUtils";
 
@@ -37,7 +38,7 @@ export function CaseFilterChips({
       />
 
       {sortConfig.primary && (
-        <GoabFilterChip
+        <GoabxFilterChip
           key={`sort-primary-${sortConfig.primary.key}`}
           content={SORT_FIELD_LABELS[sortConfig.primary.key]}
           leadingIcon={sortConfig.primary.direction === "asc" ? "arrow-up" : "arrow-down"}
@@ -46,7 +47,7 @@ export function CaseFilterChips({
         />
       )}
       {sortConfig.secondary && (
-        <GoabFilterChip
+        <GoabxFilterChip
           key={`sort-secondary-${sortConfig.secondary.key}`}
           content={SORT_FIELD_LABELS[sortConfig.secondary.key]}
           leadingIcon={
@@ -58,7 +59,7 @@ export function CaseFilterChips({
       )}
 
       {searchChips.map((chip) => (
-        <GoabFilterChip
+        <GoabxFilterChip
           key={`search-${chip}`}
           content={chip}
           onClick={() => onRemoveSearchChip(chip)}
@@ -66,14 +67,14 @@ export function CaseFilterChips({
       ))}
 
       {filterChips.map((chip) => (
-        <GoabFilterChip
+        <GoabxFilterChip
           key={`${chip.category}-${chip.value}`}
           content={chip.label}
           onClick={() => onRemoveFilter(chip.category, chip.value)}
         />
       ))}
 
-      <GoabLink color="dark" size="small">
+      <GoabxLink color="dark" size="small">
         <a
           href="#"
           onClick={(e) => {
@@ -83,7 +84,7 @@ export function CaseFilterChips({
         >
           Clear all
         </a>
-      </GoabLink>
+      </GoabxLink>
     </div>
   );
 }

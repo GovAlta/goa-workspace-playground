@@ -1,4 +1,4 @@
-import { GoabButton } from "@abgov/react-components";
+import { GoabxButton } from "@abgov/react-components/experimental";
 import emptyStateIllustration from "../assets/empty-state-illustration.svg";
 import "./EmptyState.css";
 
@@ -17,9 +17,9 @@ export function EmptyState({ onButtonClick }: EmptyStateProps) {
       <span className="empty-state__heading">No results found</span>
       <span className="empty-state__subline">Try adjusting your search or filters.</span>
       {onButtonClick && (
-        <GoabButton type="tertiary" size="compact" onClick={onButtonClick}>
+        <GoabxButton type="tertiary" size="compact" onClick={onButtonClick}>
           Clear filters
-        </GoabButton>
+        </GoabxButton>
       )}
     </div>
   );

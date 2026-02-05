@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import { GoabTable, GoabIcon, GoabBadge } from "@abgov/react-components";
+import { GoabIcon } from "@abgov/react-components";
+import { GoabxTable, GoabxBadge } from "@abgov/react-components/experimental";
 import { Case } from "../../types/Case";
 import { TableColumn } from "../../types/TableColumn";
 import { DataTable } from "../../components/DataTable";
@@ -39,7 +40,7 @@ export function CaseTable({
   if (groupedCases) {
     return (
       <div className="table-wrapper">
-        <GoabTable width="100%" variant="normal" striped={true}>
+        <GoabxTable width="100%" variant="normal" striped={true}>
           <thead>
             <tr>
               {columns.map((column) => (
@@ -65,7 +66,7 @@ export function CaseTable({
                       size="small"
                     />
                     <span className="table-group-row__label">{group.label}</span>
-                    <GoabBadge type="information" content={String(group.cases.length)} />
+                    <GoabxBadge type="information" content={String(group.cases.length)} />
                   </div>
                 </td>
               </tr>
@@ -84,7 +85,7 @@ export function CaseTable({
                 ))}
             </tbody>
           ))}
-        </GoabTable>
+        </GoabxTable>
       </div>
     );
   }

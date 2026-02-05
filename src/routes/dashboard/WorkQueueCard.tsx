@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { GoabBadge } from "@abgov/react-components";
+import { GoabxBadge } from "@abgov/react-components/experimental";
 import { getPriorityBadgeProps } from "../../utils/badgeUtils";
 import { Case } from "../../types/Case";
 
@@ -22,9 +22,9 @@ export function WorkQueueCard({ caseItem, isOverdue }: WorkQueueCardProps) {
         </div>
         <div className="dashboard-queue-card__badges">
           {caseItem.priority && (
-            <GoabBadge {...getPriorityBadgeProps(caseItem.priority)} />
+            <GoabxBadge {...getPriorityBadgeProps(caseItem.priority)} />
           )}
-          <GoabBadge
+          <GoabxBadge
             type={caseItem.status}
             content={caseItem.statusText}
             emphasis="subtle"

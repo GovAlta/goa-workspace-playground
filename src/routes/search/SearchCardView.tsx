@@ -1,13 +1,12 @@
 import React from "react";
 import {
   GoabText,
-  GoabButton,
-  GoabBadge,
   GoabBlock,
   GoabContainer,
   GoabSkeleton,
   GoabDataGrid,
 } from "@abgov/react-components";
+import { GoabxButton, GoabxBadge } from "@abgov/react-components/experimental";
 import { SearchResult } from "../../types/SearchResult";
 import { getTypeBadgeProps } from "../../utils/badgeUtils";
 
@@ -69,7 +68,7 @@ export function SearchCardView({ results, isLoading, emptyState }: SearchCardVie
                       <GoabText size="heading-xs" mt="none" mb="none" data-grid="cell-1">
                         {result.name}
                       </GoabText>
-                      <GoabBadge
+                      <GoabxBadge
                         data-grid="cell-2"
                         type={result.status}
                         content={result.statusText}
@@ -80,7 +79,7 @@ export function SearchCardView({ results, isLoading, emptyState }: SearchCardVie
                   }
                   actions={
                     <div data-grid="cell-3">
-                      <GoabButton
+                      <GoabxButton
                         type="tertiary"
                         size="compact"
                         onClick={() => {
@@ -88,7 +87,7 @@ export function SearchCardView({ results, isLoading, emptyState }: SearchCardVie
                         }}
                       >
                         View
-                      </GoabButton>
+                      </GoabxButton>
                     </div>
                   }
                 >
@@ -111,7 +110,7 @@ export function SearchCardView({ results, isLoading, emptyState }: SearchCardVie
                       <GoabBlock direction="column" gap="xs" data-grid="cell-7">
                         <span className="data-card__label">Type</span>
                         <span className="data-card__value">
-                          <GoabBadge
+                          <GoabxBadge
                             {...getTypeBadgeProps(result.type)}
                             emphasis="subtle"
                             icon={true}

@@ -1,10 +1,6 @@
 import React, { ReactNode, useState, useCallback, useMemo } from "react";
-import {
-  GoabTable,
-  GoabTableSortHeader,
-  GoabDataGrid,
-  GoabSkeleton,
-} from "@abgov/react-components";
+import { GoabDataGrid, GoabSkeleton } from "@abgov/react-components";
+import { GoabxTable, GoabxTableSortHeader } from "@abgov/react-components/experimental";
 import { GoabTableOnSortDetail } from "@abgov/ui-components-common";
 import { TableColumn } from "../types/TableColumn";
 import { ScrollContainer } from "./ScrollContainer";
@@ -103,13 +99,13 @@ export function DataTable<T>({
     }
     if (column.sortable && column.header && onSort && sortConfig) {
       return (
-        <GoabTableSortHeader
+        <GoabxTableSortHeader
           name={column.key}
           direction={getColumnSortDirection(column.key)}
           sortOrder={getColumnSortOrder(column.key)}
         >
           {column.header}
-        </GoabTableSortHeader>
+        </GoabxTableSortHeader>
       );
     }
     return column.header || null;
@@ -119,7 +115,7 @@ export function DataTable<T>({
     <ScrollContainer>
       <div className="table-wrapper">
         <GoabDataGrid keyboardNav="table" keyboardIconPosition="right">
-          <GoabTable width="100%" onSort={onSort} variant="normal" striped={striped}>
+          <GoabxTable width="100%" onSort={onSort} variant="normal" striped={striped}>
             <thead>
               <tr data-grid="row">
                 {columns.map((column) => (
@@ -199,7 +195,7 @@ export function DataTable<T>({
                 ))
               )}
             </tbody>
-          </GoabTable>
+          </GoabxTable>
         </GoabDataGrid>
       </div>
     </ScrollContainer>

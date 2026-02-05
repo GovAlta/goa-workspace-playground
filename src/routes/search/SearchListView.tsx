@@ -1,5 +1,6 @@
 import React from "react";
-import { GoabBadge, GoabButton, GoabBlock } from "@abgov/react-components";
+import { GoabBlock } from "@abgov/react-components";
+import { GoabxBadge, GoabxButton } from "@abgov/react-components/experimental";
 import { SearchResult } from "../../types/SearchResult";
 import { getTypeBadgeProps } from "../../utils/badgeUtils";
 import { ExpandableListView } from "../../components/ExpandableListView";
@@ -24,7 +25,7 @@ export function SearchListView({ results, isLoading, emptyState }: SearchListVie
         renderCollapsed={(result) => ({
           title: <span className="expandable-list__name">{result.name}</span>,
           badge: (
-            <GoabBadge
+            <GoabxBadge
               type={result.status}
               content={result.statusText}
               emphasis="subtle"
@@ -32,16 +33,16 @@ export function SearchListView({ results, isLoading, emptyState }: SearchListVie
             />
           ),
           secondaryInfo: (
-            <GoabBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" />
+            <GoabxBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" />
           ),
           actions: (
-            <GoabButton
+            <GoabxButton
               type="tertiary"
               size="compact"
               onClick={() => console.log("View result:", result.id)}
             >
               View
-            </GoabButton>
+            </GoabxButton>
           ),
         })}
         renderExpanded={(result) => (
@@ -64,7 +65,7 @@ export function SearchListView({ results, isLoading, emptyState }: SearchListVie
                 <GoabBlock direction="column" gap="xs" data-grid="cell-9">
                   <span className="data-card__label">Type</span>
                   <span className="data-card__value">
-                    <GoabBadge
+                    <GoabxBadge
                       {...getTypeBadgeProps(result.type)}
                       emphasis="subtle"
                       icon={true}

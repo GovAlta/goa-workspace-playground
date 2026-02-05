@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  GoabInput,
-  GoabDropdown,
-  GoabDropdownItem,
-  GoabMenuButton,
-  GoabMenuAction,
-} from "@abgov/react-components";
+import { GoabMenuButton, GoabMenuAction } from "@abgov/react-components";
+import { GoabxInput, GoabxDropdown, GoabxDropdownItem } from "@abgov/react-components/experimental";
 import {
   GoabInputOnChangeDetail,
   GoabMenuButtonOnActionDetail,
@@ -59,7 +54,7 @@ export function SearchHeaderFilters({
   return (
     <div className="search-header-filters">
       <div className="search-header-filters__search">
-        <GoabInput
+        <GoabxInput
           name="searchText"
           value={filters.searchText}
           onChange={(e: GoabInputOnChangeDetail) =>
@@ -74,21 +69,21 @@ export function SearchHeaderFilters({
       </div>
 
       <div className="search-header-filters__dropdowns">
-        <GoabDropdown
+        <GoabxDropdown
           value={filters.entity}
           onChange={(e) => setFilters((f) => ({ ...f, entity: e.value }))}
           placeholder="All types"
           size="compact"
           width="120px"
         >
-          <GoabDropdownItem value="all" label="All types" />
-          <GoabDropdownItem value="client" label="Clients" />
-          <GoabDropdownItem value="case" label="Cases" />
-          <GoabDropdownItem value="application" label="Applications" />
-          <GoabDropdownItem value="document" label="Documents" />
-        </GoabDropdown>
+          <GoabxDropdownItem value="all" label="All types" />
+          <GoabxDropdownItem value="client" label="Clients" />
+          <GoabxDropdownItem value="case" label="Cases" />
+          <GoabxDropdownItem value="application" label="Applications" />
+          <GoabxDropdownItem value="document" label="Documents" />
+        </GoabxDropdown>
 
-        <GoabDropdown
+        <GoabxDropdown
           value={filters.status}
           onChange={(e) => setFilters((f) => ({ ...f, status: e.value }))}
           placeholder="All statuses"
@@ -96,11 +91,11 @@ export function SearchHeaderFilters({
           width="150px"
           maxHeight="70vh"
         >
-          <GoabDropdownItem value="all" label="All statuses" />
+          <GoabxDropdownItem value="all" label="All statuses" />
           {statusOptions.map((status) => (
-            <GoabDropdownItem key={status} value={status} label={status} />
+            <GoabxDropdownItem key={status} value={status} label={status} />
           ))}
-        </GoabDropdown>
+        </GoabxDropdown>
 
         <GoabMenuButton
           size="compact"

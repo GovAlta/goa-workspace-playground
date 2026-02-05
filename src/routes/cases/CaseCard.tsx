@@ -1,14 +1,16 @@
 import {
   GoabContainer,
-  GoabCheckbox,
   GoabText,
-  GoabBadge,
-  GoabLink,
   GoabMenuButton,
   GoabMenuAction,
-  GoabButton,
   GoabBlock,
 } from "@abgov/react-components";
+import {
+  GoabxCheckbox,
+  GoabxBadge,
+  GoabxLink,
+  GoabxButton,
+} from "@abgov/react-components/experimental";
 import { GoabMenuButtonOnActionDetail } from "@abgov/ui-components-common";
 import { Case } from "../../types/Case";
 
@@ -36,7 +38,7 @@ export function CaseCard({
       heading={
         <div className="data-card__title">
           {activeTab === "all" && (
-            <GoabCheckbox
+            <GoabxCheckbox
               name={`select-card-${caseItem.id}`}
               checked={caseItem.selected}
               onChange={() => onSelectChange(caseItem.id, !caseItem.selected)}
@@ -46,7 +48,7 @@ export function CaseCard({
           <GoabText size="heading-xs" mt={"none"} mb={"none"} data-grid={"cell-1"}>
             {caseItem.name}
           </GoabText>
-          <GoabBadge
+          <GoabxBadge
             data-grid={"cell-2"}
             type={caseItem.status}
             content={caseItem.statusText}
@@ -57,11 +59,11 @@ export function CaseCard({
       actions={
         <div data-grid={"cell-3"} className="data-card__actions">
           {caseItem.comments > 0 && (
-            <GoabLink leadingIcon="chatbox" size="small">
+            <GoabxLink leadingIcon="chatbox" size="small">
               <a href="#">
                 {caseItem.comments} comment{caseItem.comments === 1 ? "" : "s"}
               </a>
-            </GoabLink>
+            </GoabxLink>
           )}
           {activeTab === "all" ? (
             <GoabMenuButton
@@ -76,13 +78,13 @@ export function CaseCard({
               <GoabMenuAction text="Assign me" action="assign" />
             </GoabMenuButton>
           ) : activeTab === "todo" ? (
-            <GoabButton
+            <GoabxButton
               type="tertiary"
               size="compact"
               onClick={() => onMenuAction("start", caseItem.id)}
             >
               Start
-            </GoabButton>
+            </GoabxButton>
           ) : (
             <GoabMenuButton
               leadingIcon="ellipsis-horizontal"

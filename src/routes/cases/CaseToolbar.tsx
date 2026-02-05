@@ -1,14 +1,16 @@
 import {
-  GoabTabs,
   GoabTab,
-  GoabBadge,
-  GoabFormItem,
-  GoabInput,
   GoabMenuButton,
   GoabMenuAction,
   GoabIconButton,
-  GoabButton,
 } from "@abgov/react-components";
+import {
+  GoabxTabs,
+  GoabxBadge,
+  GoabxFormItem,
+  GoabxInput,
+  GoabxButton,
+} from "@abgov/react-components/experimental";
 import {
   GoabInputOnChangeDetail,
   GoabInputOnKeyPressDetail,
@@ -80,7 +82,7 @@ export function CaseToolbar({
   return (
     <div className="cases-toolbar-row">
       <div className="cases-toolbar-tabs">
-        <GoabTabs
+        <GoabxTabs
           initialTab={1}
           onChange={onTabChange}
           stackOnMobile={false}
@@ -91,7 +93,7 @@ export function CaseToolbar({
             heading={
               <>
                 Assigned to me{" "}
-                <GoabBadge type="information" content={String(myCasesCount)} />
+                <GoabxBadge type="information" content={String(myCasesCount)} />
               </>
             }
           />
@@ -99,18 +101,18 @@ export function CaseToolbar({
             heading={
               <>
                 In progress{" "}
-                <GoabBadge type="important" content={String(inProgressCount)} />
+                <GoabxBadge type="important" content={String(inProgressCount)} />
               </>
             }
           />
           <GoabTab heading="Complete" />
-        </GoabTabs>
+        </GoabxTabs>
         <div className="cases-toolbar-tabs__spacer" aria-hidden="true" />
       </div>
       <div className="cases-search-row">
         <div className="cases-search-group">
-          <GoabFormItem id="filterInput" error={inputError} labelSize="compact">
-            <GoabInput
+          <GoabxFormItem id="filterInput" error={inputError} labelSize="compact">
+            <GoabxInput
               name="filterInput"
               value={inputValue}
               leadingIcon="search"
@@ -122,7 +124,7 @@ export function CaseToolbar({
               }}
               onKeyPress={onInputKeyPress}
             />
-          </GoabFormItem>
+          </GoabxFormItem>
         </div>
         <div className="cases-actions-group">
           <GoabMenuButton
@@ -157,14 +159,14 @@ export function CaseToolbar({
               onClick={onFilterOpen}
             />
           ) : (
-            <GoabButton
+            <GoabxButton
               type="tertiary"
               leadingIcon="filter-lines"
               size="compact"
               onClick={onFilterOpen}
             >
               Filter
-            </GoabButton>
+            </GoabxButton>
           )}
           <DisplaySettings
             settings={viewSettings}

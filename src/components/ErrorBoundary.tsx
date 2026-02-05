@@ -1,6 +1,7 @@
 import { ReactNode, useCallback } from "react";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
-import { GoabButton, GoabText } from "@abgov/react-components";
+import { GoabText } from "@abgov/react-components";
+import { GoabxButton } from "@abgov/react-components/experimental";
 import { ErrorLayout } from "./ErrorLayout";
 
 interface ErrorBoundaryProps {
@@ -32,14 +33,14 @@ export function ErrorBoundary({ children }: ErrorBoundaryProps) {
                   </GoabText>
                 </div>
               )}
-              <GoabButton
+              <GoabxButton
                 type="primary"
                 size="compact"
                 mt="xl"
                 onClick={() => resetErrorBoundary()}
               >
                 Try again
-              </GoabButton>
+              </GoabxButton>
             </>
           }
         />

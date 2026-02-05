@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import "./CasesPage.css";
 import {
   GoabButtonGroup,
-  GoabButton,
-  GoabCheckbox,
-  GoabBadge,
   GoabMenuButton,
   GoabMenuAction,
   GoabContainer,
@@ -13,6 +10,7 @@ import {
   GoabSkeleton,
   GoabDataGrid,
 } from "@abgov/react-components";
+import { GoabxButton, GoabxCheckbox, GoabxBadge } from "@abgov/react-components/experimental";
 import {
   GoabInputOnKeyPressDetail,
   GoabMenuButtonOnActionDetail,
@@ -376,24 +374,24 @@ export function CasesPage() {
   usePageFooter({
     content: (
       <GoabButtonGroup gap="compact" alignment="start">
-        <GoabButton
+        <GoabxButton
           type="tertiary"
           size="compact"
           onClick={() => setCases((prev) => prev.map((c) => ({ ...c, selected: false })))}
         >
           Clear selection ({selectedCount})
-        </GoabButton>
-        <GoabButton type="primary" size="compact" onClick={() => {}}>
+        </GoabxButton>
+        <GoabxButton type="primary" size="compact" onClick={() => {}}>
           Assign to me
-        </GoabButton>
-        <GoabButton
+        </GoabxButton>
+        <GoabxButton
           type="primary"
           size="compact"
           variant="destructive"
           onClick={() => setCases((prev) => prev.filter((c) => !c.selected))}
         >
           Delete selected
-        </GoabButton>
+        </GoabxButton>
       </GoabButtonGroup>
     ),
     visibleWhen: "selection",
@@ -406,7 +404,7 @@ export function CasesPage() {
         key: "select",
         type: "checkbox",
         headerRender: () => (
-          <GoabCheckbox
+          <GoabxCheckbox
             name="selectAll"
             checked={isAllSelected}
             indeterminate={isIndeterminate}
@@ -418,7 +416,7 @@ export function CasesPage() {
           />
         ),
         render: (caseItem) => (
-          <GoabCheckbox
+          <GoabxCheckbox
             name={`select-${caseItem.id}`}
             checked={caseItem.selected}
             onChange={() => handleSelectChange(caseItem.id, !caseItem.selected)}
@@ -442,7 +440,7 @@ export function CasesPage() {
         type: "badge",
         sortable: true,
         render: (caseItem) => (
-          <GoabBadge type={caseItem.status} content={caseItem.statusText} icon={true} />
+          <GoabxBadge type={caseItem.status} content={caseItem.statusText} icon={true} />
         ),
       },
       {
@@ -478,7 +476,7 @@ export function CasesPage() {
         sortable: true,
         render: (caseItem) =>
           caseItem.priority ? (
-            <GoabBadge {...getPriorityBadgeProps(caseItem.priority)} />
+            <GoabxBadge {...getPriorityBadgeProps(caseItem.priority)} />
           ) : (
             "—"
           ),
@@ -516,12 +514,12 @@ export function CasesPage() {
   const headerActions = useMemo(
     () => (
       <GoabButtonGroup gap="compact" alignment={"start"}>
-        <GoabButton type="secondary" size="compact">
+        <GoabxButton type="secondary" size="compact">
           More
-        </GoabButton>
-        <GoabButton type="primary" size="compact">
+        </GoabxButton>
+        <GoabxButton type="primary" size="compact">
           Add application
-        </GoabButton>
+        </GoabxButton>
       </GoabButtonGroup>
     ),
     [],
@@ -666,7 +664,7 @@ export function CasesPage() {
                         aria-expanded={expandedGroups.has(group.key)}
                       >
                         <span className="cases-group__label">{group.label}</span>
-                        <GoabBadge
+                        <GoabxBadge
                           type="information"
                           content={String(group.cases.length)}
                         />

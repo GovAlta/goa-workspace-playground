@@ -1,14 +1,16 @@
 import { useState } from "react";
 import {
   GoabPopover,
-  GoabButton,
   GoabIconButton,
-  GoabCheckbox,
-  GoabRadioGroup,
   GoabRadioItem,
   GoabIcon,
-  GoabLink,
 } from "@abgov/react-components";
+import {
+  GoabxButton,
+  GoabxCheckbox,
+  GoabxRadioGroup,
+  GoabxLink,
+} from "@abgov/react-components/experimental";
 import "./DisplaySettings.css";
 
 export type LayoutType = "table" | "card" | "list";
@@ -164,7 +166,7 @@ export function DisplaySettings({
       </div>
 
       <div className="settings-popover__reset">
-        <GoabLink color="dark">
+        <GoabxLink color="dark">
           <a
             href="#"
             onClick={(e) => {
@@ -174,7 +176,7 @@ export function DisplaySettings({
           >
             Reset
           </a>
-        </GoabLink>
+        </GoabxLink>
       </div>
     </div>
   );
@@ -196,7 +198,7 @@ export function DisplaySettings({
       </div>
 
       <div className="settings-popover__options">
-        <GoabRadioGroup
+        <GoabxRadioGroup
           name="layout"
           value={settings.layout}
           onChange={(e) => handleLayoutChange(e.value)}
@@ -212,7 +214,7 @@ export function DisplaySettings({
               }
             />
           ))}
-        </GoabRadioGroup>
+        </GoabxRadioGroup>
       </div>
     </div>
   );
@@ -235,7 +237,7 @@ export function DisplaySettings({
 
       <div className="settings-popover__options">
         {COLUMN_OPTIONS.map((column) => (
-          <GoabCheckbox
+          <GoabxCheckbox
             key={column.key}
             name={`column-${column.key}`}
             text={column.label}
@@ -268,7 +270,7 @@ export function DisplaySettings({
       </div>
 
       <div className="settings-popover__options">
-        <GoabRadioGroup
+        <GoabxRadioGroup
           name="groupBy"
           value={settings.groupBy === null ? "null" : settings.groupBy}
           onChange={(e) => handleGroupByChange(e.value)}
@@ -280,7 +282,7 @@ export function DisplaySettings({
               label={option.label}
             />
           ))}
-        </GoabRadioGroup>
+        </GoabxRadioGroup>
       </div>
     </div>
   );
@@ -321,9 +323,9 @@ export function DisplaySettings({
             onClick={handleToggle}
           />
         ) : (
-          <GoabButton type="tertiary" size="compact" onClick={handleToggle}>
+          <GoabxButton type="tertiary" size="compact" onClick={handleToggle}>
             Settings
-          </GoabButton>
+          </GoabxButton>
         )
       }
       onClose={() => {
