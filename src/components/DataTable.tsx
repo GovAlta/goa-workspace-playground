@@ -1,10 +1,9 @@
-import React, { ReactNode, useState, useCallback, useMemo } from "react";
+import React, { ReactNode } from "react";
 import { GoabDataGrid, GoabSkeleton } from "@abgov/react-components";
 import { GoabxTable, GoabxTableSortHeader } from "@abgov/react-components/experimental";
 import { GoabTableOnSortDetail } from "@abgov/ui-components-common";
 import { TableColumn } from "../types/TableColumn";
 import { ScrollContainer } from "./ScrollContainer";
-import { useMenu } from "../contexts/MenuContext";
 
 import { SortConfig } from "../utils/searchUtils";
 
@@ -35,7 +34,6 @@ export function DataTable<T>({
   striped = true,
   onRowClick,
 }: DataTableProps<T>) {
-  const { isMobile } = useMenu();
 
   const renderSkeletonCell = (column: TableColumn<T>, rowIndex: number) => {
     switch (column.type) {
@@ -77,21 +75,6 @@ export function DataTable<T>({
     return "none";
   };
 
-  // Get sort order for a column ("1", "2", or undefined)
-  const getColumnSortOrder = (columnKey: string): string | undefined => {
-    // Only show numbers if there are two sorts active
-    if (!sortConfig?.primary || !sortConfig?.secondary) {
-      return undefined;
-    }
-    if (sortConfig.primary.key === columnKey) {
-      return "1";
-    }
-    if (sortConfig.secondary.key === columnKey) {
-      return "2";
-    }
-    return undefined;
-  };
-
   const renderHeader = (column: TableColumn<T>) => {
     // Custom header render takes priority
     if (column.headerRender) {
@@ -102,7 +85,6 @@ export function DataTable<T>({
         <GoabxTableSortHeader
           name={column.key}
           direction={getColumnSortDirection(column.key)}
-          sortOrder={getColumnSortOrder(column.key)}
         >
           {column.header}
         </GoabxTableSortHeader>
