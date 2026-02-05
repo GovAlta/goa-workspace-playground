@@ -5,6 +5,7 @@ import {
   GoabRadioItem,
   GoabIcon,
 } from "@abgov/react-components";
+import { GoabIconType } from "@abgov/ui-components-common";
 import {
   GoabxButton,
   GoabxCheckbox,
@@ -50,7 +51,7 @@ const GROUPING_OPTIONS: { value: GroupByField; label: string }[] = [
   { value: "jurisdiction", label: "Jurisdiction" },
 ];
 
-const LAYOUT_OPTIONS: { value: LayoutType; label: string; icon: string }[] = [
+const LAYOUT_OPTIONS: { value: LayoutType; label: string; icon: GoabIconType }[] = [
   { value: "table", label: "Table", icon: "menu" },
   { value: "card", label: "Card", icon: "grid" },
   { value: "list", label: "List", icon: "list" },
@@ -63,7 +64,6 @@ export function DisplaySettings({
   isMobile = false,
   isCompact = false,
 }: DisplaySettingsProps) {
-  const [open, setOpen] = useState(false);
   const [screen, setScreen] = useState<Screen>("main");
 
   const getLayoutLabel = () => {
@@ -131,7 +131,7 @@ export function DisplaySettings({
           onClick={() => setScreen("layout")}
         >
           <GoabIcon
-            type={LAYOUT_OPTIONS.find((o) => o.value === settings.layout)?.icon || "menu"}
+            type={LAYOUT_OPTIONS.find((o) => o.value === settings.layout)!.icon}
             size="small"
           />
           <span className="settings-popover__menu-label">Layout</span>
@@ -300,16 +300,9 @@ export function DisplaySettings({
     }
   };
 
-  const handleToggle = () => {
-    if (!open) {
-      setScreen("main");
-    }
-    setOpen(!open);
-  };
 
   return (
     <GoabPopover
-      open={open}
       padded={false}
       maxWidth="280px"
       position="below"
@@ -320,19 +313,13 @@ export function DisplaySettings({
             size="medium"
             variant="dark"
             ariaLabel="Settings"
-            onClick={handleToggle}
           />
         ) : (
-          <GoabxButton type="tertiary" size="compact" onClick={handleToggle}>
+          <GoabxButton type="tertiary" size="compact">
             Settings
           </GoabxButton>
         )
       }
-      onClose={() => {
-        setOpen(false);
-        // Reset to main screen after close animation
-        setTimeout(() => setScreen("main"), 200);
-      }}
     >
       {renderScreen()}
     </GoabPopover>

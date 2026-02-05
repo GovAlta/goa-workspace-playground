@@ -23,12 +23,13 @@ export type BadgeType =
   | "success"
   | "important"
   | "emergency"
-  | "midtone"
+  | "default"
   | "sky"
   | "prairie"
   | "lilac"
   | "pasture"
   | "sunset"
+  | "archived"
   | "dawn";
 
 export interface TypeBadgeProps {

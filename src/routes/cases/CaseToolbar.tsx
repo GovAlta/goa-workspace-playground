@@ -85,7 +85,6 @@ export function CaseToolbar({
         <GoabxTabs
           initialTab={1}
           onChange={onTabChange}
-          stackOnMobile={false}
           variant="segmented"
         >
           <GoabTab heading="Unassigned" />
@@ -111,7 +110,7 @@ export function CaseToolbar({
       </div>
       <div className="cases-search-row">
         <div className="cases-search-group">
-          <GoabxFormItem id="filterInput" error={inputError} labelSize="compact">
+          <GoabxFormItem id="filterInput" error={inputError}>
             <GoabxInput
               name="filterInput"
               value={inputValue}
