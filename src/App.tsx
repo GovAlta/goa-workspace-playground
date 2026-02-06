@@ -3,7 +3,6 @@ import {
   GoabxWorkSideMenuItem,
 } from "@abgov/react-components/experimental";
 
-import { useNavigate } from "react-router-dom";
 import { MenuContext } from "./contexts/MenuContext";
 import { PageFooterProvider } from "./contexts/PageFooterContext";
 import { ScrollStateProvider } from "./contexts/ScrollStateContext";
@@ -11,12 +10,8 @@ import { WorkspaceLayout } from "./components/WorkspaceLayout";
 import { useWorkspaceMenuState } from "./hooks/useWorkspaceMenuState";
 
 export function App() {
-  const navigate = useNavigate();
   const { menuOpen, setMenuOpen, isMobile } = useWorkspaceMenuState();
-
-  const handleNavigate = (path: string) => {
-    navigate(path);
-  };
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   return (
     <MenuContext.Provider value={{ menuOpen, setMenuOpen, isMobile }}>
@@ -24,7 +19,7 @@ export function App() {
         <ScrollStateProvider>
           <div className="app-layout">
             <GoabxWorkSideMenu
-              url={"/"}
+              url={`${base}/`}
               heading="Workspace Demo Application"
               userName="Edna Mode"
               userSecondaryText="edna.mode@example.com"
@@ -35,19 +30,19 @@ export function App() {
                   <GoabxWorkSideMenuItem
                     icon="grid"
                     label="Dashboard"
-                    url={"/"}
+                    url={`${base}/`}
                   />
 
                   <GoabxWorkSideMenuItem
                     icon="search"
                     label="Search"
-                    url={"/search"}
+                    url={`${base}/search`}
                   />
 
                   <GoabxWorkSideMenuItem
                     icon="list"
                     label="Cases"
-                    url={"/cases"}
+                    url={`${base}/cases`}
                   />
 
                   <GoabxWorkSideMenuItem
@@ -55,19 +50,19 @@ export function App() {
                     label="Documents"
                     type="success"
                     badge="New"
-                    url={"/documents"}
+                    url={`${base}/documents`}
                   >
                     <GoabxWorkSideMenuItem
                       label="Sub menu item 1"
-                      url={"/documents/sub1"}
+                      url={`${base}/documents/sub1`}
                     />
                     <GoabxWorkSideMenuItem
                       label="Sub menu item 2"
-                      url={"/documents/sub2"}
+                      url={`${base}/documents/sub2`}
                     />
                     <GoabxWorkSideMenuItem
                       label="Sub menu item 3"
-                      url={"/documents/sub3"}
+                      url={`${base}/documents/sub3`}
                     />
                   </GoabxWorkSideMenuItem>
                 </>
@@ -79,7 +74,7 @@ export function App() {
                     type="emergency"
                     icon="notifications"
                     label="Notifications"
-                    url={"/notifications"}
+                    url={`${base}/notifications`}
                   />
                 </>
               }
@@ -88,12 +83,12 @@ export function App() {
                   <GoabxWorkSideMenuItem
                     icon="settings"
                     label="Settings"
-                    url="/settings"
+                    url={`${base}/settings`}
                   />
                   <GoabxWorkSideMenuItem
                     icon="log-out"
                     label="Log out"
-                    url="/logout"
+                    url={`${base}/logout`}
                   />
                 </>
               }
