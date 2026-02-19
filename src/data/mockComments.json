@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "author": "Tom Jerry",
+    "timestamp": "Nov 21, 2025 at 10:01 am",
+    "text": "Great work all around.",
+    "isOwned": false
+  },
+  {
+    "id": 2,
+    "author": "Edna Mode",
+    "timestamp": "Nov 21, 2025 at 9:12 am",
+    "text": "Thanks!",
+    "isOwned": true
+  },
+  {
+    "id": 3,
+    "author": "Tom Jerry",
+    "timestamp": "Nov 20, 2025 at 4:21 pm",
+    "text": "I also reviewed, looks good to me.",
+    "isOwned": false
+  },
+  {
+    "id": 4,
+    "author": "Frank Sea",
+    "timestamp": "Nov 20, 2025 at 4:19 pm",
+    "text": "Ok, I've updated it, is there any more information to add?",
+    "isOwned": false
+  },
+  {
+    "id": 5,
+    "author": "Edna Mode",
+    "timestamp": "Nov 20, 2025 at 2:43 pm",
+    "text": "This can be updated with the current information.",
+    "isOwned": true
+  },
+  {
+    "id": 6,
+    "author": "Frank Sea",
+    "timestamp": "Nov 19, 2025 at 1:23 pm",
+    "text": "Tom, can you review please?",
+    "isOwned": false
+  }
+]
