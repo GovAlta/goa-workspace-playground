@@ -2,13 +2,12 @@ import { useMemo, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   GoabMenuAction,
-  GoabMenuButton,
   GoabSkeleton,
   GoabSpacer,
   GoabTab,
   GoabText,
 } from "@abgov/react-components";
-import { GoabxBadge, GoabxButton, GoabxTabs } from "@abgov/react-components/experimental";
+import { GoabxBadge, GoabxButton, GoabxTabs, GoabxMenuButton} from "@abgov/react-components/experimental";
 import { PageHeader } from "../../components/PageHeader";
 import { CommentsDrawer } from "../../components/CommentsDrawer";
 import { CaseDetailHeader } from "./CaseDetailHeader";
@@ -120,15 +119,16 @@ export function CaseDetailPage() {
   const headerActions = useMemo(
     () => (
       <>
-        <GoabMenuButton
+        <GoabxMenuButton
             type="tertiary"
             text="Assign"
+            size="compact"
             onAction={(e: GoabMenuButtonOnActionDetail) => handleAssignClick()}
         >
             <GoabMenuAction text="Assign to me" action="assign-me" />
             <GoabMenuAction text="Assign to team" action="assign-team" />
             <GoabMenuAction text="Unassign" action="unassign" />
-        </GoabMenuButton>
+        </GoabxMenuButton>
 
         <GoabxButton
             type="tertiary"
