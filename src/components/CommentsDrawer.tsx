@@ -2,12 +2,15 @@ import { useState } from "react";
 import {
   GoabButtonGroup,
   GoabFormItem,
-  GoabMenuAction,
-  GoabMenuButton,
   GoabText,
   GoabTextArea,
 } from "@abgov/react-components";
-import { GoabxButton, GoabxDrawer, GoabxModal } from "@abgov/react-components/experimental";
+import {
+  GoabxButton,
+  GoabxDrawer,
+  GoabxModal,
+  GoabxMenuAction,
+  GoabxMenuButton, } from "@abgov/react-components/experimental";
 import {
   GoabInputOnChangeDetail,
 } from "@abgov/ui-components-common";
@@ -154,10 +157,12 @@ export function CommentsDrawer({
                     </div>
                   </div>
                   {comment.isOwned && editingCommentId !== comment.id && (
-                    <GoabMenuButton
+                    <GoabxMenuButton
                       type="tertiary"
                       leadingIcon="ellipsis-vertical:filled"
                       text=""
+                      size="compact"
+                      ariaLabel="Options"
                       onAction={(e: any) => {
                         const action = (e as any)?.detail?.action || (e as any)?.action || "";
                         if (action === "edit") {
@@ -167,9 +172,9 @@ export function CommentsDrawer({
                         }
                       }}
                     >
-                      <GoabMenuAction text="Edit" action="edit" />
-                      <GoabMenuAction text="Delete" action="delete" />
-                    </GoabMenuButton>
+                      <GoabxMenuAction text="Edit" action="edit" />
+                      <GoabxMenuAction text="Delete" action="delete" />
+                    </GoabxMenuButton>
                   )}
                 </div>
                 <div className="page__comments_single_content">

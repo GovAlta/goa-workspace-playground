@@ -38,7 +38,7 @@
 .page__comments_single_heading {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     border-radius: var(--goa-border-radius-xl) var(--goa-border-radius-xl) 0 0;
     margin-bottom: var(--goa-space-xs);
     background: var(--goa-color-greyscale-100);
