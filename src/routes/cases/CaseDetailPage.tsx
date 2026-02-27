@@ -1,6 +1,11 @@
 import { useMemo, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { GoabSkeleton, GoabSpacer, GoabTab, GoabText } from "@abgov/react-components";
+import {
+  GoabSkeleton,
+  GoabSpacer,
+  GoabTab,
+  GoabText
+} from "@abgov/react-components";
 import {
   GoabxBadge,
   GoabxButton,
@@ -8,18 +13,24 @@ import {
   GoabxMenuButton,
   GoabxMenuAction,
 } from "@abgov/react-components/experimental";
+import {
+  GoabMenuButtonOnActionDetail,
+  GoabTabsOnChangeDetail
+} from "@abgov/ui-components-common";
 import { PageHeader } from "../../components/PageHeader";
 import { CommentsDrawer } from "../../components/CommentsDrawer";
 import { CaseDetailHeader } from "./CaseDetailHeader";
 import { CaseAccordions } from "./CaseAccordions";
-import { GoabMenuButtonOnActionDetail } from "@abgov/ui-components-common";
 import { useWorkspaceMenuState } from "../../hooks/useWorkspaceMenuState";
 import emptySystemStateIcon from "../../assets/empty-system-state-no-results.svg";
 import mockCases from "../../data/mockCases.json";
 import mockComments from "../../data/mockComments.json";
 import { mockFetch } from "../../utils/mockApi";
 import { Case } from "../../types/Case";
+import { Comments } from "../../types/Comments";
 import "./CaseDetailPage.css";
+
+type CommentsList = Comments[];
 
 export function CaseDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -31,24 +42,7 @@ export function CaseDetailPage() {
   const [expandedAll, setExpandedAll] = useState<boolean>(false);
   const [expandedList, setExpandedList] = useState<number[]>([]);
   const [activeTabIndex, setActiveTabIndex] = useState<number>(1);
-
-  const [comments, setComments] = useState<
-    Array<{
-      id: number;
-      author: string;
-      timestamp: string;
-      text: string;
-      isOwned: boolean;
-    }>
-  >(
-    mockComments as Array<{
-      id: number;
-      author: string;
-      timestamp: string;
-      text: string;
-      isOwned: boolean;
-    }>,
-  );
+  const [comments, setComments] = useState<CommentsList>([]);
 
   useEffect(() => {
     setExpandedAll(expandedList.length === 10);
@@ -71,6 +65,15 @@ export function CaseDetailPage() {
       setIsLoading(false);
     };
     fetchCaseData();
+  }, [id]);
+
+  useEffect(() => {
+    const loadComments = async () => {
+      const data = await mockFetch<CommentsList>(mockComments as CommentsList);
+      const caseSpecificComments = data.filter((c) => c.caseId === id);
+      setComments(caseSpecificComments);
+    };
+    loadComments();
   }, [id]);
 
   const handleAssignClick = () => {
@@ -125,6 +128,7 @@ export function CaseDetailPage() {
           type="tertiary"
           text="Assign"
           size="compact"
+          maxWidth="100%"
           onAction={(e: GoabMenuButtonOnActionDetail) => handleAssignClick()}
         >
           <GoabxMenuAction text="Assign to me" action="assign-me" />
@@ -146,17 +150,7 @@ export function CaseDetailPage() {
   );
 
   const SkeletonAccordion = () => (
-    <div
-      style={{
-        marginBottom: "var(--goa-space-m)",
-        padding: "0 var(--goa-space-m)",
-        border: "var(--goa-accordion-border)",
-        borderRadius: "var(--goa-accordion-border-radius)",
-        display: "flex",
-        alignItems: "center",
-        gap: "1rem",
-      }}
-    >
+    <div className="case-detail__page_skeleton">
       <div style={{ minWidth: "50px" }}>
         <GoabSkeleton type="thumbnail" mb="none" mt="none" />
       </div>
@@ -169,8 +163,8 @@ export function CaseDetailPage() {
     </div>
   );
 
-  const handleTabsChange = (event: any) => {
-    const tabIndex = event.detail?.tab || event.tab;
+  const handleTabsChange = (event: GoabTabsOnChangeDetail) => {
+    const tabIndex = event.tab;
     setActiveTabIndex(tabIndex);
   };
 
@@ -178,7 +172,7 @@ export function CaseDetailPage() {
     <>
       <div className="case-detail__page_template">
         <PageHeader
-          title={caseData?.name || "Cases"}
+          title={caseData?.name || "Case"}
           actions={<CaseDetailHeader isLoading={isLoading} />}
           toolbar={headerActions}
         />
@@ -189,6 +183,7 @@ export function CaseDetailPage() {
           comments={comments}
           onEditComment={handleEditComment}
           onDeleteComment={handleDeleteComment}
+          caseStatus={caseData?.statusText}
         />
 
         <div className="case-detail__page_content">

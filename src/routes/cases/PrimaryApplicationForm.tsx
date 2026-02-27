@@ -150,7 +150,7 @@ export function PrimaryApplicationForm({ formData: initialFormData }: PrimaryApp
                     <GoabxInput
                     name="lisaFileNumber"
                     value={formData.lisaFileNumber}
-                    size="compact"onChange={(event: GoabInputOnChangeDetail) => {
+                    size="compact" onChange={(event: GoabInputOnChangeDetail) => {
                         handleInputChange("lisaFileNumber", event.value)
                     }}
                     />

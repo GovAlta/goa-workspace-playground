@@ -60,7 +60,8 @@
 
 .case-detail__page_template .page-header .page-header__toolbar {
     flex: initial;
-    justify-items: flex-end;
+    justify-content: flex-start;
+    flex-direction: row;
 }
 
 .case-detail_form_double,
@@ -102,8 +103,18 @@
     margin-bottom: var(--goa-space-l);
 }
 
+.case-detail__page_skeleton {
+    margin-bottom: var(--goa-space-m);
+    padding: 0 var(--goa-space-m);
+    border: var(--goa-accordion-border);
+    border-radius: var(--goa-accordion-border-radius);
+    display: flex;
+    align-items: center;
+    gap: var(--goa-space-m);
+}
 
-@media (max-width: 855px) {
+
+@media screen and (max-width: 855px) {
     .case-detail_form_double {
         flex-direction: column;
         gap: 0;
@@ -119,7 +130,7 @@
     }
 }
 
-@media (max-width: 623px) {
+@media screen and (max-width: 623px) {
     .case-detail__page_template > .case-detail__page_content {
         padding: var(--goa-space-m);
     }

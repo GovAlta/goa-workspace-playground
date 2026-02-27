@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useMenu } from "../contexts/MenuContext";
 import {
   GoabButtonGroup,
   GoabFormItem,
@@ -13,6 +14,7 @@ import {
   GoabxMenuButton, } from "@abgov/react-components/experimental";
 import {
   GoabInputOnChangeDetail,
+  GoabMenuButtonOnActionDetail,
 } from "@abgov/ui-components-common";
 import {
   parseDate,
@@ -33,6 +35,7 @@ interface CommentsDrawerProps {
   comments: Comment[];
   onEditComment: (id: number, text: string) => void;
   onDeleteComment: (id: number) => void;
+  caseStatus?: string;
 }
 
 export function CommentsDrawer({
@@ -41,12 +44,15 @@ export function CommentsDrawer({
   comments,
   onEditComment,
   onDeleteComment,
+  caseStatus,
 }: CommentsDrawerProps) {
   const [commentText, setCommentText] = useState("");
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const [editingCommentText, setEditingCommentText] = useState("");
   const [deleteCommentId, setDeleteCommentId] = useState<number | null>(null);
   const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
+  const { isMobile } = useMenu();
+  const isCompletedCase = caseStatus && ["Accepted", "Cancelled", "Denied"].includes(caseStatus);
 
   const handleClearComment = () => {
     setCommentText("");
@@ -86,10 +92,19 @@ export function CommentsDrawer({
     setDeleteCommentId(null);
   };
 
+  const sortedComments = useMemo(() =>
+    [...comments].sort((a, b) => {
+      const dateA = parseDate(a.timestamp);
+      const dateB = parseDate(b.timestamp);
+      if (!dateA) return 1;
+      if (!dateB) return -1;
+      return dateB.getTime() - dateA.getTime();
+  }), [comments]);
+
   return (
     <>
       <GoabxDrawer
-        maxSize="400"
+        maxSize={!isMobile ? "480px" : "288px"}
         position="right"
         open={isOpen}
         onClose={onClose}
@@ -98,54 +113,59 @@ export function CommentsDrawer({
         <div className="page__comments">
           {/* Add Comment Section */}
           <div className="page__comments_form">
-            <div className="page__comments_form_heading">
-              <GoabText size="heading-xs" mt="none" mb="none">
-                Add comment
-              </GoabText>
-              <GoabButtonGroup alignment="end">
-                <GoabxButton
-                  type="tertiary"
-                  size="compact"
-                  disabled={commentText.trim().length === 0}
-                  onClick={() => handleClearComment()}
-                >
-                  Clear
-                </GoabxButton>
-                <GoabxButton
-                  type="primary"
-                  size="compact"
-                  disabled={commentText.trim().length === 0}
-                  onClick={() => {
-                    console.log('Saving comment:', commentText);
-                    handleClearComment();
-                  }}
-                >
-                  Save
-                </GoabxButton>
-              </GoabButtonGroup>
-            </div>
-            <GoabFormItem helpText="Add a comment for updates related to the case.">
-              <GoabTextArea
-                name="comment"
-                countBy="character"
-                maxCount={200}
-                value={commentText}
-                onChange={(event: GoabInputOnChangeDetail) => {
-                  setCommentText(event.value);
-                }}
-              />
-            </GoabFormItem>
+            {isCompletedCase ? (
+              <div className="page__comments_form_disabled">
+                <GoabText size="body-s" mt="none" mb="none" color="secondary">
+                  Adding comments is not available once the entry is completed.
+                </GoabText>
+              </div>
+            ) : (
+              <>
+                <div className="page__comments_form_heading">
+                  <GoabText size="heading-xs" mt="none" mb="none">
+                    Add comment
+                  </GoabText>
+                  <GoabButtonGroup alignment="end">
+                    <GoabxButton
+                      type="tertiary"
+                      size="compact"
+                      disabled={commentText.trim().length === 0}
+                      onClick={() => handleClearComment()}
+                    >
+                      Clear
+                    </GoabxButton>
+                    <GoabxButton
+                      type="primary"
+                      size="compact"
+                      disabled={commentText.trim().length === 0}
+                      onClick={() => {
+                        console.log('Saving comment:', commentText);
+                        handleClearComment();
+                      }}
+                    >
+                      Save
+                    </GoabxButton>
+                  </GoabButtonGroup>
+                </div>
+                <GoabFormItem helpText="Add a comment for updates related to the case.">
+                  <GoabTextArea
+                    name="comment"
+                    countBy="character"
+                    maxCount={200}
+                    rows={isMobile ? 7 : 3}
+                    value={commentText}
+                    onChange={(event: GoabInputOnChangeDetail) => {
+                      setCommentText(event.value);
+                    }}
+                  />
+                </GoabFormItem>
+              </>
+            )}
           </div>
 
           {/* Comments List */}
           <div className="page__comments_list">
-            {[...comments].sort((a, b) => {
-              const dateA = parseDate(a.timestamp);
-              const dateB = parseDate(b.timestamp);
-              if (!dateA) return 1;
-              if (!dateB) return -1;
-              return dateB.getTime() - dateA.getTime();
-            }).map((comment) => (
+            {sortedComments.map((comment) => (
               <div key={comment.id} className="page__comments_single">
                 <div className="page__comments_single_heading">
                   <div>
@@ -156,14 +176,14 @@ export function CommentsDrawer({
                       {comment.timestamp}
                     </div>
                   </div>
-                  {comment.isOwned && editingCommentId !== comment.id && (
+                  {!isCompletedCase && comment.isOwned && editingCommentId !== comment.id && (
                     <GoabxMenuButton
                       type="tertiary"
                       leadingIcon="ellipsis-vertical:filled"
                       text=""
                       size="compact"
                       ariaLabel="Options"
-                      onAction={(e: any) => {
+                      onAction={(e: GoabMenuButtonOnActionDetail) => {
                         const action = (e as any)?.detail?.action || (e as any)?.action || "";
                         if (action === "edit") {
                           handleEditComment(comment.id);
@@ -179,7 +199,7 @@ export function CommentsDrawer({
                 </div>
                 <div className="page__comments_single_content">
                   {editingCommentId === comment.id ? (
-                    <div style={{ display: "flex", flexDirection: "column", gap: "var(--goa-space-s)" }}>
+                    <div className="page_comments_single_content_heading">
                       <GoabFormItem>
                         <GoabTextArea
                           name={`edit-comment-${comment.id}`}

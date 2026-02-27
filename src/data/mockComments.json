@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "caseId": "1",
     "author": "Tom Jerry",
     "timestamp": "Nov 21, 2025 at 10:01 am",
     "text": "Great work all around.",
@@ -8,6 +9,7 @@
   },
   {
     "id": 2,
+    "caseId": "1",
     "author": "Edna Mode",
     "timestamp": "Nov 21, 2025 at 9:12 am",
     "text": "Thanks!",
@@ -15,6 +17,7 @@
   },
   {
     "id": 3,
+    "caseId": "1",
     "author": "Tom Jerry",
     "timestamp": "Nov 20, 2025 at 4:21 pm",
     "text": "I also reviewed, looks good to me.",
@@ -22,6 +25,7 @@
   },
   {
     "id": 4,
+    "caseId": "1",
     "author": "Frank Sea",
     "timestamp": "Nov 20, 2025 at 4:19 pm",
     "text": "Ok, I've updated it, is there any more information to add?",
@@ -29,6 +33,7 @@
   },
   {
     "id": 5,
+    "caseId": "1",
     "author": "Edna Mode",
     "timestamp": "Nov 20, 2025 at 2:43 pm",
     "text": "This can be updated with the current information.",
@@ -36,9 +41,186 @@
   },
   {
     "id": 6,
+    "caseId": "1",
     "author": "Frank Sea",
     "timestamp": "Nov 19, 2025 at 1:23 pm",
     "text": "Tom, can you review please?",
+    "isOwned": false
+  },
+  {
+    "id": 7,
+    "caseId": "2",
+    "author": "Edna Mode",
+    "timestamp": "Nov 22, 2025 at 2:30 pm",
+    "text": "All documentation has been verified and is complete.",
+    "isOwned": true
+  },
+  {
+    "id": 8,
+    "caseId": "2",
+    "author": "Michael Chen",
+    "timestamp": "Nov 21, 2025 at 11:45 am",
+    "text": "Need to clarify the jurisdiction details before proceeding.",
+    "isOwned": false
+  },
+  {
+    "id": 9,
+    "caseId": "2",
+    "author": "Edna Mode",
+    "timestamp": "Nov 20, 2025 at 3:15 pm",
+    "text": "Updated jurisdiction to Calgary. Ready for next step.",
+    "isOwned": true
+  },
+  {
+    "id": 10,
+    "caseId": "3",
+    "author": "Jennifer Lee",
+    "timestamp": "Nov 23, 2025 at 9:20 am",
+    "text": "Case is progressing well. Scheduled follow-up for next week.",
+    "isOwned": false
+  },
+  {
+    "id": 11,
+    "caseId": "3",
+    "author": "Edna Mode",
+    "timestamp": "Nov 22, 2025 at 4:00 pm",
+    "text": "Sounds good. I'll prepare the documents.",
+    "isOwned": true
+  },
+  {
+    "id": 12,
+    "caseId": "3",
+    "author": "Jennifer Lee",
+    "timestamp": "Nov 22, 2025 at 1:30 pm",
+    "text": "Can you send over the latest inspection report?",
+    "isOwned": false
+  },
+  {
+    "id": 13,
+    "caseId": "4",
+    "author": "David Kumar",
+    "timestamp": "Nov 23, 2025 at 10:15 am",
+    "text": "Priority escalated due to deadline. Please expedite.",
+    "isOwned": false
+  },
+  {
+    "id": 14,
+    "caseId": "4",
+    "author": "Edna Mode",
+    "timestamp": "Nov 22, 2025 at 5:45 pm",
+    "text": "Understood. Moving to high priority queue.",
+    "isOwned": true
+  },
+  {
+    "id": 19,
+    "caseId": "6",
+    "author": "Robert Brown",
+    "timestamp": "Nov 23, 2025 at 3:45 pm",
+    "text": "All prerequisites have not been met.",
+    "isOwned": false
+  },
+  {
+    "id": 20,
+    "caseId": "7",
+    "author": "Susan Taylor",
+    "timestamp": "Nov 24, 2025 at 10:30 am",
+    "text": "Email has been sent",
+    "isOwned": false
+  },
+  {
+    "id": 21,
+    "caseId": "7",
+    "author": "Edna Mode",
+    "timestamp": "Nov 23, 2025 at 2:15 pm",
+    "text": "Final review schedule updated for next Monday.",
+    "isOwned": true
+  },
+  {
+    "id": 23,
+    "caseId": "9",
+    "author": "Amanda Ross",
+    "timestamp": "Nov 24, 2025 at 1:30 pm",
+    "text": "Thank you!",
+    "isOwned": false
+  },
+  {
+    "id": 24,
+    "caseId": "9",
+    "author": "Frank Sea",
+    "timestamp": "Nov 23, 2025 at 4:00 pm",
+    "text": "Looks great.",
+    "isOwned": false
+  },
+  {
+    "id": 25,
+    "caseId": "10",
+    "author": "George Davis",
+    "timestamp": "Nov 25, 2025 at 9:00 am",
+    "text": "Initial assessment completed. Findings attached.",
+    "isOwned": false
+  },
+  {
+    "id": 26,
+    "caseId": "10",
+    "author": "Edna Mode",
+    "timestamp": "Nov 24, 2025 at 5:30 pm",
+    "text": "Thank you for the comprehensive assessment.",
+    "isOwned": true
+  },
+  {
+    "id": 27,
+    "caseId": "11",
+    "author": "Nancy Harris",
+    "timestamp": "Nov 25, 2025 at 10:15 am",
+    "text": "Request for additional information sent to applicant.",
+    "isOwned": false
+  },
+  {
+    "id": 28,
+    "caseId": "12",
+    "author": "Christopher Martin",
+    "timestamp": "Nov 25, 2025 at 11:30 am",
+    "text": "Applicant has responded with requested documents.",
+    "isOwned": false
+  },
+  {
+    "id": 32,
+    "caseId": "15",
+    "author": "Stephanie Robinson",
+    "timestamp": "Nov 25, 2025 at 3:15 pm",
+    "text": "Background check results received and reviewed.",
+    "isOwned": false
+  },
+  {
+    "id": 33,
+    "caseId": "16",
+    "author": "Edna Mode",
+    "timestamp": "Nov 25, 2025 at 4:30 pm",
+    "text": "No issues detected. Can move to approval stage.",
+    "isOwned": true
+  },
+  {
+    "id": 35,
+    "caseId": "18",
+    "author": "Edna Mode",
+    "timestamp": "Nov 25, 2025 at 6:00 pm",
+    "text": "Formal approval will be issued tomorrow morning.",
+    "isOwned": true
+  },
+  {
+    "id": 36,
+    "caseId": "19",
+    "author": "Michelle White",
+    "timestamp": "Nov 25, 2025 at 7:15 pm",
+    "text": "All looks good!",
+    "isOwned": false
+  },
+  {
+    "id": 37,
+    "caseId": "20",
+    "author": "Paul Anderson",
+    "timestamp": "Nov 25, 2025 at 8:30 pm",
+    "text": "Email has been sent to Amelia",
     "isOwned": false
   }
 ]

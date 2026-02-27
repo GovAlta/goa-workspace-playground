@@ -13,7 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@abgov/design-tokens": "2.0.1",
+    "@abgov/design-tokens": "2.1.1",
     "@abgov/react-components": "^6.11.0-dev.6",
     "@abgov/ui-components-common": "1.11.0-dev.3",
     "@abgov/web-components": "1.41.0-dev.9",

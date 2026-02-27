@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./CasesPage.css";
 import {
   GoabButtonGroup,
@@ -26,9 +26,11 @@ import { useDisplaySettings } from "../../hooks/useDisplaySettings";
 import { Case } from "../../types/Case";
 import { TableColumn } from "../../types/TableColumn";
 import mockData from "../../data/mockCases.json";
+import mockComments from "../../data/mockComments.json";
 import { mockFetch } from "../../utils/mockApi";
 import { EmptyState } from "../../components/EmptyState";
 import { LayoutType } from "../../components/DisplaySettings";
+import { CommentsDrawer } from "../../components/CommentsDrawer";
 
 import { FilterState, FilterChip, FilterOptions, GroupedCase } from "./types";
 import { CaseDeleteModal } from "./CaseDeleteModal";
@@ -38,8 +40,12 @@ import { CaseCard } from "./CaseCard";
 import { CaseTable } from "./CaseTable";
 import { CaseListView } from "./CaseListView";
 import { CaseToolbar } from "./CaseToolbar";
+import { Comments } from "../../types/Comments";
+
+type CommentsList = Comments[];
 
 export function CasesPage() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState("");
@@ -51,6 +57,9 @@ export function CasesPage() {
   const [cases, setCases] = useState<Case[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [isCommentsDrawerOpen, setIsCommentsDrawerOpen] = useState(false);
+  const [comments, setComments] = useState<CommentsList>([]);
+  const [selectedCaseIdForComments, setSelectedCaseIdForComments] = useState<string | null>(null);
 
   const { isMobile } = useMenu();
   const isCompactToolbar = useCompactToolbar();
@@ -81,6 +90,39 @@ export function CasesPage() {
       });
     }
   }, [activeTab, defaultLayout, layoutCustomized]);
+
+  useEffect(() => {
+    const loadComments = async () => {
+      const data = await mockFetch<CommentsList>(mockComments as CommentsList);
+      setComments(data);
+    };
+    loadComments();
+  }, []);
+  
+  const handleCommentsClick = (caseId?: string) => {
+    if (caseId) {
+      setSelectedCaseIdForComments(caseId);
+    }
+    setIsCommentsDrawerOpen(true);
+  };
+
+  const selectedCaseData = useMemo(() => {
+    if (!selectedCaseIdForComments) return null;
+    return cases.find((c) => c.id === selectedCaseIdForComments) || null;
+  }, [cases, selectedCaseIdForComments]);
+
+  const caseSpecificComments = useMemo(() => {
+    if (!selectedCaseIdForComments) return comments;
+    return comments.filter((c) => c.caseId === selectedCaseIdForComments);
+  }, [comments, selectedCaseIdForComments]);
+
+  const handleEditComment = (id: number, text: string) => {
+    setComments(comments.map((c) => (c.id === id ? { ...c, text } : c)));
+  };
+
+  const handleDeleteComment = (id: number) => {
+    setComments(comments.filter((c) => c.id !== id));
+  };
 
   const viewMode = useMemo((): "table" | "card" | "list" => {
     if (isMobile && viewSettings.layout === "table") return "card";
@@ -337,9 +379,13 @@ export function CasesPage() {
       case "edit":
         break;
       case "view":
+        navigate(`/case/${caseId}`);
         break;
       case "delete":
         deleteCase(caseId);
+        break;
+      case "comments":
+        handleCommentsClick(caseId);
         break;
     }
   };
@@ -488,8 +534,8 @@ export function CasesPage() {
           <GoabMenuButton
             leadingIcon="ellipsis-horizontal"
             text=""
-            onAction={(e: GoabMenuButtonOnActionDetail) =>
-              onMenuActionButton(e.action, caseItem.id)
+            onAction={(e: GoabMenuButtonOnActionDetail) => 
+                onMenuActionButton(e.action, caseItem.id)
             }
           >
             <GoabMenuAction text="View case" action="view" />
@@ -586,6 +632,15 @@ export function CasesPage() {
             onClearAll={handleClearAll}
           />
         </div>
+
+        <CommentsDrawer
+          isOpen={isCommentsDrawerOpen}
+          onClose={() => setIsCommentsDrawerOpen(false)}
+          comments={caseSpecificComments}
+          onEditComment={handleEditComment}
+          onDeleteComment={handleDeleteComment}
+          caseStatus={selectedCaseData?.statusText}
+        />
 
         {viewMode === "table" && (
           <CaseTable

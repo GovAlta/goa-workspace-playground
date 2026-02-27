@@ -8,11 +8,14 @@ import {
 import {  
   GoabxBadge
 } from "@abgov/react-components/experimental";
+import {
+  GoabBadgeEmphasis,
+  GoabxBadgeType,
+} from '@abgov/ui-components-common';
 
 interface CaseDetailHeaderProps {
-  applicantName?: string;
   phoneNumber?: string;
-  statuses?: Array<{ label: string; type?: string, emphasis?: string }>;
+  statuses?: Array<{ label: string; type?: GoabxBadgeType; emphasis?: GoabBadgeEmphasis }>;
   isLoading?: boolean;
 }
 
@@ -52,8 +55,8 @@ export function CaseDetailHeader({
               <GoabxBadge
                   key={index}
                   content={status.label}
-                  type={status.type as any}
-                  emphasis={status.emphasis as any}
+                  type={status.type as GoabxBadgeType}
+                  emphasis={status.emphasis as GoabBadgeEmphasis}
               />
               ))
             )}
