@@ -192,8 +192,8 @@ export function CommentsDrawer({
                         }
                       }}
                     >
-                      <GoabxMenuAction text="Edit" action="edit" />
-                      <GoabxMenuAction text="Delete" action="delete" />
+                      <GoabxMenuAction icon="pencil" text="Edit" action="edit" />
+                      <GoabxMenuAction icon="trash" text="Delete" action="delete" />
                     </GoabxMenuButton>
                   )}
                 </div>

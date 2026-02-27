@@ -128,6 +128,7 @@ export function CaseToolbar({
         <div className="cases-actions-group">
           <GoabMenuButton
             type="tertiary"
+            size="compact"
             leadingIcon={isCompactToolbar ? "swap-vertical" : undefined}
             text={isCompactToolbar ? undefined : "Sort"}
             onAction={(e: GoabMenuButtonOnActionDetail) => onSortAction(e.action)}
