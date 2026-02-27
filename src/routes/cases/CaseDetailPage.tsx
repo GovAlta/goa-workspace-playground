@@ -142,7 +142,7 @@ export function CaseDetailPage() {
           onClick={handleCommentsClick}
           leadingIcon="chatbubble"
         >
-          Comments ({comments.length})
+          Comments {!isLoading && "(" + (comments.length) + ")"}
         </GoabxButton>
       </>
     ),
