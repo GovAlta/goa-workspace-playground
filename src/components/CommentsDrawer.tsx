@@ -184,10 +184,9 @@ export function CommentsDrawer({
                       size="compact"
                       ariaLabel="Options"
                       onAction={(e: GoabMenuButtonOnActionDetail) => {
-                        const action = (e as any)?.detail?.action || (e as any)?.action || "";
-                        if (action === "edit") {
+                        if (e.action === "edit") {
                           handleEditComment(comment.id);
-                        } else if (action === "delete") {
+                        } else if (e.action === "delete") {
                           handleDeleteComment(comment.id);
                         }
                       }}
@@ -199,7 +198,7 @@ export function CommentsDrawer({
                 </div>
                 <div className="page__comments_single_content">
                   {editingCommentId === comment.id ? (
-                    <div className="page_comments_single_content_heading">
+                    <div className="page__comments_single_content_editing">
                       <GoabFormItem>
                         <GoabTextArea
                           name={`edit-comment-${comment.id}`}

@@ -10,20 +10,7 @@ import {
 import { GoabxBadge } from "@abgov/react-components/experimental";
 import { PrimaryApplicationForm } from "./PrimaryApplicationForm";
 import { Case } from "../../types/Case";
-
-interface PrimaryFormData {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  lastNameOnBirthCertificate: string;
-  sin: string;
-  sinVerified: boolean;
-  verification: boolean;
-  albertaHealthNumber: string;
-  lisaFileNumber: string;
-  hsId: string;
-  pid: string;
-}
+import { PrimaryFormData } from "../../types/PrimaryFormData";
 
 interface Props {
   expandedAll: boolean;
@@ -85,7 +72,6 @@ export const CaseAccordions: React.FC<Props> = ({
   const identifiedNeedsBadge = getStatusBadge(accordionStatuses.identifiedNeeds);
   const labourMarketBadge = getStatusBadge(accordionStatuses.labourMarket);
   const decisionBadge = getStatusBadge(accordionStatuses.decision);
-
   return (
     <>
       <GoabButton type="tertiary" size="compact" mb="m" onClick={expandOrCollapseAll}>

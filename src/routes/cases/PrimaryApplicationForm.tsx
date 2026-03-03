@@ -14,28 +14,15 @@ import {
   GoabInputOnChangeDetail,
   GoabCheckboxOnChangeDetail,
 } from "@abgov/ui-components-common";
-
-interface PrimaryApplicationFormData {
-    firstName: string;
-    middleName: string;
-    lastName: string;
-    lastNameOnBirthCertificate: string;
-    sin: string;
-    sinVerified: boolean;
-    verification: boolean;
-    albertaHealthNumber: string;
-    lisaFileNumber: string;
-    hsId: string;
-    pid: string;
-}
+import { PrimaryFormData } from "../../types/PrimaryFormData";
 
 interface PrimaryApplicationFormProps {
-    formData?: PrimaryApplicationFormData;
+    formData?: PrimaryFormData;
 }
 
 export function PrimaryApplicationForm({ formData: initialFormData }: PrimaryApplicationFormProps) {
     
-    const [formData, setFormData] = useState<PrimaryApplicationFormData>(initialFormData || {} as PrimaryApplicationFormData);
+    const [formData, setFormData] = useState<PrimaryFormData>(initialFormData || {} as PrimaryFormData);
     const [copiedField, setCopiedField] = useState<string | null>(null);
 
     useEffect(() => {
@@ -44,7 +31,7 @@ export function PrimaryApplicationForm({ formData: initialFormData }: PrimaryApp
         }
     }, [initialFormData]);
 
-    const handleInputChange = (field: keyof PrimaryApplicationFormData, value: string | boolean) => {
+    const handleInputChange = (field: keyof PrimaryFormData, value: string | boolean) => {
         setFormData((prev) => ({
             ...prev,
             [field]: value,

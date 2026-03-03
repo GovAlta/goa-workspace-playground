@@ -58,7 +58,7 @@
     padding: var(--goa-space-m) var(--goa-space-m) var(--goa-space-l);
 }
 
-.page_comments_single_content_heading {
+.page__comments_single_content_editing {
     display: flex;
     flex-direction: column;
     gap: var(--goa-space-s);
