@@ -1,3 +1,4 @@
+import { useEffect, useState, useMemo } from "react";
 import {
   GoabContainer,
   GoabText,
@@ -13,6 +14,9 @@ import {
 } from "@abgov/react-components/experimental";
 import { GoabMenuButtonOnActionDetail } from "@abgov/ui-components-common";
 import { Case } from "../../types/Case";
+import mockComments from "../../data/mockComments.json";
+import { Comments } from "../../types/Comments";
+import { mockFetch } from "../../utils/mockApi";
 
 interface CaseCardProps {
   caseItem: Case;
@@ -21,12 +25,29 @@ interface CaseCardProps {
   onSelectChange: (caseId: string, selected: boolean) => void;
 }
 
+type CommentsList = Comments[];
+
 export function CaseCard({
   caseItem,
   activeTab,
   onMenuAction,
   onSelectChange,
 }: CaseCardProps) {
+  
+  const [comments, setComments] = useState<CommentsList>([]);
+
+  useEffect(() => {
+    const loadComments = async () => {
+      const data = await mockFetch<CommentsList>(mockComments as CommentsList);
+      setComments(data);
+    };
+    loadComments();
+  }, []);
+
+  const caseCommentCount = useMemo(() => {
+    return comments.filter((c) => c.caseId === caseItem.id).length;
+  }, [comments, caseItem.id]);
+
   return (
     <GoabContainer
       key={caseItem.id}
@@ -58,10 +79,10 @@ export function CaseCard({
       }
       actions={
         <div data-grid={"cell-3"} className="data-card__actions">
-          {caseItem.comments > 0 && (
+          {caseCommentCount > 0 && (
             <GoabxLink leadingIcon="chatbox" size="small">
-              <a href="#">
-                {caseItem.comments} comment{caseItem.comments === 1 ? "" : "s"}
+              <a href="#" onClick={(e) => { e.preventDefault(); onMenuAction("comments", caseItem.id); }}>
+                {caseCommentCount} comment{caseCommentCount === 1 ? "" : "s"}
               </a>
             </GoabxLink>
           )}
