@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { GoabTableOnSortDetail } from "@abgov/ui-components-common";
+import { GoabTableOnSortDetail, GoabTableOnMultiSortDetail } from "@abgov/ui-components-common";
 import { SortConfig } from "../utils/searchUtils";
 
 /**
@@ -12,10 +12,10 @@ import { SortConfig } from "../utils/searchUtils";
  * - When primary is removed, secondary is promoted to primary
  *
  * Usage:
- *   const { sortConfig, sortByKey, handleTableSort, clearSort, setSortConfig } = useMultiColumnSort();
+ *   const { sortConfig, sortByKey, handleMultiSort, clearSort, setSortConfig } = useMultiColumnSort();
  *
- *   // For table header clicks:
- *   <DataTable onSort={handleTableSort} sortConfig={sortConfig} />
+ *   // For multi-sort table (GoabxTable sortMode="multi"):
+ *   <DataTable onMultiSort={handleMultiSort} sortConfig={sortConfig} />
  *
  *   // For menu button actions:
  *   const handleMenuAction = (action: string) => {
@@ -102,6 +102,25 @@ export function useMultiColumnSort(initialConfig?: SortConfig) {
   );
 
   /**
+   * Handle multi-sort event from GoabxTable (sortMode="multi").
+   * Syncs the table's multi-sort state into our SortConfig.
+   */
+  const handleMultiSort = useCallback(
+    (detail: GoabTableOnMultiSortDetail) => {
+      const { sorts } = detail;
+      setSortConfig({
+        primary: sorts[0]
+          ? { key: sorts[0].column, direction: sorts[0].direction }
+          : null,
+        secondary: sorts[1]
+          ? { key: sorts[1].column, direction: sorts[1].direction }
+          : null,
+      });
+    },
+    [],
+  );
+
+  /**
    * Clear all sorting.
    */
   const clearSort = useCallback(() => {
@@ -113,6 +132,7 @@ export function useMultiColumnSort(initialConfig?: SortConfig) {
     setSortConfig,
     sortByKey,
     handleTableSort,
+    handleMultiSort,
     clearSort,
   };
 }

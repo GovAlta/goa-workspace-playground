@@ -1,15 +1,12 @@
-import {
-  GoabTab,
-  GoabMenuButton,
-  GoabMenuAction,
-  GoabIconButton,
-} from "@abgov/react-components";
+import { GoabTab, GoabIconButton } from "@abgov/react-components";
 import {
   GoabxTabs,
   GoabxBadge,
   GoabxFormItem,
   GoabxInput,
   GoabxButton,
+  GoabxMenuButton,
+  GoabxMenuAction,
 } from "@abgov/react-components/experimental";
 import {
   GoabInputOnChangeDetail,
@@ -82,11 +79,7 @@ export function CaseToolbar({
   return (
     <div className="cases-toolbar-row">
       <div className="cases-toolbar-tabs">
-        <GoabxTabs
-          initialTab={1}
-          onChange={onTabChange}
-          variant="segmented"
-        >
+        <GoabxTabs initialTab={1} onChange={onTabChange} variant="segmented">
           <GoabTab heading="Unassigned" />
           <GoabTab
             heading={
@@ -126,15 +119,15 @@ export function CaseToolbar({
           </GoabxFormItem>
         </div>
         <div className="cases-actions-group">
-          <GoabMenuButton
-            type="tertiary"
+          <GoabxMenuButton
             size="compact"
+            type="tertiary"
             leadingIcon={isCompactToolbar ? "swap-vertical" : undefined}
             text={isCompactToolbar ? undefined : "Sort"}
             onAction={(e: GoabMenuButtonOnActionDetail) => onSortAction(e.action)}
           >
             {Object.entries(SORT_FIELD_LABELS).map(([key, label]) => (
-              <GoabMenuAction
+              <GoabxMenuAction
                 key={key}
                 text={`${label}${getSortIndicator(key)}`}
                 action={`sort-${key}`}
@@ -142,12 +135,9 @@ export function CaseToolbar({
               />
             ))}
             {sortConfig.primary && (
-              <GoabMenuAction
-                text="Clear sort"
-                action="clear-sort"
-              />
+              <GoabxMenuAction text="Clear sort" action="clear-sort" />
             )}
-          </GoabMenuButton>
+          </GoabxMenuButton>
           {isCompactToolbar ? (
             <GoabIconButton
               icon="filter-lines"

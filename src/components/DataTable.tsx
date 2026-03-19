@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { GoabDataGrid, GoabSkeleton } from "@abgov/react-components";
 import { GoabxTable, GoabxTableSortHeader } from "@abgov/react-components/experimental";
-import { GoabTableOnSortDetail } from "@abgov/ui-components-common";
+import { GoabTableOnMultiSortDetail, GoabTableSortMode } from "@abgov/ui-components-common";
 import { TableColumn } from "../types/TableColumn";
 import { ScrollContainer } from "./ScrollContainer";
 
@@ -12,8 +12,9 @@ export interface DataTableProps<T> {
   data: T[];
   isLoading?: boolean;
   skeletonRows?: number;
-  onSort?: (event: GoabTableOnSortDetail) => void;
-  sortConfig?: SortConfig; // Two-level sort config
+  onMultiSort?: (detail: GoabTableOnMultiSortDetail) => void;
+  sortMode?: GoabTableSortMode;
+  sortConfig?: SortConfig;
   emptyState?: ReactNode;
   getRowKey: (item: T) => string;
   getRowSelected?: (item: T) => boolean;
@@ -26,7 +27,8 @@ export function DataTable<T>({
   data,
   isLoading = false,
   skeletonRows = 10,
-  onSort,
+  onMultiSort,
+  sortMode = "multi",
   sortConfig,
   emptyState,
   getRowKey,
@@ -75,16 +77,24 @@ export function DataTable<T>({
     return "none";
   };
 
+  // Get sort order (1 or 2) for multi-sort indicator
+  const getColumnSortOrder = (columnKey: string): 1 | 2 | undefined => {
+    if (sortConfig?.primary?.key === columnKey) return 1;
+    if (sortConfig?.secondary?.key === columnKey) return 2;
+    return undefined;
+  };
+
   const renderHeader = (column: TableColumn<T>) => {
     // Custom header render takes priority
     if (column.headerRender) {
       return column.headerRender();
     }
-    if (column.sortable && column.header && onSort && sortConfig) {
+    if (column.sortable && column.header && onMultiSort && sortConfig) {
       return (
         <GoabxTableSortHeader
           name={column.key}
           direction={getColumnSortDirection(column.key)}
+          sortOrder={getColumnSortOrder(column.key)}
         >
           {column.header}
         </GoabxTableSortHeader>
@@ -97,17 +107,14 @@ export function DataTable<T>({
     <ScrollContainer>
       <div className="table-wrapper">
         <GoabDataGrid keyboardNav="table" keyboardIconPosition="right">
-          <GoabxTable width="100%" onSort={onSort} variant="normal" striped={striped}>
+          <GoabxTable width="100%" onMultiSort={onMultiSort} sortMode={sortMode} variant="normal" striped={striped}>
             <thead>
               <tr data-grid="row">
                 {columns.map((column) => (
                   <th
                     key={column.key}
                     data-grid="cell"
-                    className={
-                      column.type === "checkbox" ? "goa-table-cell--checkbox" : undefined
-                    }
-                    style={column.type === "checkbox" ? { paddingBottom: 0 } : undefined}
+                    className={getCellClassName(column.type)}
                   >
                     {renderHeader(column)}
                   </th>

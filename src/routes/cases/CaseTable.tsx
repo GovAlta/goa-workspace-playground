@@ -5,7 +5,7 @@ import { Case } from "../../types/Case";
 import { TableColumn } from "../../types/TableColumn";
 import { DataTable } from "../../components/DataTable";
 import { SortConfig } from "../../utils/searchUtils";
-import { GoabTableOnSortDetail } from "@abgov/ui-components-common";
+import { GoabTableOnMultiSortDetail } from "@abgov/ui-components-common";
 import { GroupedCase } from "./types";
 
 interface CaseTableProps {
@@ -17,7 +17,7 @@ interface CaseTableProps {
   isLoading: boolean;
   emptyState?: ReactNode;
   sortConfig: SortConfig;
-  onSort: (event: GoabTableOnSortDetail) => void;
+  onMultiSort: (detail: GoabTableOnMultiSortDetail) => void;
   onRowClick: (caseItem: Case) => void;
   getRowKey: (caseItem: Case) => string;
   getRowSelected: (caseItem: Case) => boolean;
@@ -32,7 +32,7 @@ export function CaseTable({
   isLoading,
   emptyState,
   sortConfig,
-  onSort,
+  onMultiSort,
   onRowClick,
   getRowKey,
   getRowSelected,
@@ -96,7 +96,7 @@ export function CaseTable({
       data={filteredCases}
       isLoading={isLoading}
       skeletonRows={10}
-      onSort={onSort}
+      onMultiSort={onMultiSort}
       sortConfig={sortConfig}
       emptyState={emptyState}
       getRowKey={getRowKey}

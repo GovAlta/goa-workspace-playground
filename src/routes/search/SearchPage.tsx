@@ -21,7 +21,7 @@ import { SearchListView } from "./SearchListView";
 
 export function SearchPage() {
   const [searchChips, setSearchChips] = useState<string[]>([]);
-  const { sortConfig, handleTableSort, clearSort } = useMultiColumnSort();
+  const { sortConfig, handleMultiSort, clearSort } = useMultiColumnSort();
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedView, setSelectedView] = useState<ViewMode>("table");
@@ -231,7 +231,7 @@ export function SearchPage() {
             data={filteredResults}
             isLoading={isLoading}
             skeletonRows={10}
-            onSort={handleTableSort}
+            onMultiSort={handleMultiSort}
             sortConfig={sortConfig}
             emptyState={
               searchResults.length > 0 && activeFiltersCount > 0

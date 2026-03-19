@@ -1,6 +1,11 @@
 import React from "react";
-import { GoabMenuButton, GoabMenuAction } from "@abgov/react-components";
-import { GoabxInput, GoabxDropdown, GoabxDropdownItem } from "@abgov/react-components/experimental";
+import {
+  GoabxInput,
+  GoabxDropdown,
+  GoabxDropdownItem,
+  GoabxMenuAction,
+  GoabxMenuButton,
+} from "@abgov/react-components/experimental";
 import {
   GoabIconType,
   GoabInputOnChangeDetail,
@@ -98,28 +103,29 @@ export function SearchHeaderFilters({
           ))}
         </GoabxDropdown>
 
-        <GoabMenuButton
+        <GoabxMenuButton
+          size="compact"
           type="tertiary"
           leadingIcon={getViewIcon(viewMode)}
           text={getViewLabel(viewMode)}
           onAction={(e: GoabMenuButtonOnActionDetail) => onViewChange(e.action)}
         >
-          <GoabMenuAction
+          <GoabxMenuAction
             text="Table"
             action="table"
             icon={selectedView === "table" ? "checkmark" : undefined}
           />
-          <GoabMenuAction
+          <GoabxMenuAction
             text="Card"
             action="card"
             icon={selectedView === "card" ? "checkmark" : undefined}
           />
-          <GoabMenuAction
+          <GoabxMenuAction
             text="List"
             action="list"
             icon={selectedView === "list" ? "checkmark" : undefined}
           />
-        </GoabMenuButton>
+        </GoabxMenuButton>
       </div>
     </div>
   );

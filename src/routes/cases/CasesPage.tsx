@@ -3,14 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import "./CasesPage.css";
 import {
   GoabButtonGroup,
-  GoabMenuButton,
-  GoabMenuAction,
   GoabContainer,
   GoabBlock,
   GoabSkeleton,
   GoabDataGrid,
 } from "@abgov/react-components";
-import { GoabxButton, GoabxCheckbox, GoabxBadge } from "@abgov/react-components/experimental";
+import { GoabxButton, GoabxCheckbox, GoabxBadge, GoabxMenuButton, GoabxMenuAction } from "@abgov/react-components/experimental";
 import {
   GoabInputOnKeyPressDetail,
   GoabMenuButtonOnActionDetail,
@@ -50,7 +48,7 @@ export function CasesPage() {
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState("");
   const [typedChips, setTypedChips] = useState<string[]>([]);
-  const { sortConfig, setSortConfig, sortByKey, handleTableSort, clearSort } =
+  const { sortConfig, setSortConfig, sortByKey, handleMultiSort, clearSort } =
     useMultiColumnSort();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [caseToDelete, setCaseToDelete] = useState<string | null>(null);
@@ -110,6 +108,14 @@ export function CasesPage() {
     if (!selectedCaseIdForComments) return null;
     return cases.find((c) => c.id === selectedCaseIdForComments) || null;
   }, [cases, selectedCaseIdForComments]);
+
+  const commentCountMap = useMemo(() => {
+    const map = new Map<string, number>();
+    comments.forEach((c) => {
+      map.set(c.caseId, (map.get(c.caseId) || 0) + 1);
+    });
+    return map;
+  }, [comments]);
 
   const caseSpecificComments = useMemo(() => {
     if (!selectedCaseIdForComments) return comments;
@@ -486,7 +492,7 @@ export function CasesPage() {
         type: "badge",
         sortable: true,
         render: (caseItem) => (
-          <GoabxBadge type={caseItem.status} content={caseItem.statusText} icon={true} />
+          <GoabxBadge type={caseItem.status} content={caseItem.statusText} icon={true} emphasis="subtle" />
         ),
       },
       {
@@ -531,17 +537,17 @@ export function CasesPage() {
         key: "actions",
         type: "actions",
         render: (caseItem) => (
-          <GoabMenuButton
+          <GoabxMenuButton
             leadingIcon="ellipsis-horizontal"
-            text=""
-            onAction={(e: GoabMenuButtonOnActionDetail) => 
+            size="compact"
+            onAction={(e: GoabMenuButtonOnActionDetail) =>
                 onMenuActionButton(e.action, caseItem.id)
             }
           >
-            <GoabMenuAction text="View case" action="view" />
-            <GoabMenuAction text="Assign to me" action="assign" />
-            <GoabMenuAction text="Delete" icon="trash" action="delete" />
-          </GoabMenuButton>
+            <GoabxMenuAction text="View case" action="view" />
+            <GoabxMenuAction text="Assign to me" action="assign" />
+            <GoabxMenuAction text="Delete" icon="trash" action="delete" />
+          </GoabxMenuButton>
         ),
       },
     ],
@@ -652,7 +658,7 @@ export function CasesPage() {
             isLoading={isLoading}
             emptyState={cases.length > 0 ? emptyStateContent : undefined}
             sortConfig={sortConfig}
-            onSort={handleTableSort}
+            onMultiSort={handleMultiSort}
             onRowClick={(caseItem) => handleSelectChange(caseItem.id, !caseItem.selected)}
             getRowKey={(caseItem) => caseItem.id}
             getRowSelected={(caseItem) => caseItem.selected}
@@ -731,6 +737,7 @@ export function CasesPage() {
                               key={caseItem.id}
                               caseItem={caseItem}
                               activeTab={activeTab}
+                              commentCount={commentCountMap.get(caseItem.id) || 0}
                               onMenuAction={onMenuActionButton}
                               onSelectChange={handleSelectChange}
                             />
@@ -747,6 +754,7 @@ export function CasesPage() {
                       key={caseItem.id}
                       caseItem={caseItem}
                       activeTab={activeTab}
+                      commentCount={commentCountMap.get(caseItem.id) || 0}
                       onMenuAction={onMenuActionButton}
                       onSelectChange={handleSelectChange}
                     />

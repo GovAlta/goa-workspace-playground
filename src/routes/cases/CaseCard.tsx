@@ -1,56 +1,41 @@
-import { useEffect, useState, useMemo } from "react";
-import {
-  GoabContainer,
-  GoabText,
-  GoabMenuButton,
-  GoabMenuAction,
-  GoabBlock,
-} from "@abgov/react-components";
+import { GoabContainer, GoabText, GoabBlock } from "@abgov/react-components";
 import {
   GoabxCheckbox,
   GoabxBadge,
   GoabxLink,
   GoabxButton,
+  GoabxMenuButton,
+  GoabxMenuAction,
 } from "@abgov/react-components/experimental";
 import { GoabMenuButtonOnActionDetail } from "@abgov/ui-components-common";
 import { Case } from "../../types/Case";
-import mockComments from "../../data/mockComments.json";
-import { Comments } from "../../types/Comments";
-import { mockFetch } from "../../utils/mockApi";
+
+const CATEGORY_LABELS: Record<string, string> = {
+  todo: "To do",
+  progress: "In progress",
+  complete: "Complete",
+};
+
+const categoryLabel = (category: string): string =>
+  CATEGORY_LABELS[category] || category || "—";
 
 interface CaseCardProps {
   caseItem: Case;
   activeTab: string;
+  commentCount?: number;
   onMenuAction: (action: string, caseId: string) => void;
   onSelectChange: (caseId: string, selected: boolean) => void;
 }
 
-type CommentsList = Comments[];
-
 export function CaseCard({
   caseItem,
   activeTab,
+  commentCount = 0,
   onMenuAction,
   onSelectChange,
 }: CaseCardProps) {
-  
-  const [comments, setComments] = useState<CommentsList>([]);
-
-  useEffect(() => {
-    const loadComments = async () => {
-      const data = await mockFetch<CommentsList>(mockComments as CommentsList);
-      setComments(data);
-    };
-    loadComments();
-  }, []);
-
-  const caseCommentCount = useMemo(() => {
-    return comments.filter((c) => c.caseId === caseItem.id).length;
-  }, [comments, caseItem.id]);
-
   return (
     <GoabContainer
-      key={caseItem.id}
       accent="thick"
       type="non-interactive"
       padding="compact"
@@ -74,29 +59,33 @@ export function CaseCard({
             type={caseItem.status}
             content={caseItem.statusText}
             icon={true}
+            emphasis="subtle"
           />
         </div>
       }
       actions={
         <div data-grid={"cell-3"} className="data-card__actions">
-          {caseCommentCount > 0 && (
+          {commentCount > 0 && (
             <GoabxLink leadingIcon="chatbox" size="small">
-              <a href="#" onClick={(e) => { e.preventDefault(); onMenuAction("comments", caseItem.id); }}>
-                {caseCommentCount} comment{caseCommentCount === 1 ? "" : "s"}
-              </a>
+              <button
+                className="link-button"
+                onClick={() => onMenuAction("comments", caseItem.id)}
+              >
+                {commentCount} comment{commentCount === 1 ? "" : "s"}
+              </button>
             </GoabxLink>
           )}
           {activeTab === "all" ? (
-            <GoabMenuButton
-              text={""}
+            <GoabxMenuButton
               leadingIcon="ellipsis-horizontal:filled"
+              size="compact"
               onAction={(e: GoabMenuButtonOnActionDetail) =>
                 onMenuAction(e.action, caseItem.id)
               }
             >
-              <GoabMenuAction text="View" action="view" />
-              <GoabMenuAction text="Assign me" action="assign" />
-            </GoabMenuButton>
+              <GoabxMenuAction text="View" action="view" />
+              <GoabxMenuAction text="Assign me" action="assign" />
+            </GoabxMenuButton>
           ) : activeTab === "todo" ? (
             <GoabxButton
               type="tertiary"
@@ -106,17 +95,17 @@ export function CaseCard({
               Start
             </GoabxButton>
           ) : (
-            <GoabMenuButton
-              text={""}
+            <GoabxMenuButton
               leadingIcon="ellipsis-horizontal:filled"
+              size="compact"
               onAction={(e: GoabMenuButtonOnActionDetail) =>
                 onMenuAction(e.action, caseItem.id)
               }
             >
-              <GoabMenuAction text="Continue" action="continue" />
-              <GoabMenuAction text="Unassign me" action="unassign" />
-              <GoabMenuAction text="Mark as complete" action="complete" />
-            </GoabMenuButton>
+              <GoabxMenuAction text="Continue" action="continue" />
+              <GoabxMenuAction text="Unassign me" action="unassign" />
+              <GoabxMenuAction text="Mark as complete" action="complete" />
+            </GoabxMenuButton>
           )}
         </div>
       }
@@ -150,13 +139,7 @@ export function CaseCard({
               <GoabBlock direction="column" gap="xs" data-grid="cell-8">
                 <span className="data-card__label">Category</span>
                 <span className="data-card__value">
-                  {caseItem.category === "todo"
-                    ? "To do"
-                    : caseItem.category === "progress"
-                      ? "In progress"
-                      : caseItem.category === "complete"
-                        ? "Complete"
-                        : caseItem.category || "—"}
+                  {categoryLabel(caseItem.category)}
                 </span>
               </GoabBlock>
             </div>
