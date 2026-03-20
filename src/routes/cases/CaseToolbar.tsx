@@ -21,6 +21,8 @@ import {
 import { SortConfig } from "../../utils/searchUtils";
 import { SORT_FIELD_LABELS } from "./types";
 
+const VALID_TABS = ["all", "unassigned", "todo", "progress", "complete"];
+
 interface CaseToolbarProps {
   activeTab: string;
   totalCount: number;
@@ -43,6 +45,7 @@ interface CaseToolbarProps {
 }
 
 export function CaseToolbar({
+  activeTab,
   totalCount,
   unassignedCount,
   myCasesCount,
@@ -83,9 +86,14 @@ export function CaseToolbar({
   return (
     <div className="cases-toolbar-row">
       <div className="cases-toolbar-tabs">
-        <GoabxTabs initialTab={1} onChange={onTabChange} variant="segmented">
-          <GoabTab heading="All" />
+        <GoabxTabs
+          initialTab={VALID_TABS.indexOf(activeTab) + 1}
+          onChange={onTabChange}
+          variant="segmented"
+        >
+          <GoabTab heading="All" slug="all" />
           <GoabTab
+            slug="unassigned"
             heading={
               <>
                 Unassigned{" "}
@@ -98,6 +106,7 @@ export function CaseToolbar({
             }
           />
           <GoabTab
+            slug="assigned-to-me"
             heading={
               <>
                 Assigned to me{" "}
@@ -110,6 +119,7 @@ export function CaseToolbar({
             }
           />
           <GoabTab
+            slug="in-progress"
             heading={
               <>
                 In progress{" "}
@@ -121,7 +131,7 @@ export function CaseToolbar({
               </>
             }
           />
-          <GoabTab heading="Complete" />
+          <GoabTab heading="Complete" slug="complete" />
         </GoabxTabs>
         <div className="cases-toolbar-tabs__spacer" aria-hidden="true" />
       </div>

@@ -23,7 +23,6 @@ import {
 } from "../../utils/dateUtils";
 import { ActivityItem } from "./types";
 import { StatCard } from "./StatCard";
-import { Widget } from "./Widget";
 import { WorkQueueCard } from "./WorkQueueCard";
 import { ComingUpItem } from "./ComingUpItem";
 import { ActivityItemComponent } from "./ActivityItem";
@@ -123,8 +122,8 @@ export function DashboardPage() {
       }));
   }, [cases]);
 
-  const handleStatClick = (filter: string) => {
-    navigate(`/cases?filter=${filter}`);
+  const handleStatClick = (hash?: string) => {
+    navigate({ pathname: "/cases", hash: hash || "" });
   };
 
   return (
@@ -166,28 +165,28 @@ export function DashboardPage() {
               label="My Active Cases"
               icon="briefcase"
               tint="info"
-              onClick={() => handleStatClick("my-cases")}
+              onClick={() => handleStatClick("assigned-to-me")}
             />
             <StatCard
               value={stats.overdue}
               label="Overdue"
               icon="warning"
               tint={stats.overdue > 0 ? "emergency" : undefined}
-              onClick={() => handleStatClick("overdue")}
+              onClick={() => handleStatClick("in-progress")}
             />
             <StatCard
               value={stats.dueSoon}
               label="Due This Week"
               icon="calendar"
               tint="important"
-              onClick={() => handleStatClick("due-soon")}
+              onClick={() => handleStatClick("in-progress")}
             />
             <StatCard
               value={stats.completed}
               label="Completed"
               icon="checkmark-circle"
               tint="success"
-              onClick={() => handleStatClick("completed")}
+              onClick={() => handleStatClick("complete")}
             />
           </div>
         ) : (
@@ -197,28 +196,28 @@ export function DashboardPage() {
               label="My Active Cases"
               icon="briefcase"
               tint="info"
-              onClick={() => handleStatClick("my-cases")}
+              onClick={() => handleStatClick("assigned-to-me")}
             />
             <StatCard
               value={stats.overdue}
               label="Overdue"
               icon="warning"
               tint={stats.overdue > 0 ? "emergency" : undefined}
-              onClick={() => handleStatClick("overdue")}
+              onClick={() => handleStatClick("in-progress")}
             />
             <StatCard
               value={stats.dueSoon}
               label="Due This Week"
               icon="calendar"
               tint="important"
-              onClick={() => handleStatClick("due-soon")}
+              onClick={() => handleStatClick("in-progress")}
             />
             <StatCard
               value={stats.completed}
               label="Completed"
               icon="checkmark-circle"
               tint="success"
-              onClick={() => handleStatClick("completed")}
+              onClick={() => handleStatClick("complete")}
             />
           </GoabGrid>
         )}

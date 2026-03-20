@@ -17,6 +17,8 @@
   flex: 1;
   overflow: hidden;
   transition: padding 0.15s ease-out;
+  /* Create stacking context so internal z-index values don't compete with side menu */
+  isolation: isolate;
 }
 
 .card-container:has([data-scroll-state="no-scroll"]) {
