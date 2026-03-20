@@ -67,7 +67,9 @@ export function SearchHeaderFilters({
             setFilters((f) => ({ ...f, searchText: e.value }))
           }
           onKeyPress={onSearchKeyPress}
-          placeholder={isMobile ? "Search..." : "Search cases, staff, or file numbers..."}
+          placeholder={
+            isMobile ? "Search..." : "Search by name, staff, or file number..."
+          }
           leadingIcon="search"
           size="compact"
           width="100%"

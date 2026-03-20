@@ -61,7 +61,6 @@
   color: var(--goa-color-text-default);
 }
 
-.table-row-link:focus,
 .table-row-link:focus-visible {
   outline: var(--goa-border-width-l) solid var(--goa-color-interactive-focus);
   outline-offset: var(--goa-border-width-l);
@@ -200,7 +199,8 @@
    Mobile breakpoint: 624px (matches the app's isMobile logic)
    ============================================================================ */
 
-/* Table wrapper - uses margin for scroll container compatibility */
+/* Table wrapper - uses margin for scroll container compatibility
+   Matches page header padding (--goa-space-xl on desktop) so edges align */
 .table-wrapper {
   margin-left: var(--goa-space-m);
   margin-right: var(--goa-space-m);
@@ -208,8 +208,8 @@
 
 @media (min-width: 624px) {
   .table-wrapper {
-    margin-left: var(--goa-space-2xl);
-    margin-right: var(--goa-space-2xl);
+    margin-left: var(--goa-space-xl);
+    margin-right: var(--goa-space-xl);
   }
 }
 
