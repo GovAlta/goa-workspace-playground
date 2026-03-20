@@ -13,6 +13,12 @@
   background-color: #f8f8f8;
 }
 
+@media (max-width: 623px) {
+  .app-layout {
+    display: block;
+  }
+}
+
 /* ============================================================================
    PUSH DRAWER - Animated side panel for filters
    ============================================================================
