@@ -91,6 +91,7 @@ export function App() {
             />
 
             <WorkspaceLayout />
+            <div id="page-push-drawer-portal" />
           </div>
         </ScrollStateProvider>
       </PageFooterProvider>

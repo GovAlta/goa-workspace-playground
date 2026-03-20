@@ -85,7 +85,11 @@ export function CaseToolbar({
             heading={
               <>
                 Assigned to me{" "}
-                <GoabxBadge type="information" content={String(myCasesCount)} />
+                <GoabxBadge
+                  type="information"
+                  content={String(myCasesCount)}
+                  emphasis="subtle"
+                />
               </>
             }
           />
@@ -93,7 +97,11 @@ export function CaseToolbar({
             heading={
               <>
                 In progress{" "}
-                <GoabxBadge type="important" content={String(inProgressCount)} />
+                <GoabxBadge
+                  type="important"
+                  content={String(inProgressCount)}
+                  emphasis="subtle"
+                />
               </>
             }
           />

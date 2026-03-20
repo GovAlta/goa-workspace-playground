@@ -741,6 +741,7 @@ export function CasesPage() {
                         <GoabxBadge
                           type="information"
                           content={String(group.cases.length)}
+                          emphasis="subtle"
                         />
                       </button>
                       {expandedGroups.has(group.key) && (

@@ -22,7 +22,12 @@ function renderCaseCollapsed(
   return {
     title: <span className="expandable-list__name">{caseItem.name}</span>,
     badge: (
-      <GoabxBadge type={caseItem.status} content={caseItem.statusText} icon={true} />
+      <GoabxBadge
+        type={caseItem.status}
+        content={caseItem.statusText}
+        icon={true}
+        emphasis="subtle"
+      />
     ),
     secondaryInfo: (
       <div className="expandable-list__header-actions">
@@ -124,7 +129,11 @@ export function CaseListView({
                   size="small"
                 />
                 <span className="cases-group__label">{group.label}</span>
-                <GoabxBadge type="information" content={String(group.cases.length)} />
+                <GoabxBadge
+                  type="information"
+                  content={String(group.cases.length)}
+                  emphasis="subtle"
+                />
               </button>
               {expandedGroups.has(group.key) && (
                 <div className="cases-group__list">

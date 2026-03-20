@@ -21,8 +21,8 @@ interface CaseDetailHeaderProps {
 export function CaseDetailHeader({
   phoneNumber = "456 789 0123",
   statuses = [
-    { label: "Overdue", type: "emergency", emphasis: "subtle" },
-    { label: "Approach with caution", type: "important", emphasis: "subtle" },
+    { label: "Overdue", type: "emergency" },
+    { label: "Approach with caution", type: "important" },
   ],
   isLoading = false,
 }: CaseDetailHeaderProps) {

@@ -66,7 +66,11 @@ export function CaseTable({
                       size="small"
                     />
                     <span className="table-group-row__label">{group.label}</span>
-                    <GoabxBadge type="information" content={String(group.cases.length)} />
+                    <GoabxBadge
+                      type="information"
+                      content={String(group.cases.length)}
+                      emphasis="subtle"
+                    />
                   </div>
                 </td>
               </tr>
