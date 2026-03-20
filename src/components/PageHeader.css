@@ -322,6 +322,11 @@
   justify-content: flex-end;
 }
 
+/* Prevent header action buttons from going full-width on mobile */
+.page-header__actions goa-button {
+  width: auto;
+}
+
 /* Allow actions to expand (e.g., search input in header) */
 .page-header__actions:has(.page-header-search) {
   flex: 1;

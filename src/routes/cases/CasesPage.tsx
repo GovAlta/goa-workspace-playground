@@ -71,7 +71,7 @@ export function CasesPage() {
   >(null);
 
   const [pageNumber, setPageNumber] = useState(1);
-  const perPageCount = 25;
+  const perPageCount = 20;
 
   const { isMobile } = useMenu();
   const isCompactToolbar = useCompactToolbar();
