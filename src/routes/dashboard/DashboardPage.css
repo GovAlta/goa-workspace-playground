@@ -119,6 +119,7 @@
   background: var(--goa-color-emergency-background);
 }
 
+/* TODO: Change to --goa-color-important-background when #3632 is fixed */
 .dashboard-stat-card--important {
   border-color: var(--goa-color-important-border);
   background: var(--goa-color-warning-background);
