@@ -15,6 +15,8 @@ import {
   GoabxBadge,
   GoabxMenuButton,
   GoabxMenuAction,
+  GoabxPagination,
+  GoabxLink,
 } from "@abgov/react-components/experimental";
 import {
   GoabInputOnKeyPressDetail,
@@ -68,12 +70,15 @@ export function CasesPage() {
     string | null
   >(null);
 
+  const [pageNumber, setPageNumber] = useState(1);
+  const perPageCount = 25;
+
   const { isMobile } = useMenu();
   const isCompactToolbar = useCompactToolbar();
 
   const getDefaultLayout = useCallback((tab: string): LayoutType => {
     if (tab === "complete") return "list";
-    if (tab === "todo" || tab === "progress") return "card";
+    if (tab === "unassigned" || tab === "todo" || tab === "progress") return "card";
     return "table";
   }, []);
 
@@ -359,6 +364,7 @@ export function CasesPage() {
     const tabMap = ["all", "unassigned", "todo", "progress", "complete"];
     setActiveTab(tabMap[tabIndex - 1] || "all");
     setCases((prev) => prev.map((c) => ({ ...c, selected: false })));
+    setPageNumber(1);
   };
 
   const handleSortAction = (action: string) => {
@@ -515,7 +521,20 @@ export function CasesPage() {
         key: "staff",
         header: "Assigned to",
         type: "text",
-        render: (caseItem) => caseItem.staff || "—",
+        render: (caseItem) =>
+          caseItem.staff || (
+            <GoabxLink color="dark" size="medium">
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                Assign me
+              </a>
+            </GoabxLink>
+          ),
       },
       {
         key: "dueDate",
@@ -649,10 +668,8 @@ export function CasesPage() {
           <CaseFilterChips
             searchChips={typedChips}
             filterChips={filterChips}
-            sortConfig={sortConfig}
             onRemoveSearchChip={removeChip}
             onRemoveFilter={removeAppliedFilter}
-            onRemoveSort={handleRemoveSort}
             onClearAll={handleClearAll}
           />
         </div>
@@ -667,20 +684,44 @@ export function CasesPage() {
         />
 
         {viewMode === "table" && (
-          <CaseTable
-            filteredCases={filteredCases}
-            groupedCases={groupedCases}
-            columns={visibleCaseColumns}
-            expandedGroups={expandedGroups}
-            onToggleGroup={toggleGroup}
-            isLoading={isLoading}
-            emptyState={cases.length > 0 ? emptyStateContent : undefined}
-            sortConfig={sortConfig}
-            onMultiSort={handleMultiSort}
-            onRowClick={(caseItem) => handleSelectChange(caseItem.id, !caseItem.selected)}
-            getRowKey={(caseItem) => caseItem.id}
-            getRowSelected={(caseItem) => caseItem.selected}
-          />
+          <>
+            <CaseTable
+              filteredCases={
+                groupedCases
+                  ? filteredCases
+                  : filteredCases.slice(
+                      (pageNumber - 1) * perPageCount,
+                      pageNumber * perPageCount,
+                    )
+              }
+              groupedCases={groupedCases}
+              columns={visibleCaseColumns}
+              expandedGroups={expandedGroups}
+              onToggleGroup={toggleGroup}
+              isLoading={isLoading}
+              emptyState={cases.length > 0 ? emptyStateContent : undefined}
+              sortConfig={sortConfig}
+              onMultiSort={handleMultiSort}
+              onRowClick={(caseItem) =>
+                handleSelectChange(caseItem.id, !caseItem.selected)
+              }
+              getRowKey={(caseItem) => caseItem.id}
+              getRowSelected={(caseItem) => caseItem.selected}
+            />
+            {!groupedCases && filteredCases.length > perPageCount && (
+              <div
+                className="content-padding"
+                style={{ marginTop: "var(--goa-space-m)" }}
+              >
+                <GoabxPagination
+                  itemCount={filteredCases.length}
+                  perPageCount={perPageCount}
+                  pageNumber={pageNumber}
+                  onChange={(e) => setPageNumber(e.page)}
+                />
+              </div>
+            )}
+          </>
         )}
 
         {viewMode === "list" && (

@@ -67,7 +67,7 @@ export function App() {
                 <>
                   <GoabxWorkSideMenuItem
                     badge="Pending"
-                    type="emergency"
+                    type="important"
                     icon="notifications"
                     label="Notifications"
                     url={`${base}/notifications`}

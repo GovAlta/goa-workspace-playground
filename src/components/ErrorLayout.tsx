@@ -36,7 +36,7 @@ export function ErrorLayout({
             {description}
           </GoabText>
         </div>
-        {action}
+        <div style={{ marginTop: "var(--goa-space-xl)" }}>{action}</div>
       </div>
     </div>
   );

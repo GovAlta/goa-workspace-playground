@@ -108,7 +108,7 @@
   {
     "id": "2",
     "name": "Shelley Leffler",
-    "staff": "Edna Mode",
+    "staff": "",
     "dueDate": "Sep 20, 2024",
     "fileNumber": "2345678901",
     "status": "success",
@@ -320,7 +320,7 @@
   {
     "id": "4",
     "name": "Bonnie Metz",
-    "staff": "Edna Mode",
+    "staff": "",
     "dueDate": "Feb 25, 2024",
     "fileNumber": "4567890123",
     "status": "emergency",
@@ -744,7 +744,7 @@
   {
     "id": "8",
     "name": "Marvin Hamill",
-    "staff": "Bob Parr",
+    "staff": "",
     "dueDate": "Jul 08, 2024",
     "fileNumber": "8901234567",
     "status": "important",
