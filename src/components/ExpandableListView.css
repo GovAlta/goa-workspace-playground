@@ -16,7 +16,7 @@
 
 .expandable-list__header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   padding: var(--goa-space-xs) var(--goa-space-l) var(--goa-space-xs) var(--goa-space-s);
   gap: var(--goa-space-2xs);
   background-color: var(--goa-color-greyscale-100);
@@ -43,10 +43,7 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--goa-border-radius-s);
-  transition: background-color 0.15s ease;
 }
-
-/* Toggle hover removed - header has hover state now */
 
 .expandable-list__toggle:focus-visible {
   outline: var(--goa-border-width-l) solid var(--goa-color-interactive-focus);

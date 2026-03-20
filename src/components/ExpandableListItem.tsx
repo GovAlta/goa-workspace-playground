@@ -53,7 +53,6 @@ export function ExpandableListItem<T>({
           variant="dark"
           ariaLabel={isExpanded ? "Collapse row" : "Expand row"}
           onClick={() => onToggle(itemKey)}
-          mt="2xs"
           testId="expandable-list-toggle"
         />
         <div className="expandable-list__heading-group">
