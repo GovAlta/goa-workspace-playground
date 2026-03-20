@@ -2,7 +2,7 @@
    DISPLAY SETTINGS - Cascading menu for view settings
    ============================================================================ */
 
-/* TODO: Remove when Popover gets an alignment prop (see popover-alignment.md) */
+/* TODO: Remove when #3643 (popover alignment prop) is resolved */
 .settings-popover-align goa-popover {
   --offset-left: -150px;
 }

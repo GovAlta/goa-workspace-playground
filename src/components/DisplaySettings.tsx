@@ -300,9 +300,7 @@ export function DisplaySettings({
     }
   };
 
-  // TODO: Remove .settings-popover-align wrapper when Popover gets an alignment prop.
-  // The Popover always left-aligns to the trigger, which overflows when near the right edge.
-  // This shifts it left as a workaround. See draft issue: popover-alignment.md
+  // TODO: Remove .settings-popover-align wrapper when #3643 is resolved
   return (
     <div className="settings-popover-align">
       <GoabPopover
