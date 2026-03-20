@@ -86,14 +86,52 @@
   background: var(--goa-color-greyscale-100);
 }
 
+.dashboard-stat-card--emergency.dashboard-stat-card--clickable:hover {
+  border-color: var(--goa-color-emergency-dark);
+  background: var(--goa-color-emergency-light);
+}
+
+.dashboard-stat-card--important.dashboard-stat-card--clickable:hover {
+  border-color: var(--goa-color-important-dark);
+  background: var(--goa-color-important-light);
+}
+
+.dashboard-stat-card--success.dashboard-stat-card--clickable:hover {
+  border-color: var(--goa-color-success-dark);
+  background: var(--goa-color-success-light);
+}
+
+.dashboard-stat-card--info.dashboard-stat-card--clickable:hover {
+  border-color: var(--goa-color-info-dark);
+  background: var(--goa-color-info-light);
+}
+
 .dashboard-stat-card--clickable:focus-visible {
   outline: var(--goa-border-width-l) solid var(--goa-color-interactive-focus);
   outline-offset: var(--goa-border-width-l);
 }
 
-.dashboard-stat-card--highlight {
-  border-color: var(--goa-color-emergency-dark);
-  background: var(--goa-color-emergency-light);
+/* Tint variants — -border for borders, -background for fills
+   Exception: important -background and -border are the same token value,
+   so we use -light for the fill instead. */
+.dashboard-stat-card--emergency {
+  border-color: var(--goa-color-emergency-border);
+  background: var(--goa-color-emergency-background);
+}
+
+.dashboard-stat-card--important {
+  border-color: var(--goa-color-important-border);
+  background: var(--goa-color-warning-background);
+}
+
+.dashboard-stat-card--success {
+  border-color: var(--goa-color-success-border);
+  background: var(--goa-color-success-background);
+}
+
+.dashboard-stat-card--info {
+  border-color: var(--goa-color-info-border);
+  background: var(--goa-color-info-background);
 }
 
 .dashboard-stat-card__icon {
@@ -103,12 +141,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--goa-color-greyscale-100);
-  border-radius: var(--goa-border-radius-m);
-}
-
-.dashboard-stat-card--highlight .dashboard-stat-card__icon {
-  background: rgba(255, 255, 255, 0.5);
 }
 
 .dashboard-stat-card__content {
@@ -122,17 +154,35 @@
   color: var(--goa-color-text-default);
 }
 
-.dashboard-stat-card__value--highlight {
+.dashboard-stat-card__value--emergency {
   color: var(--goa-color-emergency-text-dark);
 }
-
-.dashboard-stat-card--highlight .dashboard-stat-card__label {
-  color: var(--goa-color-emergency-text-dark);
+.dashboard-stat-card__value--important {
+  color: var(--goa-color-important-text-dark);
+}
+.dashboard-stat-card__value--success {
+  color: var(--goa-color-success-text-dark);
+}
+.dashboard-stat-card__value--info {
+  color: var(--goa-color-info-text-dark);
 }
 
 .dashboard-stat-card__label {
   font: var(--goa-typography-body-xs);
   color: var(--goa-color-text-secondary);
+}
+
+.dashboard-stat-card__label--emergency {
+  color: var(--goa-color-emergency-text-dark);
+}
+.dashboard-stat-card__label--important {
+  color: var(--goa-color-important-text-dark);
+}
+.dashboard-stat-card__label--success {
+  color: var(--goa-color-success-text-dark);
+}
+.dashboard-stat-card__label--info {
+  color: var(--goa-color-info-text-dark);
 }
 
 /* Dashboard Main Content - Two Column Layout */
@@ -155,6 +205,11 @@
   gap: var(--goa-space-l);
 }
 
+/* Prevent GoabContainer from stretching to fill flex parent */
+.dashboard-main goa-container {
+  flex: 0 0 auto;
+}
+
 /* Dashboard Widget */
 .dashboard-widget {
   background: var(--goa-color-greyscale-white);
@@ -167,7 +222,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--goa-space-m) var(--goa-space-l);
+  padding: var(--goa-space-m);
   border-bottom: var(--goa-border-width-s) solid var(--goa-color-greyscale-200);
   background: var(--goa-color-greyscale-50);
 }
@@ -178,7 +233,7 @@
 }
 
 .dashboard-widget__content {
-  padding: var(--goa-space-m) var(--goa-space-l);
+  padding: var(--goa-space-s) var(--goa-space-m);
 }
 
 @media (max-width: 623px) {
@@ -315,7 +370,7 @@
   gap: var(--goa-space-s);
   padding: var(--goa-space-s) var(--goa-space-m);
   background: var(--goa-color-greyscale-50);
-  border: var(--goa-border-width-l) solid var(--goa-color-greyscale-200);
+  border: var(--goa-border-width-s) solid var(--goa-color-greyscale-200);
   border-radius: var(--goa-border-radius-m);
   text-decoration: none;
   color: inherit;

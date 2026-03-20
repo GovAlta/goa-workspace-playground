@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { GoabText, GoabGrid } from "@abgov/react-components";
+import { GoabText, GoabGrid, GoabContainer } from "@abgov/react-components";
 import { GoabxButton } from "@abgov/react-components/experimental";
 import {
   AreaChart,
@@ -165,25 +165,28 @@ export function DashboardPage() {
               value={stats.myCases}
               label="My Active Cases"
               icon="briefcase"
+              tint="info"
               onClick={() => handleStatClick("my-cases")}
             />
             <StatCard
               value={stats.overdue}
               label="Overdue"
               icon="warning"
-              highlight={stats.overdue > 0}
+              tint={stats.overdue > 0 ? "emergency" : undefined}
               onClick={() => handleStatClick("overdue")}
             />
             <StatCard
               value={stats.dueSoon}
               label="Due This Week"
               icon="calendar"
+              tint="important"
               onClick={() => handleStatClick("due-soon")}
             />
             <StatCard
               value={stats.completed}
               label="Completed"
               icon="checkmark-circle"
+              tint="success"
               onClick={() => handleStatClick("completed")}
             />
           </div>
@@ -193,25 +196,28 @@ export function DashboardPage() {
               value={stats.myCases}
               label="My Active Cases"
               icon="briefcase"
+              tint="info"
               onClick={() => handleStatClick("my-cases")}
             />
             <StatCard
               value={stats.overdue}
               label="Overdue"
               icon="warning"
-              highlight={stats.overdue > 0}
+              tint={stats.overdue > 0 ? "emergency" : undefined}
               onClick={() => handleStatClick("overdue")}
             />
             <StatCard
               value={stats.dueSoon}
               label="Due This Week"
               icon="calendar"
+              tint="important"
               onClick={() => handleStatClick("due-soon")}
             />
             <StatCard
               value={stats.completed}
               label="Completed"
               icon="checkmark-circle"
+              tint="success"
               onClick={() => handleStatClick("completed")}
             />
           </GoabGrid>
@@ -219,7 +225,20 @@ export function DashboardPage() {
 
         <div className="dashboard-main">
           <div className="dashboard-main__left">
-            <Widget title="Case Activity (Last 7 Days)">
+            <GoabContainer
+              heading={
+                <>
+                  Case Activity{" "}
+                  <GoabText as="span" size="body-s" color="secondary" mt="none" mb="none">
+                    Last 7 days
+                  </GoabText>
+                </>
+              }
+              type="non-interactive"
+              accent="thick"
+              padding="compact"
+              mb="none"
+            >
               <div className="dashboard-chart">
                 <ResponsiveContainer width="100%" height={200}>
                   <AreaChart
@@ -275,11 +294,15 @@ export function DashboardPage() {
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
-            </Widget>
+            </GoabContainer>
 
-            <Widget
-              title="My Work Queue"
-              action={
+            <GoabContainer
+              heading="Assigned to me"
+              type="non-interactive"
+              accent="thick"
+              padding="compact"
+              mb="none"
+              actions={
                 <GoabxButton
                   type="tertiary"
                   size="compact"
@@ -302,11 +325,17 @@ export function DashboardPage() {
                   ))
                 )}
               </div>
-            </Widget>
+            </GoabContainer>
           </div>
 
           <div className="dashboard-main__right">
-            <Widget title="Coming Up">
+            <GoabContainer
+              heading="Coming Up"
+              type="non-interactive"
+              accent="thick"
+              padding="compact"
+              mb="none"
+            >
               <div className="dashboard-coming-up">
                 {comingUp.length === 0 ? (
                   <p className="dashboard-empty">No upcoming deadlines</p>
@@ -320,11 +349,15 @@ export function DashboardPage() {
                   ))
                 )}
               </div>
-            </Widget>
+            </GoabContainer>
 
-            <Widget
-              title="Recent Activity"
-              action={
+            <GoabContainer
+              heading="Recent Activity"
+              type="non-interactive"
+              accent="thick"
+              padding="compact"
+              mb="none"
+              actions={
                 <GoabxButton
                   type="tertiary"
                   size="compact"
@@ -343,7 +376,7 @@ export function DashboardPage() {
                   ))
                 )}
               </div>
-            </Widget>
+            </GoabContainer>
           </div>
         </div>
       </div>

@@ -1,17 +1,27 @@
 import { GoabIcon } from "@abgov/react-components";
 
+type StatCardTint = "emergency" | "important" | "success" | "info" | undefined;
+
 interface StatCardProps {
   value: number;
   label: string;
   icon: string;
-  highlight?: boolean;
+  tint?: StatCardTint;
   onClick?: () => void;
 }
 
-export function StatCard({ value, label, icon, highlight, onClick }: StatCardProps) {
+const tintIconColors: Record<string, string> = {
+  emergency: "var(--goa-color-emergency-default)",
+  important: "var(--goa-color-important-text-dark)",
+  success: "var(--goa-color-success-default)",
+  info: "var(--goa-color-info-default)",
+};
+
+export function StatCard({ value, label, icon, tint, onClick }: StatCardProps) {
+  const tintClass = tint ? `dashboard-stat-card--${tint}` : "";
   return (
     <div
-      className={`dashboard-stat-card ${highlight ? "dashboard-stat-card--highlight" : ""} ${onClick ? "dashboard-stat-card--clickable" : ""}`}
+      className={`dashboard-stat-card ${tintClass} ${onClick ? "dashboard-stat-card--clickable" : ""}`}
       onClick={onClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
@@ -21,20 +31,20 @@ export function StatCard({ value, label, icon, highlight, onClick }: StatCardPro
         <GoabIcon
           type={icon as any}
           size="medium"
-          fillColor={
-            highlight
-              ? "var(--goa-color-emergency-text-dark)"
-              : "var(--goa-color-interactive-default)"
-          }
+          fillColor={tint ? tintIconColors[tint] : "var(--goa-color-interactive-default)"}
         />
       </div>
       <div className="dashboard-stat-card__content">
         <span
-          className={`dashboard-stat-card__value ${highlight ? "dashboard-stat-card__value--highlight" : ""}`}
+          className={`dashboard-stat-card__value ${tint ? `dashboard-stat-card__value--${tint}` : ""}`}
         >
           {value}
         </span>
-        <span className="dashboard-stat-card__label">{label}</span>
+        <span
+          className={`dashboard-stat-card__label ${tint ? `dashboard-stat-card__label--${tint}` : ""}`}
+        >
+          {label}
+        </span>
       </div>
     </div>
   );
