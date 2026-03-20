@@ -1,85 +1,86 @@
 .page__comments .page__comments_form goa-textarea {
-    --goa-text-area-border-radius: 0 0 var(--goa-border-radius-xl) var(--goa-border-radius-xl) !important;
+  --goa-text-area-border-radius: 0 0 var(--goa-border-radius-xl)
+    var(--goa-border-radius-xl) !important;
 }
 
 .page__comments,
 .page__comments_form,
 .page__comments_form_heading,
 .page__comments_list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--goa-space-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-2xl);
 }
 
 .page__comments_form {
-    gap: 0;
+  gap: 0;
 }
 
 .page__comments_list {
-    gap: var(--goa-space-m);
+  gap: var(--goa-space-m);
 }
 
 .page__comments_form_heading {
-    justify-content: space-between;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--goa-space-xs);
-    background-color: var(--goa-color-greyscale-100);
-    border-radius:  var(--goa-border-radius-xl) var(--goa-border-radius-xl) 0 0;
-    padding: var(--goa-space-m);
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--goa-space-xs);
+  background-color: var(--goa-color-greyscale-100);
+  border-radius: var(--goa-border-radius-xl) var(--goa-border-radius-xl) 0 0;
+  padding: var(--goa-space-m);
 }
 
 .page__comments_single {
-    border-radius: var(--goa-border-radius-xl);
-    border: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
-    background: transparent;
+  border-radius: var(--goa-border-radius-xl);
+  border: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
+  background: transparent;
 }
 
 .page__comments_single_heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: var(--goa-border-radius-xl) var(--goa-border-radius-xl) 0 0;
-    margin-bottom: var(--goa-space-xs);
-    background: var(--goa-color-greyscale-100);
-    padding: var(--goa-space-m);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--goa-border-radius-xl) var(--goa-border-radius-xl) 0 0;
+  margin-bottom: var(--goa-space-xs);
+  background: var(--goa-color-greyscale-100);
+  padding: var(--goa-space-m);
 }
 
 .page__comments_single_author {
-    font-weight: var(--goa-font-weight-semi-bold);
+  font-weight: var(--goa-font-weight-semi-bold);
 }
 
 .page__comments_single_date {
-    font-size: var(--goa-font-size-2);
-    color: var(--goa-color-greyscale-600);
+  font-size: var(--goa-font-size-2);
+  color: var(--goa-color-greyscale-600);
 }
 
 .page__comments_single_content {
-    padding: var(--goa-space-m) var(--goa-space-m) var(--goa-space-l);
+  padding: var(--goa-space-m) var(--goa-space-m) var(--goa-space-l);
 }
 
 .page__comments_single_content_editing {
-    display: flex;
-    flex-direction: column;
-    gap: var(--goa-space-s);
+  display: flex;
+  flex-direction: column;
+  gap: var(--goa-space-s);
 }
 
 .page__comments_form_disabled {
-    background: var(--goa-color-greyscale-50);
-    padding: var(--goa-space-m);
-    border-radius: var(--goa-border-radius-xl);
-    border: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
-    text-align: center;
+  background: var(--goa-color-greyscale-50);
+  padding: var(--goa-space-m);
+  border-radius: var(--goa-border-radius-xl);
+  border: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
+  text-align: center;
 }
 
 @media screen and (max-width: 623px) {
-    .page__comments_form_heading {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--goa-space-l);
-    }
+  .page__comments_form_heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--goa-space-l);
+  }
 
-    .page__comments_form_heading goa-button-group {
-        width: 100%;
-    }
+  .page__comments_form_heading goa-button-group {
+    width: 100%;
+  }
 }

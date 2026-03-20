@@ -21,7 +21,9 @@ function renderCaseCollapsed(
 ) {
   return {
     title: <span className="expandable-list__name">{caseItem.name}</span>,
-    badge: <GoabxBadge type={caseItem.status} content={caseItem.statusText} icon={true} />,
+    badge: (
+      <GoabxBadge type={caseItem.status} content={caseItem.statusText} icon={true} />
+    ),
     secondaryInfo: (
       <div className="expandable-list__header-actions">
         {caseItem.comments > 0 && (

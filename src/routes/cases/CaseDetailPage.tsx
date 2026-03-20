@@ -1,11 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  GoabSkeleton,
-  GoabSpacer,
-  GoabTab,
-  GoabText
-} from "@abgov/react-components";
+import { GoabSkeleton, GoabSpacer, GoabTab, GoabText } from "@abgov/react-components";
 import {
   GoabxBadge,
   GoabxButton,
@@ -15,7 +10,7 @@ import {
 } from "@abgov/react-components/experimental";
 import {
   GoabMenuButtonOnActionDetail,
-  GoabTabsOnChangeDetail
+  GoabTabsOnChangeDetail,
 } from "@abgov/ui-components-common";
 import { PageHeader } from "../../components/PageHeader";
 import { CommentsDrawer } from "../../components/CommentsDrawer";
@@ -142,7 +137,7 @@ export function CaseDetailPage() {
           onClick={handleCommentsClick}
           leadingIcon="chatbubble"
         >
-          Comments {!isLoading && "(" + (comments.length) + ")"}
+          Comments {!isLoading && "(" + comments.length + ")"}
         </GoabxButton>
       </>
     ),

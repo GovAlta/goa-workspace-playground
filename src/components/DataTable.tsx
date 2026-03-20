@@ -1,7 +1,10 @@
 import { ReactNode } from "react";
 import { GoabDataGrid, GoabSkeleton } from "@abgov/react-components";
 import { GoabxTable, GoabxTableSortHeader } from "@abgov/react-components/experimental";
-import { GoabTableOnMultiSortDetail, GoabTableSortMode } from "@abgov/ui-components-common";
+import {
+  GoabTableOnMultiSortDetail,
+  GoabTableSortMode,
+} from "@abgov/ui-components-common";
 import { TableColumn } from "../types/TableColumn";
 import { ScrollContainer } from "./ScrollContainer";
 
@@ -36,7 +39,6 @@ export function DataTable<T>({
   striped = true,
   onRowClick,
 }: DataTableProps<T>) {
-
   const renderSkeletonCell = (column: TableColumn<T>, rowIndex: number) => {
     switch (column.type) {
       case "checkbox":
@@ -107,7 +109,13 @@ export function DataTable<T>({
     <ScrollContainer>
       <div className="table-wrapper">
         <GoabDataGrid keyboardNav="table" keyboardIconPosition="right">
-          <GoabxTable width="100%" onMultiSort={onMultiSort} sortMode={sortMode} variant="normal" striped={striped}>
+          <GoabxTable
+            width="100%"
+            onMultiSort={onMultiSort}
+            sortMode={sortMode}
+            variant="normal"
+            striped={striped}
+          >
             <thead>
               <tr data-grid="row">
                 {columns.map((column) => (

@@ -1,5 +1,8 @@
 import { useState, useCallback } from "react";
-import { GoabTableOnSortDetail, GoabTableOnMultiSortDetail } from "@abgov/ui-components-common";
+import {
+  GoabTableOnSortDetail,
+  GoabTableOnMultiSortDetail,
+} from "@abgov/ui-components-common";
 import { SortConfig } from "../utils/searchUtils";
 
 /**
@@ -105,20 +108,15 @@ export function useMultiColumnSort(initialConfig?: SortConfig) {
    * Handle multi-sort event from GoabxTable (sortMode="multi").
    * Syncs the table's multi-sort state into our SortConfig.
    */
-  const handleMultiSort = useCallback(
-    (detail: GoabTableOnMultiSortDetail) => {
-      const { sorts } = detail;
-      setSortConfig({
-        primary: sorts[0]
-          ? { key: sorts[0].column, direction: sorts[0].direction }
-          : null,
-        secondary: sorts[1]
-          ? { key: sorts[1].column, direction: sorts[1].direction }
-          : null,
-      });
-    },
-    [],
-  );
+  const handleMultiSort = useCallback((detail: GoabTableOnMultiSortDetail) => {
+    const { sorts } = detail;
+    setSortConfig({
+      primary: sorts[0] ? { key: sorts[0].column, direction: sorts[0].direction } : null,
+      secondary: sorts[1]
+        ? { key: sorts[1].column, direction: sorts[1].direction }
+        : null,
+    });
+  }, []);
 
   /**
    * Clear all sorting.

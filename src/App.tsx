@@ -27,11 +27,7 @@ export function App() {
               onToggle={() => setMenuOpen((prev) => !prev)}
               primaryContent={
                 <>
-                  <GoabxWorkSideMenuItem
-                    icon="grid"
-                    label="Dashboard"
-                    url={`${base}/`}
-                  />
+                  <GoabxWorkSideMenuItem icon="grid" label="Dashboard" url={`${base}/`} />
 
                   <GoabxWorkSideMenuItem
                     icon="search"

@@ -87,14 +87,14 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run build:check` | Type-check and build |
-| `npm run preview` | Preview production build |
-| `npm run test` | Run tests |
-| `npm run coverage` | Run tests with coverage |
+| Script                | Description              |
+| --------------------- | ------------------------ |
+| `npm run dev`         | Start development server |
+| `npm run build`       | Build for production     |
+| `npm run build:check` | Type-check and build     |
+| `npm run preview`     | Preview production build |
+| `npm run test`        | Run tests                |
+| `npm run coverage`    | Run tests with coverage  |
 
 ## Key Patterns
 
@@ -119,7 +119,7 @@ useEffect(() => {
 }, []);
 
 // In JSX:
-<GoabCircularProgress visible={isLoading} variant="fullscreen" message="Loading..." />
+<GoabCircularProgress visible={isLoading} variant="fullscreen" message="Loading..." />;
 ```
 
 ### Page Headers

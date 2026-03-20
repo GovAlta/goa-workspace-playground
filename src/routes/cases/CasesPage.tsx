@@ -8,7 +8,13 @@ import {
   GoabSkeleton,
   GoabDataGrid,
 } from "@abgov/react-components";
-import { GoabxButton, GoabxCheckbox, GoabxBadge, GoabxMenuButton, GoabxMenuAction } from "@abgov/react-components/experimental";
+import {
+  GoabxButton,
+  GoabxCheckbox,
+  GoabxBadge,
+  GoabxMenuButton,
+  GoabxMenuAction,
+} from "@abgov/react-components/experimental";
 import {
   GoabInputOnKeyPressDetail,
   GoabMenuButtonOnActionDetail,
@@ -57,7 +63,9 @@ export function CasesPage() {
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [isCommentsDrawerOpen, setIsCommentsDrawerOpen] = useState(false);
   const [comments, setComments] = useState<CommentsList>([]);
-  const [selectedCaseIdForComments, setSelectedCaseIdForComments] = useState<string | null>(null);
+  const [selectedCaseIdForComments, setSelectedCaseIdForComments] = useState<
+    string | null
+  >(null);
 
   const { isMobile } = useMenu();
   const isCompactToolbar = useCompactToolbar();
@@ -96,7 +104,7 @@ export function CasesPage() {
     };
     loadComments();
   }, []);
-  
+
   const handleCommentsClick = (caseId?: string) => {
     if (caseId) {
       setSelectedCaseIdForComments(caseId);
@@ -492,7 +500,12 @@ export function CasesPage() {
         type: "badge",
         sortable: true,
         render: (caseItem) => (
-          <GoabxBadge type={caseItem.status} content={caseItem.statusText} icon={true} emphasis="subtle" />
+          <GoabxBadge
+            type={caseItem.status}
+            content={caseItem.statusText}
+            icon={true}
+            emphasis="subtle"
+          />
         ),
       },
       {
@@ -541,7 +554,7 @@ export function CasesPage() {
             leadingIcon="ellipsis-horizontal"
             size="compact"
             onAction={(e: GoabMenuButtonOnActionDetail) =>
-                onMenuActionButton(e.action, caseItem.id)
+              onMenuActionButton(e.action, caseItem.id)
             }
           >
             <GoabxMenuAction text="View case" action="view" />

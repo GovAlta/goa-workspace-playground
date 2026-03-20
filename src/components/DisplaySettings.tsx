@@ -300,7 +300,6 @@ export function DisplaySettings({
     }
   };
 
-
   return (
     <GoabPopover
       padded={false}

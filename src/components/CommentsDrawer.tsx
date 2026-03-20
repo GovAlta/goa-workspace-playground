@@ -11,14 +11,13 @@ import {
   GoabxDrawer,
   GoabxModal,
   GoabxMenuAction,
-  GoabxMenuButton, } from "@abgov/react-components/experimental";
+  GoabxMenuButton,
+} from "@abgov/react-components/experimental";
 import {
   GoabInputOnChangeDetail,
   GoabMenuButtonOnActionDetail,
 } from "@abgov/ui-components-common";
-import {
-  parseDate,
-} from "../utils/dateUtils";
+import { parseDate } from "../utils/dateUtils";
 import "./CommentsDrawer.css";
 
 interface Comment {
@@ -52,14 +51,15 @@ export function CommentsDrawer({
   const [deleteCommentId, setDeleteCommentId] = useState<number | null>(null);
   const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
   const { isMobile } = useMenu();
-  const isCompletedCase = caseStatus && ["Accepted", "Cancelled", "Denied"].includes(caseStatus);
+  const isCompletedCase =
+    caseStatus && ["Accepted", "Cancelled", "Denied"].includes(caseStatus);
 
   const handleClearComment = () => {
     setCommentText("");
   };
 
   const handleEditComment = (commentId: number) => {
-    const comment = comments.find(c => c.id === commentId);
+    const comment = comments.find((c) => c.id === commentId);
     if (comment) {
       setEditingCommentId(commentId);
       setEditingCommentText(comment.text);
@@ -92,14 +92,17 @@ export function CommentsDrawer({
     setDeleteCommentId(null);
   };
 
-  const sortedComments = useMemo(() =>
-    [...comments].sort((a, b) => {
-      const dateA = parseDate(a.timestamp);
-      const dateB = parseDate(b.timestamp);
-      if (!dateA) return 1;
-      if (!dateB) return -1;
-      return dateB.getTime() - dateA.getTime();
-  }), [comments]);
+  const sortedComments = useMemo(
+    () =>
+      [...comments].sort((a, b) => {
+        const dateA = parseDate(a.timestamp);
+        const dateB = parseDate(b.timestamp);
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        return dateB.getTime() - dateA.getTime();
+      }),
+    [comments],
+  );
 
   return (
     <>
@@ -139,7 +142,7 @@ export function CommentsDrawer({
                       size="compact"
                       disabled={commentText.trim().length === 0}
                       onClick={() => {
-                        console.log('Saving comment:', commentText);
+                        console.log("Saving comment:", commentText);
                         handleClearComment();
                       }}
                     >
@@ -169,32 +172,30 @@ export function CommentsDrawer({
               <div key={comment.id} className="page__comments_single">
                 <div className="page__comments_single_heading">
                   <div>
-                    <div className="page__comments_single_author">
-                      {comment.author}
-                    </div>
-                    <div className="page__comments_single_date">
-                      {comment.timestamp}
-                    </div>
+                    <div className="page__comments_single_author">{comment.author}</div>
+                    <div className="page__comments_single_date">{comment.timestamp}</div>
                   </div>
-                  {!isCompletedCase && comment.isOwned && editingCommentId !== comment.id && (
-                    <GoabxMenuButton
-                      type="tertiary"
-                      leadingIcon="ellipsis-vertical:filled"
-                      text=""
-                      size="compact"
-                      ariaLabel="Options"
-                      onAction={(e: GoabMenuButtonOnActionDetail) => {
-                        if (e.action === "edit") {
-                          handleEditComment(comment.id);
-                        } else if (e.action === "delete") {
-                          handleDeleteComment(comment.id);
-                        }
-                      }}
-                    >
-                      <GoabxMenuAction icon="pencil" text="Edit" action="edit" />
-                      <GoabxMenuAction icon="trash" text="Delete" action="delete" />
-                    </GoabxMenuButton>
-                  )}
+                  {!isCompletedCase &&
+                    comment.isOwned &&
+                    editingCommentId !== comment.id && (
+                      <GoabxMenuButton
+                        type="tertiary"
+                        leadingIcon="ellipsis-vertical:filled"
+                        text=""
+                        size="compact"
+                        ariaLabel="Options"
+                        onAction={(e: GoabMenuButtonOnActionDetail) => {
+                          if (e.action === "edit") {
+                            handleEditComment(comment.id);
+                          } else if (e.action === "delete") {
+                            handleDeleteComment(comment.id);
+                          }
+                        }}
+                      >
+                        <GoabxMenuAction icon="pencil" text="Edit" action="edit" />
+                        <GoabxMenuAction icon="trash" text="Delete" action="delete" />
+                      </GoabxMenuButton>
+                    )}
                 </div>
                 <div className="page__comments_single_content">
                   {editingCommentId === comment.id ? (
@@ -212,10 +213,18 @@ export function CommentsDrawer({
                         />
                       </GoabFormItem>
                       <GoabButtonGroup alignment="end">
-                        <GoabxButton type="tertiary" size="compact" onClick={handleCancelEditComment}>
+                        <GoabxButton
+                          type="tertiary"
+                          size="compact"
+                          onClick={handleCancelEditComment}
+                        >
                           Cancel
                         </GoabxButton>
-                        <GoabxButton type="primary" size="compact" onClick={handleSaveEditComment}>
+                        <GoabxButton
+                          type="primary"
+                          size="compact"
+                          onClick={handleSaveEditComment}
+                        >
                           Save
                         </GoabxButton>
                       </GoabButtonGroup>
@@ -238,7 +247,11 @@ export function CommentsDrawer({
         open={showDeleteCommentModal}
         actions={
           <GoabButtonGroup alignment="end">
-            <GoabxButton type="secondary" size="compact" onClick={() => setShowDeleteCommentModal(false)}>
+            <GoabxButton
+              type="secondary"
+              size="compact"
+              onClick={() => setShowDeleteCommentModal(false)}
+            >
               Cancel
             </GoabxButton>
             <GoabxButton
