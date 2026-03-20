@@ -32,7 +32,7 @@ function renderCaseCollapsed(
     secondaryInfo: (
       <div className="expandable-list__header-actions">
         {caseItem.comments > 0 && (
-          <GoabxLink leadingIcon="chatbox" size="small">
+          <GoabxLink leadingIcon="chatbox" size="small" color="dark">
             <a href="#">
               {caseItem.comments} comment{caseItem.comments === 1 ? "" : "s"}
             </a>

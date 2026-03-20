@@ -66,7 +66,7 @@ export function CaseCard({
       actions={
         <div data-grid={"cell-3"} className="data-card__actions">
           {commentCount > 0 && (
-            <GoabxLink leadingIcon="chatbox" size="small">
+            <GoabxLink leadingIcon="chatbox" size="small" color="dark">
               <button
                 className="link-button"
                 onClick={() => onMenuAction("comments", caseItem.id)}

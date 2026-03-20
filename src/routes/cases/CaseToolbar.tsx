@@ -23,6 +23,8 @@ import { SORT_FIELD_LABELS } from "./types";
 
 interface CaseToolbarProps {
   activeTab: string;
+  totalCount: number;
+  unassignedCount: number;
   myCasesCount: number;
   inProgressCount: number;
   onTabChange: (event: any) => void;
@@ -41,6 +43,8 @@ interface CaseToolbarProps {
 }
 
 export function CaseToolbar({
+  totalCount,
+  unassignedCount,
   myCasesCount,
   inProgressCount,
   onTabChange,
@@ -80,7 +84,19 @@ export function CaseToolbar({
     <div className="cases-toolbar-row">
       <div className="cases-toolbar-tabs">
         <GoabxTabs initialTab={1} onChange={onTabChange} variant="segmented">
-          <GoabTab heading="Unassigned" />
+          <GoabTab heading="All" />
+          <GoabTab
+            heading={
+              <>
+                Unassigned{" "}
+                <GoabxBadge
+                  type="default"
+                  content={String(unassignedCount)}
+                  emphasis="subtle"
+                />
+              </>
+            }
+          />
           <GoabTab
             heading={
               <>

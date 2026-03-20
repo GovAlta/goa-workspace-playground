@@ -232,7 +232,9 @@ export function CasesPage() {
 
   const filteredCases = useMemo(() => {
     let filtered = cases;
-    if (activeTab !== "all") {
+    if (activeTab === "unassigned") {
+      filtered = cases.filter((caseItem) => !caseItem.staff || caseItem.staff === "");
+    } else if (activeTab !== "all") {
       filtered = cases.filter((caseItem) => caseItem.category === activeTab);
     }
     filtered = filterData(typedChips, filtered);
@@ -354,7 +356,7 @@ export function CasesPage() {
 
   const handleTabChange = (event: any) => {
     const tabIndex = event.detail?.tab || event.tab;
-    const tabMap = ["all", "todo", "progress", "complete"];
+    const tabMap = ["all", "unassigned", "todo", "progress", "complete"];
     setActiveTab(tabMap[tabIndex - 1] || "all");
     setCases((prev) => prev.map((c) => ({ ...c, selected: false })));
   };
@@ -552,7 +554,7 @@ export function CasesPage() {
         type: "actions",
         render: (caseItem) => (
           <GoabxMenuButton
-            leadingIcon="ellipsis-horizontal"
+            leadingIcon="ellipsis-horizontal:filled"
             size="compact"
             onAction={(e: GoabMenuButtonOnActionDetail) =>
               onMenuActionButton(e.action, caseItem.id)
@@ -595,6 +597,8 @@ export function CasesPage() {
     () => (
       <CaseToolbar
         activeTab={activeTab}
+        totalCount={cases.length}
+        unassignedCount={cases.filter((c) => !c.staff || c.staff === "").length}
         myCasesCount={myCasesCount}
         inProgressCount={inProgressCount}
         onTabChange={handleTabChange}
