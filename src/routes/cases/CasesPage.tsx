@@ -15,7 +15,6 @@ import {
   GoabxBadge,
   GoabxMenuButton,
   GoabxMenuAction,
-  GoabxPagination,
   GoabxLink,
 } from "@abgov/react-components/experimental";
 import {
@@ -69,9 +68,6 @@ export function CasesPage() {
   const [selectedCaseIdForComments, setSelectedCaseIdForComments] = useState<
     string | null
   >(null);
-
-  const [pageNumber, setPageNumber] = useState(1);
-  const perPageCount = 20;
 
   const { isMobile } = useMenu();
   const isCompactToolbar = useCompactToolbar();
@@ -364,7 +360,6 @@ export function CasesPage() {
     const tabMap = ["all", "unassigned", "todo", "progress", "complete"];
     setActiveTab(tabMap[tabIndex - 1] || "all");
     setCases((prev) => prev.map((c) => ({ ...c, selected: false })));
-    setPageNumber(1);
   };
 
   const handleSortAction = (action: string) => {
@@ -684,44 +679,20 @@ export function CasesPage() {
         />
 
         {viewMode === "table" && (
-          <>
-            <CaseTable
-              filteredCases={
-                groupedCases
-                  ? filteredCases
-                  : filteredCases.slice(
-                      (pageNumber - 1) * perPageCount,
-                      pageNumber * perPageCount,
-                    )
-              }
-              groupedCases={groupedCases}
-              columns={visibleCaseColumns}
-              expandedGroups={expandedGroups}
-              onToggleGroup={toggleGroup}
-              isLoading={isLoading}
-              emptyState={cases.length > 0 ? emptyStateContent : undefined}
-              sortConfig={sortConfig}
-              onMultiSort={handleMultiSort}
-              onRowClick={(caseItem) =>
-                handleSelectChange(caseItem.id, !caseItem.selected)
-              }
-              getRowKey={(caseItem) => caseItem.id}
-              getRowSelected={(caseItem) => caseItem.selected}
-            />
-            {!groupedCases && filteredCases.length > perPageCount && (
-              <div
-                className="content-padding"
-                style={{ marginTop: "var(--goa-space-m)" }}
-              >
-                <GoabxPagination
-                  itemCount={filteredCases.length}
-                  perPageCount={perPageCount}
-                  pageNumber={pageNumber}
-                  onChange={(e) => setPageNumber(e.page)}
-                />
-              </div>
-            )}
-          </>
+          <CaseTable
+            filteredCases={filteredCases}
+            groupedCases={groupedCases}
+            columns={visibleCaseColumns}
+            expandedGroups={expandedGroups}
+            onToggleGroup={toggleGroup}
+            isLoading={isLoading}
+            emptyState={cases.length > 0 ? emptyStateContent : undefined}
+            sortConfig={sortConfig}
+            onMultiSort={handleMultiSort}
+            onRowClick={(caseItem) => handleSelectChange(caseItem.id, !caseItem.selected)}
+            getRowKey={(caseItem) => caseItem.id}
+            getRowSelected={(caseItem) => caseItem.selected}
+          />
         )}
 
         {viewMode === "list" && (
