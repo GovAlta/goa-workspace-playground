@@ -211,7 +211,7 @@
   align-items: center;
   gap: var(--goa-space-s);
   width: 100%;
-  padding: var(--goa-space-s) 0;
+  padding: var(--goa-space-m);
   margin-bottom: var(--goa-space-m);
   background: none;
   border: none;
@@ -232,7 +232,7 @@
 
 .cases-group__label {
   font: var(--goa-typography-heading-xs);
-  color: var(--goa-color-text-default);
+  color: var(--goa-color-text-secondary);
 }
 
 .cases-group .card-grid,

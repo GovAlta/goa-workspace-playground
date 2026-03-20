@@ -12,6 +12,7 @@
   background: white;
   border: var(--goa-border-width-s) solid var(--goa-color-greyscale-200);
   border-radius: var(--goa-border-radius-xl);
+  overflow: hidden;
 }
 
 .expandable-list__header {
@@ -20,18 +21,12 @@
   padding: var(--goa-space-xs) var(--goa-space-l) var(--goa-space-xs) var(--goa-space-s);
   gap: var(--goa-space-2xs);
   background-color: var(--goa-color-greyscale-100);
-  border-radius: var(--goa-border-radius-xl);
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
 .expandable-list__header:hover {
-  background-color: var(--goa-color-greyscale-200);
-}
-
-/* When expanded, only round top corners of header */
-.expandable-list__item--expanded .expandable-list__header {
-  border-radius: var(--goa-border-radius-xl) var(--goa-border-radius-xl) 0 0;
+  background-color: var(--goa-color-greyscale-150);
 }
 
 .expandable-list__toggle {

@@ -130,7 +130,7 @@ export function CaseListView({
                 />
                 <span className="cases-group__label">{group.label}</span>
                 <GoabxBadge
-                  type="information"
+                  type="default"
                   content={String(group.cases.length)}
                   emphasis="subtle"
                 />

@@ -7,6 +7,7 @@ import {
   GoabBlock,
   GoabSkeleton,
   GoabDataGrid,
+  GoabIcon,
 } from "@abgov/react-components";
 import {
   GoabxButton,
@@ -737,9 +738,17 @@ export function CasesPage() {
                         onClick={() => toggleGroup(group.key)}
                         aria-expanded={expandedGroups.has(group.key)}
                       >
+                        <GoabIcon
+                          type={
+                            expandedGroups.has(group.key)
+                              ? "chevron-down"
+                              : "chevron-forward"
+                          }
+                          size="small"
+                        />
                         <span className="cases-group__label">{group.label}</span>
                         <GoabxBadge
-                          type="information"
+                          type="default"
                           content={String(group.cases.length)}
                           emphasis="subtle"
                         />
