@@ -1,0 +1,71 @@
+/* ============================================================================
+   PAGE FOOTER
+   ============================================================================
+   Sticky footer that appears at the bottom of the viewport.
+   Visibility controlled by visibleWhen mode (always, selection, scrolled).
+   Matches header pattern with scroll-aware shadow.
+   ============================================================================ */
+
+/* Footer container base styles */
+.page-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  background-color: white;
+  border-top: var(--goa-border-width) solid var(--goa-color-greyscale-150);
+  padding: var(--goa-space-s) var(--goa-space-xl);
+  transition: border-color 0.1s ease-out;
+}
+
+/* At bottom - no border, extra bottom padding to match card chrome */
+.page-footer--atbottom,
+.page-footer--noscroll {
+  border-top-color: transparent;
+  padding-bottom: var(--goa-space-l);
+}
+
+/* Mobile footer styles */
+@media (max-width: 623px) {
+  .page-footer {
+    padding: var(--goa-space-s) var(--goa-space-m);
+  }
+}
+
+/* Footer scroll shadow - gradient fade when content scrolls behind */
+.page-footer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 8px;
+  transform: translateY(-100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.08), transparent);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.1s ease-out,
+    visibility 0.1s ease-out;
+}
+
+/* Shadow visible when content scrolls behind footer */
+.page-footer--attop::before,
+.page-footer--middle::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Explicitly hide shadow when at bottom or no scroll */
+.page-footer--atbottom::before,
+.page-footer--noscroll::before {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Footer content container */
+.page-footer__content {
+  display: flex;
+  align-items: center;
+  gap: var(--goa-space-m);
+}

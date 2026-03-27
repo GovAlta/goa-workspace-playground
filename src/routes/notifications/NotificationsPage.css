@@ -1,0 +1,32 @@
+.notifications-content {
+  padding: 16px var(--goa-space-xl) var(--goa-space-xl) var(--goa-space-xl);
+}
+
+.notifications-group {
+  margin-bottom: 1.5rem;
+  border: 1px solid rgb(231, 231, 231);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.notifications-group__heading {
+  font: var(--goa-typography-heading-2xs);
+  color: var(--goa-color-greyscale-600);
+  padding-left: var(--goa-space-m);
+  padding-right: var(--goa-space-m);
+  margin-top: var(--goa-space-l);
+  margin-bottom: 0;
+  padding-bottom: var(--goa-space-s);
+  border-bottom: 1px solid var(--goa-color-greyscale-100);
+}
+
+.notifications-group__items {
+  display: flex;
+  flex-direction: column;
+}
+
+.notifications-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--goa-color-text-secondary, #666);
+}

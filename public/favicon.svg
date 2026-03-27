@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 512 512"><rect width="512" height="512" fill="#fff" rx="0" ry="0"/><defs><clipPath id="a"><rect width="512" height="512" rx="0" ry="0"/></clipPath>
+  <style>
+    @media (prefers-color-scheme: dark) {
+      svg { filter: invert(0%) hue-rotate(0deg) saturate(100%) contrast(100%) brightness(1); }
+    }
+  </style></defs><g clip-path="url(#a)"><g transform="scale(16)"><g clip-path="url(#b)"><path fill="#00B6ED" d="M0 32h32V0H0z"/><path fill="#fff" d="M14.985 27.78a52 52 0 0 0 6.202-2.748c.31 2.625.648 4.535 1.024 5.939-1.686-.611-4.088-1.59-7.226-3.191m8.838-6.727c-.506-6.732-.299-14.208.968-18.792.29-1.05.596-1.764.856-2.261h-4.124q-.443.628-.854 1.447C19.227 4.325 12.58 19.969 1.96 30.528A14 14 0 0 1 .23 32h4.797c6.125-6.9 12.83-19.327 15.658-24.817-.28 3.321-.376 8.89.243 15.417-3.287 1.601-6.236 2.544-7.625 2.91-1.506.394-2.438 1.007-2.466 1.705-.029.764.982 1.408 2.443 2.102 1.18.56 3.388 1.606 5.627 2.683h6.998q-.196-.064-.39-.123c-.636-2.21-1.144-5.184-1.483-8.46 2.91-1.79 5.785-4.028 7.968-6.71v-2.698c-2.139 2.936-5.153 5.264-8.177 7.044"/></g><defs><clipPath id="b"><rect width="32" height="32" fill="#fff" rx="4"/></clipPath></defs></g></g></svg>
