@@ -16,6 +16,7 @@ import { useWorkspaceMenuState } from "./hooks/useWorkspaceMenuState";
 function AppShell() {
   const navigate = useNavigate();
   const { menuOpen, setMenuOpen, isMobile } = useWorkspaceMenuState();
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotifications();
 
@@ -29,7 +30,7 @@ function AppShell() {
         <ScrollStateProvider>
           <div className="app-layout">
             <GoabxWorkSideMenu
-              url="/"
+              url={`${base}/`}
               heading="Workspace Demo Application"
               userName="Edna Mode"
               userSecondaryText="edna.mode@example.com"
