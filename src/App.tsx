@@ -20,6 +20,11 @@ function AppShell() {
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotifications();
 
+  const handleNavigate = (path: string) => {
+    const routePath = base ? path.replace(base, "") || "/" : path;
+    navigate(routePath);
+  };
+
   const handleViewAll = () => {
     navigate("/notifications");
   };
@@ -36,21 +41,21 @@ function AppShell() {
               userSecondaryText="edna.mode@example.com"
               open={menuOpen}
               onToggle={() => setMenuOpen((prev) => !prev)}
-              onNavigate={(path: string) => navigate(path)}
+              onNavigate={handleNavigate}
               primaryContent={
                 <>
-                  <GoabxWorkSideMenuItem icon="grid" label="Dashboard" url="/" />
+                  <GoabxWorkSideMenuItem icon="grid" label="Dashboard" url={`${base}/`} />
 
                   <GoabxWorkSideMenuItem
                     icon="search"
                     label="Search"
-                    url="/search"
+                    url={`${base}/search`}
                   />
 
                   <GoabxWorkSideMenuItem
                     icon="list"
                     label="Cases"
-                    url="/cases"
+                    url={`${base}/cases`}
                   />
 
                   <GoabxWorkSideMenuItem
@@ -58,19 +63,19 @@ function AppShell() {
                     label="Documents"
                     type="success"
                     badge="New"
-                    url="/documents"
+                    url={`${base}/documents`}
                   >
                     <GoabxWorkSideMenuItem
                       label="Sub menu item 1"
-                      url="/documents/sub1"
+                      url={`${base}/documents/sub1`}
                     />
                     <GoabxWorkSideMenuItem
                       label="Sub menu item 2"
-                      url="/documents/sub2"
+                      url={`${base}/documents/sub2`}
                     />
                     <GoabxWorkSideMenuItem
                       label="Sub menu item 3"
-                      url="/documents/sub3"
+                      url={`${base}/documents/sub3`}
                     />
                   </GoabxWorkSideMenuItem>
                 </>
@@ -112,12 +117,12 @@ function AppShell() {
                   <GoabxWorkSideMenuItem
                     icon="settings"
                     label="Settings"
-                    url="/settings"
+                    url={`${base}/settings`}
                   />
                   <GoabxWorkSideMenuItem
                     icon="log-out"
                     label="Log out"
-                    url="/logout"
+                    url={`${base}/logout`}
                   />
                 </>
               }
