@@ -1,13 +1,16 @@
 import { useMemo, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { GoabSkeleton, GoabSpacer, GoabTab, GoabText } from "@abgov/react-components";
 import {
-  GoabxBadge,
-  GoabxButton,
-  GoabxTabs,
-  GoabxMenuButton,
-  GoabxMenuAction,
-} from "@abgov/react-components/experimental";
+  GoabSkeleton,
+  GoabSpacer,
+  GoabTab,
+  GoabText,
+  GoabBadge,
+  GoabButton,
+  GoabTabs,
+  GoabMenuButton,
+  GoabMenuAction,
+} from "@abgov/react-components";
 import {
   GoabMenuButtonOnActionDetail,
   GoabTabsOnChangeDetail,
@@ -119,26 +122,26 @@ export function CaseDetailPage() {
   const headerActions = useMemo(
     () => (
       <>
-        <GoabxMenuButton
+        <GoabMenuButton
           type="tertiary"
           text="Assign"
           size="compact"
           maxWidth="100%"
-          onAction={(e: GoabMenuButtonOnActionDetail) => handleAssignClick()}
+          onAction={(_: GoabMenuButtonOnActionDetail) => handleAssignClick()}
         >
-          <GoabxMenuAction text="Assign to me" action="assign-me" />
-          <GoabxMenuAction text="Assign to team" action="assign-team" />
-          <GoabxMenuAction text="Unassign" action="unassign" />
-        </GoabxMenuButton>
+          <GoabMenuAction text="Assign to me" action="assign-me" />
+          <GoabMenuAction text="Assign to team" action="assign-team" />
+          <GoabMenuAction text="Unassign" action="unassign" />
+        </GoabMenuButton>
 
-        <GoabxButton
+        <GoabButton
           type="tertiary"
           size="compact"
           onClick={handleCommentsClick}
           leadingIcon="chatbubble"
         >
           Comments {!isLoading && "(" + comments.length + ")"}
-        </GoabxButton>
+        </GoabButton>
       </>
     ),
     [isLoading, comments.length],
@@ -182,7 +185,7 @@ export function CaseDetailPage() {
         />
 
         <div className="case-detail__page_content">
-          <GoabxTabs
+          <GoabTabs
             initialTab={1}
             variant={!isMobile ? "segmented" : "default"}
             onChange={handleTabsChange}
@@ -192,11 +195,11 @@ export function CaseDetailPage() {
               heading={
                 <>
                   Previous assessments
-                  <GoabxBadge type="archived" emphasis="subtle" content="0" />
+                  <GoabBadge type="archived" emphasis="subtle" content="0" />
                 </>
               }
             />
-          </GoabxTabs>
+          </GoabTabs>
 
           {isMobile && <GoabSpacer vSpacing="l" />}
 

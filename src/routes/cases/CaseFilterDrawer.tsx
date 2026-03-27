@@ -1,10 +1,12 @@
 import { createPortal } from "react-dom";
-import { GoabButtonGroup, GoabDivider, GoabPushDrawer } from "@abgov/react-components";
 import {
-  GoabxButton,
-  GoabxFormItem,
-  GoabxCheckbox,
-} from "@abgov/react-components/experimental";
+  GoabButtonGroup,
+  GoabDivider,
+  GoabPushDrawer,
+  GoabButton,
+  GoabFormItem,
+  GoabCheckbox,
+} from "@abgov/react-components";
 import { FilterState, FilterOptions } from "./types";
 
 interface CaseFilterDrawerProps {
@@ -40,12 +42,12 @@ export function CaseFilterDrawer({
           onClose={onClose}
           actions={
             <GoabButtonGroup alignment="start" gap="compact">
-              <GoabxButton type="primary" size="compact" onClick={onApply}>
+              <GoabButton type="primary" size="compact" onClick={onApply}>
                 Apply filters
-              </GoabxButton>
-              <GoabxButton type="tertiary" size="compact" onClick={onClose}>
+              </GoabButton>
+              <GoabButton type="tertiary" size="compact" onClick={onClose}>
                 Cancel
-              </GoabxButton>
+              </GoabButton>
             </GoabButtonGroup>
           }
         >
@@ -56,7 +58,7 @@ export function CaseFilterDrawer({
               gap: "var(--goa-space-l)",
             }}
           >
-            <GoabxFormItem label="Status">
+            <GoabFormItem label="Status">
               <div
                 style={{
                   display: "flex",
@@ -65,7 +67,7 @@ export function CaseFilterDrawer({
                 }}
               >
                 {filterOptions.statuses.map((status) => (
-                  <GoabxCheckbox
+                  <GoabCheckbox
                     key={status}
                     name={`status-${status}`}
                     text={status}
@@ -74,9 +76,9 @@ export function CaseFilterDrawer({
                   />
                 ))}
               </div>
-            </GoabxFormItem>
+            </GoabFormItem>
 
-            <GoabxFormItem label="Priority">
+            <GoabFormItem label="Priority">
               <div
                 style={{
                   display: "flex",
@@ -85,7 +87,7 @@ export function CaseFilterDrawer({
                 }}
               >
                 {filterOptions.priorities.map((priority) => (
-                  <GoabxCheckbox
+                  <GoabCheckbox
                     key={priority}
                     name={`priority-${priority}`}
                     text={priority.charAt(0).toUpperCase() + priority.slice(1)}
@@ -94,9 +96,9 @@ export function CaseFilterDrawer({
                   />
                 ))}
               </div>
-            </GoabxFormItem>
+            </GoabFormItem>
 
-            <GoabxFormItem label="Assigned to">
+            <GoabFormItem label="Assigned to">
               <div
                 style={{
                   display: "flex",
@@ -105,7 +107,7 @@ export function CaseFilterDrawer({
                 }}
               >
                 {filterOptions.staffMembers.map((staff) => (
-                  <GoabxCheckbox
+                  <GoabCheckbox
                     key={staff}
                     name={`staff-${staff}`}
                     text={staff}
@@ -114,9 +116,9 @@ export function CaseFilterDrawer({
                   />
                 ))}
               </div>
-            </GoabxFormItem>
+            </GoabFormItem>
 
-            <GoabxFormItem label="Jurisdiction">
+            <GoabFormItem label="Jurisdiction">
               <div
                 style={{
                   display: "flex",
@@ -125,7 +127,7 @@ export function CaseFilterDrawer({
                 }}
               >
                 {filterOptions.jurisdictions.map((jurisdiction) => (
-                  <GoabxCheckbox
+                  <GoabCheckbox
                     key={jurisdiction}
                     name={`jurisdiction-${jurisdiction}`}
                     text={jurisdiction}
@@ -134,14 +136,14 @@ export function CaseFilterDrawer({
                   />
                 ))}
               </div>
-            </GoabxFormItem>
+            </GoabFormItem>
 
             {hasFilters && (
               <>
                 <GoabDivider />
-                <GoabxButton type="tertiary" size="compact" onClick={onClearAll}>
+                <GoabButton type="tertiary" size="compact" onClick={onClearAll}>
                   Clear all filters
-                </GoabxButton>
+                </GoabButton>
               </>
             )}
           </div>

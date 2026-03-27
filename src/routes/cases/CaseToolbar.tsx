@@ -1,13 +1,14 @@
-import { GoabTab, GoabIconButton } from "@abgov/react-components";
 import {
-  GoabxTabs,
-  GoabxBadge,
-  GoabxFormItem,
-  GoabxInput,
-  GoabxButton,
-  GoabxMenuButton,
-  GoabxMenuAction,
-} from "@abgov/react-components/experimental";
+  GoabTab,
+  GoabIconButton,
+  GoabTabs,
+  GoabBadge,
+  GoabFormItem,
+  GoabInput,
+  GoabButton,
+  GoabMenuButton,
+  GoabMenuAction,
+} from "@abgov/react-components";
 import {
   GoabInputOnChangeDetail,
   GoabInputOnKeyPressDetail,
@@ -86,7 +87,7 @@ export function CaseToolbar({
   return (
     <div className="cases-toolbar-row">
       <div className="cases-toolbar-tabs">
-        <GoabxTabs
+        <GoabTabs
           initialTab={VALID_TABS.indexOf(activeTab) + 1}
           onChange={onTabChange}
           variant="segmented"
@@ -97,7 +98,7 @@ export function CaseToolbar({
             heading={
               <>
                 Unassigned{" "}
-                <GoabxBadge
+                <GoabBadge
                   type="default"
                   content={String(unassignedCount)}
                   emphasis="subtle"
@@ -110,7 +111,7 @@ export function CaseToolbar({
             heading={
               <>
                 Assigned to me{" "}
-                <GoabxBadge
+                <GoabBadge
                   type="information"
                   content={String(myCasesCount)}
                   emphasis="subtle"
@@ -123,7 +124,7 @@ export function CaseToolbar({
             heading={
               <>
                 In progress{" "}
-                <GoabxBadge
+                <GoabBadge
                   type="important"
                   content={String(inProgressCount)}
                   emphasis="subtle"
@@ -132,13 +133,13 @@ export function CaseToolbar({
             }
           />
           <GoabTab heading="Complete" slug="complete" />
-        </GoabxTabs>
+        </GoabTabs>
         <div className="cases-toolbar-tabs__spacer" aria-hidden="true" />
       </div>
       <div className="cases-search-row">
         <div className="cases-search-group">
-          <GoabxFormItem id="filterInput" error={inputError}>
-            <GoabxInput
+          <GoabFormItem id="filterInput" error={inputError}>
+            <GoabInput
               name="filterInput"
               value={inputValue}
               leadingIcon="search"
@@ -150,10 +151,10 @@ export function CaseToolbar({
               }}
               onKeyPress={onInputKeyPress}
             />
-          </GoabxFormItem>
+          </GoabFormItem>
         </div>
         <div className="cases-actions-group">
-          <GoabxMenuButton
+          <GoabMenuButton
             size="compact"
             type="tertiary"
             leadingIcon={isCompactToolbar ? "swap-vertical" : undefined}
@@ -161,7 +162,7 @@ export function CaseToolbar({
             onAction={(e: GoabMenuButtonOnActionDetail) => onSortAction(e.action)}
           >
             {Object.entries(SORT_FIELD_LABELS).map(([key, label]) => (
-              <GoabxMenuAction
+              <GoabMenuAction
                 key={key}
                 text={`${label}${getSortIndicator(key)}`}
                 action={`sort-${key}`}
@@ -169,9 +170,9 @@ export function CaseToolbar({
               />
             ))}
             {sortConfig.primary && (
-              <GoabxMenuAction text="Clear sort" action="clear-sort" />
+              <GoabMenuAction text="Clear sort" action="clear-sort" />
             )}
-          </GoabxMenuButton>
+          </GoabMenuButton>
           {isCompactToolbar ? (
             <GoabIconButton
               icon="filter-lines"
@@ -181,14 +182,14 @@ export function CaseToolbar({
               onClick={onFilterOpen}
             />
           ) : (
-            <GoabxButton
+            <GoabButton
               type="tertiary"
               leadingIcon="filter-lines"
               size="compact"
               onClick={onFilterOpen}
             >
               Filter
-            </GoabxButton>
+            </GoabButton>
           )}
           <DisplaySettings
             settings={viewSettings}

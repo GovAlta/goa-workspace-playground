@@ -4,15 +4,15 @@ import {
   GoabText,
   GoabSkeleton,
   GoabTooltip,
+  GoabBadge,
 } from "@abgov/react-components";
-import { GoabxBadge } from "@abgov/react-components/experimental";
-import { GoabBadgeEmphasis, GoabxBadgeType } from "@abgov/ui-components-common";
+import { GoabBadgeEmphasis, GoabBadgeType } from "@abgov/ui-components-common";
 
 interface CaseDetailHeaderProps {
   phoneNumber?: string;
   statuses?: Array<{
     label: string;
-    type?: GoabxBadgeType;
+    type?: GoabBadgeType;
     emphasis?: GoabBadgeEmphasis;
   }>;
   isLoading?: boolean;
@@ -53,10 +53,10 @@ export function CaseDetailHeader({
             </div>
           ) : (
             statuses.map((status, index) => (
-              <GoabxBadge
+              <GoabBadge
                 key={index}
                 content={status.label}
-                type={status.type as GoabxBadgeType}
+                type={status.type as GoabBadgeType}
                 emphasis={status.emphasis as GoabBadgeEmphasis}
               />
             ))

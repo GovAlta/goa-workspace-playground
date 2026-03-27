@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
-import { GoabTab } from "@abgov/react-components";
 import {
-  GoabxTabs,
-  GoabxBadge,
-  GoabxButton,
-  GoabxWorkSideNotificationItem,
-} from "@abgov/react-components/experimental";
+  GoabTab,
+  GoabTabs,
+  GoabBadge,
+  GoabButton,
+  GoabWorkSideNotificationItem,
+} from "@abgov/react-components";
 import { GoabTabsOnChangeDetail } from "@abgov/ui-components-common";
 import { PageHeader } from "../../components/PageHeader";
 import {
@@ -92,13 +92,13 @@ export function NotificationsPage() {
         title="All Notifications"
         actions={
           unreadCount > 0 ? (
-            <GoabxButton type="tertiary" size="compact" onClick={markAllAsRead}>
+            <GoabButton type="tertiary" size="compact" onClick={markAllAsRead}>
               Mark all as read
-            </GoabxButton>
+            </GoabButton>
           ) : undefined
         }
         tabs={
-          <GoabxTabs
+          <GoabTabs
             initialTab={tabIndex}
             onChange={handleTabChange}
             variant="segmented"
@@ -109,7 +109,7 @@ export function NotificationsPage() {
                 <>
                   Unread{" "}
                   {unreadCount > 0 && (
-                    <GoabxBadge type="default" emphasis="subtle" content={String(unreadCount)} />
+                    <GoabBadge type="default" emphasis="subtle" content={String(unreadCount)} />
                   )}
                 </>
               }
@@ -120,13 +120,13 @@ export function NotificationsPage() {
                 <>
                   Urgent{" "}
                   {urgentCount > 0 && (
-                    <GoabxBadge type="important" emphasis="subtle" content={String(urgentCount)} />
+                    <GoabBadge type="important" emphasis="subtle" content={String(urgentCount)} />
                   )}
                 </>
               }
             />
             <GoabTab slug="all" heading="All" />
-          </GoabxTabs>
+          </GoabTabs>
         }
       />
 
@@ -141,7 +141,7 @@ export function NotificationsPage() {
               <h4 className="notifications-group__heading">{group.label}</h4>
               <div className="notifications-group__items">
                 {group.items.map((notif) => (
-                  <GoabxWorkSideNotificationItem
+                  <GoabWorkSideNotificationItem
                     key={notif.id}
                     title={notif.title}
                     description={notif.description}
