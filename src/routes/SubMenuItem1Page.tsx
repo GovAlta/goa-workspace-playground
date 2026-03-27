@@ -1,6 +1,4 @@
-import React from "react";
 import { GoabText, GoabPageBlock } from "@abgov/react-components";
-import { GoabxBadge } from "@abgov/react-components/experimental";
 
 export function SubMenuItem1Page() {
   return (

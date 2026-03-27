@@ -17,7 +17,7 @@ import { SortConfig } from "../utils/searchUtils";
  * Usage:
  *   const { sortConfig, sortByKey, handleMultiSort, clearSort, setSortConfig } = useMultiColumnSort();
  *
- *   // For multi-sort table (GoabxTable sortMode="multi"):
+ *   // For multi-sort table (GoabTable sortMode="multi"):
  *   <DataTable onMultiSort={handleMultiSort} sortConfig={sortConfig} />
  *
  *   // For menu button actions:
@@ -105,7 +105,7 @@ export function useMultiColumnSort(initialConfig?: SortConfig) {
   );
 
   /**
-   * Handle multi-sort event from GoabxTable (sortMode="multi").
+   * Handle multi-sort event from GoabTable (sortMode="multi").
    * Syncs the table's multi-sort state into our SortConfig.
    */
   const handleMultiSort = useCallback((detail: GoabTableOnMultiSortDetail) => {

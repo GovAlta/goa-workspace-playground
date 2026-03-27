@@ -1,5 +1,4 @@
-import { GoabIcon } from "@abgov/react-components";
-import { GoabxFilterChip, GoabxLink } from "@abgov/react-components/experimental";
+import { GoabIcon, GoabFilterChip, GoabLink } from "@abgov/react-components";
 import { FilterChip } from "./types";
 
 interface CaseFilterChipsProps {
@@ -33,7 +32,7 @@ export function CaseFilterChips({
       />
 
       {searchChips.map((chip) => (
-        <GoabxFilterChip
+        <GoabFilterChip
           key={`search-${chip}`}
           content={chip}
           onClick={() => onRemoveSearchChip(chip)}
@@ -41,14 +40,14 @@ export function CaseFilterChips({
       ))}
 
       {filterChips.map((chip) => (
-        <GoabxFilterChip
+        <GoabFilterChip
           key={`${chip.category}-${chip.value}`}
           content={chip.label}
           onClick={() => onRemoveFilter(chip.category, chip.value)}
         />
       ))}
 
-      <GoabxLink color="dark" size="small">
+      <GoabLink color="dark" size="small">
         <a
           href="#"
           onClick={(e) => {
@@ -58,7 +57,7 @@ export function CaseFilterChips({
         >
           Clear all
         </a>
-      </GoabxLink>
+      </GoabLink>
     </div>
   );
 }
