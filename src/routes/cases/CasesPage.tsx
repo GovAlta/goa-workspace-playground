@@ -8,15 +8,13 @@ import {
   GoabSkeleton,
   GoabDataGrid,
   GoabIcon,
+  GoabButton,
+  GoabCheckbox,
+  GoabBadge,
+  GoabMenuButton,
+  GoabMenuAction,
+  GoabLink,
 } from "@abgov/react-components";
-import {
-  GoabxButton,
-  GoabxCheckbox,
-  GoabxBadge,
-  GoabxMenuButton,
-  GoabxMenuAction,
-  GoabxLink,
-} from "@abgov/react-components/experimental";
 import {
   GoabInputOnKeyPressDetail,
   GoabMenuButtonOnActionDetail,
@@ -438,24 +436,24 @@ export function CasesPage() {
   usePageFooter({
     content: (
       <GoabButtonGroup gap="compact" alignment="start">
-        <GoabxButton
+        <GoabButton
           type="tertiary"
           size="compact"
           onClick={() => setCases((prev) => prev.map((c) => ({ ...c, selected: false })))}
         >
           Clear selection ({selectedCount})
-        </GoabxButton>
-        <GoabxButton type="primary" size="compact" onClick={() => {}}>
+        </GoabButton>
+        <GoabButton type="primary" size="compact" onClick={() => {}}>
           Assign to me
-        </GoabxButton>
-        <GoabxButton
+        </GoabButton>
+        <GoabButton
           type="primary"
           size="compact"
           variant="destructive"
           onClick={() => setCases((prev) => prev.filter((c) => !c.selected))}
         >
           Delete selected
-        </GoabxButton>
+        </GoabButton>
       </GoabButtonGroup>
     ),
     visibleWhen: "selection",
@@ -468,7 +466,7 @@ export function CasesPage() {
         key: "select",
         type: "checkbox",
         headerRender: () => (
-          <GoabxCheckbox
+          <GoabCheckbox
             name="selectAll"
             checked={isAllSelected}
             indeterminate={isIndeterminate}
@@ -480,7 +478,7 @@ export function CasesPage() {
           />
         ),
         render: (caseItem) => (
-          <GoabxCheckbox
+          <GoabCheckbox
             name={`select-${caseItem.id}`}
             checked={caseItem.selected}
             onChange={() => handleSelectChange(caseItem.id, !caseItem.selected)}
@@ -504,7 +502,7 @@ export function CasesPage() {
         type: "badge",
         sortable: true,
         render: (caseItem) => (
-          <GoabxBadge
+          <GoabBadge
             type={caseItem.status}
             content={caseItem.statusText}
             icon={true}
@@ -518,7 +516,7 @@ export function CasesPage() {
         type: "text",
         render: (caseItem) =>
           caseItem.staff || (
-            <GoabxLink color="dark" size="medium">
+            <GoabLink color="dark" size="medium">
               <a
                 href="#"
                 onClick={(e) => {
@@ -528,7 +526,7 @@ export function CasesPage() {
               >
                 Assign me
               </a>
-            </GoabxLink>
+            </GoabLink>
           ),
       },
       {
@@ -558,7 +556,7 @@ export function CasesPage() {
         sortable: true,
         render: (caseItem) =>
           caseItem.priority ? (
-            <GoabxBadge {...getPriorityBadgeProps(caseItem.priority)} />
+            <GoabBadge {...getPriorityBadgeProps(caseItem.priority)} />
           ) : (
             "—"
           ),
@@ -567,17 +565,17 @@ export function CasesPage() {
         key: "actions",
         type: "actions",
         render: (caseItem) => (
-          <GoabxMenuButton
+          <GoabMenuButton
             leadingIcon="ellipsis-horizontal:filled"
             size="compact"
             onAction={(e: GoabMenuButtonOnActionDetail) =>
               onMenuActionButton(e.action, caseItem.id)
             }
           >
-            <GoabxMenuAction text="View case" action="view" />
-            <GoabxMenuAction text="Assign to me" action="assign" />
-            <GoabxMenuAction text="Delete" icon="trash" action="delete" />
-          </GoabxMenuButton>
+            <GoabMenuAction text="View case" action="view" />
+            <GoabMenuAction text="Assign to me" action="assign" />
+            <GoabMenuAction text="Delete" icon="trash" action="delete" />
+          </GoabMenuButton>
         ),
       },
     ],
@@ -596,12 +594,12 @@ export function CasesPage() {
   const headerActions = useMemo(
     () => (
       <GoabButtonGroup gap="compact" alignment={"start"}>
-        <GoabxButton type="secondary" size="compact">
+        <GoabButton type="secondary" size="compact">
           More
-        </GoabxButton>
-        <GoabxButton type="primary" size="compact">
+        </GoabButton>
+        <GoabButton type="primary" size="compact">
           Add application
-        </GoabxButton>
+        </GoabButton>
       </GoabButtonGroup>
     ),
     [],
@@ -763,7 +761,7 @@ export function CasesPage() {
                           size="small"
                         />
                         <span className="cases-group__label">{group.label}</span>
-                        <GoabxBadge
+                        <GoabBadge
                           type="default"
                           content={String(group.cases.length)}
                           emphasis="subtle"

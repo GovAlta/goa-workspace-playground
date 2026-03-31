@@ -6,8 +6,8 @@ import {
   GoabText,
   GoabIconButton,
   GoabTooltip,
+  GoabBadge,
 } from "@abgov/react-components";
-import { GoabxBadge } from "@abgov/react-components/experimental";
 import { PrimaryApplicationForm } from "./PrimaryApplicationForm";
 import { Case } from "../../types/Case";
 import { PrimaryFormData } from "../../types/PrimaryFormData";
@@ -83,7 +83,7 @@ export const CaseAccordions: React.FC<Props> = ({
         headingSize="medium"
         heading="Primary applicant"
         headingContent={
-          <GoabxBadge
+          <GoabBadge
             type={primaryApplicantBadge.type}
             emphasis="subtle"
             content={primaryApplicantBadge.content}
@@ -99,7 +99,7 @@ export const CaseAccordions: React.FC<Props> = ({
         headingSize="medium"
         heading="Personal"
         headingContent={
-          <GoabxBadge
+          <GoabBadge
             type={personalBadge.type}
             emphasis="subtle"
             content={personalBadge.content}
@@ -217,7 +217,7 @@ export const CaseAccordions: React.FC<Props> = ({
         headingSize="medium"
         heading="Spouse/Partner"
         headingContent={
-          <GoabxBadge
+          <GoabBadge
             type={spousePartnerBadge.type}
             emphasis="subtle"
             content={spousePartnerBadge.content}
@@ -236,7 +236,7 @@ export const CaseAccordions: React.FC<Props> = ({
               <span className="data-card__label">Full name</span>
               <span className="data-card__value case-detail-header__id">
                 {(caseData?.spouseFullName as string) || "-"}
-                {caseData?.spouseFullName && (
+                {(caseData?.spouseFullName as string) && (
                   <GoabTooltip
                     content={copiedField === "spouseFullName" ? "Copied" : "Copy"}
                   >
@@ -293,7 +293,7 @@ export const CaseAccordions: React.FC<Props> = ({
               <span className="data-card__label">SIN</span>
               <span className="data-card__value case-detail-header__id">
                 {(caseData?.spouseSIN as string) || "-"}
-                {caseData?.spouseSIN && (
+                {(caseData?.spouseSIN as string) && (
                   <GoabTooltip content={copiedField === "spouseSIN" ? "Copied" : "Copy"}>
                     <GoabIconButton
                       icon="copy"
@@ -311,7 +311,7 @@ export const CaseAccordions: React.FC<Props> = ({
               <span className="data-card__label">Alberta Health Number</span>
               <span className="data-card__value">
                 {(caseData?.spouseAlbertaHealthNumber as string) || "-"}
-                {caseData?.spouseAlbertaHealthNumber && (
+                {(caseData?.spouseAlbertaHealthNumber as string) && (
                   <GoabTooltip
                     content={
                       copiedField === "spouseAlbertaHealthNumber" ? "Copied" : "Copy"
@@ -342,7 +342,7 @@ export const CaseAccordions: React.FC<Props> = ({
         headingSize="medium"
         heading="Dependant"
         headingContent={
-          <GoabxBadge
+          <GoabBadge
             type={dependantBadge.type}
             emphasis="subtle"
             content={dependantBadge.content}
@@ -456,7 +456,7 @@ export const CaseAccordions: React.FC<Props> = ({
         headingSize="medium"
         heading="Education"
         headingContent={
-          <GoabxBadge
+          <GoabBadge
             type={educationBadge.type}
             emphasis="subtle"
             content={educationBadge.content}
@@ -521,7 +521,7 @@ export const CaseAccordions: React.FC<Props> = ({
         headingSize="medium"
         heading="Employment"
         headingContent={
-          <GoabxBadge
+          <GoabBadge
             type={employmentBadge.type}
             emphasis="subtle"
             content={employmentBadge.content}
@@ -607,7 +607,7 @@ export const CaseAccordions: React.FC<Props> = ({
         headingSize="medium"
         heading="Health"
         headingContent={
-          <GoabxBadge
+          <GoabBadge
             type={healthBadge.type}
             emphasis="subtle"
             content={healthBadge.content}
@@ -672,7 +672,7 @@ export const CaseAccordions: React.FC<Props> = ({
         headingSize="medium"
         heading="Identified needs"
         headingContent={
-          <GoabxBadge
+          <GoabBadge
             type={identifiedNeedsBadge.type}
             emphasis="subtle"
             content={identifiedNeedsBadge.content}
@@ -758,7 +758,7 @@ export const CaseAccordions: React.FC<Props> = ({
         headingSize="medium"
         heading="Labour market"
         headingContent={
-          <GoabxBadge
+          <GoabBadge
             type={labourMarketBadge.type}
             emphasis="subtle"
             content={labourMarketBadge.content}
@@ -851,7 +851,7 @@ export const CaseAccordions: React.FC<Props> = ({
         headingSize="medium"
         heading="Decision"
         headingContent={
-          <GoabxBadge
+          <GoabBadge
             type={decisionBadge.type}
             emphasis="subtle"
             content={decisionBadge.content}
@@ -869,7 +869,7 @@ export const CaseAccordions: React.FC<Props> = ({
             <div className="data-card_info">
               <span className="data-card__label">Decision status</span>
               <span className="data-card__value">
-                <GoabxBadge
+                <GoabBadge
                   type="default"
                   emphasis="subtle"
                   content={(caseData?.decisionStatus as string) || "Pending"}

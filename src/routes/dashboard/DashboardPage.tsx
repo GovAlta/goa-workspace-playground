@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { GoabText, GoabGrid, GoabContainer } from "@abgov/react-components";
-import { GoabxButton } from "@abgov/react-components/experimental";
+import { GoabText, GoabGrid, GoabContainer, GoabButton } from "@abgov/react-components";
 import {
   AreaChart,
   Area,
@@ -308,13 +307,13 @@ export function DashboardPage() {
               padding="compact"
               mb="none"
               actions={
-                <GoabxButton
+                <GoabButton
                   type="tertiary"
                   size="compact"
                   onClick={() => navigate("/cases?filter=my-cases")}
                 >
                   View all
-                </GoabxButton>
+                </GoabButton>
               }
             >
               <div className="dashboard-queue">
@@ -363,13 +362,13 @@ export function DashboardPage() {
               padding="compact"
               mb="none"
               actions={
-                <GoabxButton
+                <GoabButton
                   type="tertiary"
                   size="compact"
                   onClick={() => navigate("/notifications")}
                 >
                   View all
-                </GoabxButton>
+                </GoabButton>
               }
             >
               <div className="dashboard-activity">

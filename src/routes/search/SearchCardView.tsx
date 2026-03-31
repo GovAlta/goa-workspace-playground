@@ -6,8 +6,9 @@ import {
   GoabContainer,
   GoabSkeleton,
   GoabDataGrid,
+  GoabButton,
+  GoabBadge,
 } from "@abgov/react-components";
-import { GoabxButton, GoabxBadge } from "@abgov/react-components/experimental";
 import { SearchResult } from "../../types/SearchResult";
 import { getTypeBadgeProps } from "../../utils/badgeUtils";
 
@@ -71,7 +72,7 @@ export function SearchCardView({ results, isLoading, emptyState }: SearchCardVie
                       <GoabText size="heading-xs" mt="none" mb="none" data-grid="cell-1">
                         {result.name}
                       </GoabText>
-                      <GoabxBadge
+                      <GoabBadge
                         data-grid="cell-2"
                         type={result.status}
                         content={result.statusText}
@@ -82,7 +83,7 @@ export function SearchCardView({ results, isLoading, emptyState }: SearchCardVie
                   }
                   actions={
                     <div data-grid="cell-3">
-                      <GoabxButton
+                      <GoabButton
                         type="tertiary"
                         size="compact"
                         onClick={() => {
@@ -90,7 +91,7 @@ export function SearchCardView({ results, isLoading, emptyState }: SearchCardVie
                         }}
                       >
                         View
-                      </GoabxButton>
+                      </GoabButton>
                     </div>
                   }
                 >
@@ -113,7 +114,7 @@ export function SearchCardView({ results, isLoading, emptyState }: SearchCardVie
                       <GoabBlock direction="column" gap="xs" data-grid="cell-7">
                         <span className="data-card__label">Type</span>
                         <span className="data-card__value">
-                          <GoabxBadge
+                          <GoabBadge
                             {...getTypeBadgeProps(result.type)}
                             emphasis="subtle"
                             icon={true}

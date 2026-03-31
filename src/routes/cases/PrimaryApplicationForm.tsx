@@ -5,8 +5,9 @@ import {
   GoabIconButton,
   GoabText,
   GoabTooltip,
+  GoabFormItem,
+  GoabInput,
 } from "@abgov/react-components";
-import { GoabxFormItem, GoabxInput } from "@abgov/react-components/experimental";
 import {
   GoabInputOnChangeDetail,
   GoabCheckboxOnChangeDetail,
@@ -56,8 +57,8 @@ export function PrimaryApplicationForm({
         <GoabDivider mb="xl" />
 
         <div className="case-detail_form_double">
-          <GoabxFormItem label="First name" mb="l">
-            <GoabxInput
+          <GoabFormItem label="First name" mb="l">
+            <GoabInput
               name="firstName"
               value={formData.firstName}
               size="compact"
@@ -65,10 +66,10 @@ export function PrimaryApplicationForm({
                 handleInputChange("firstName", event.value);
               }}
             />
-          </GoabxFormItem>
+          </GoabFormItem>
 
-          <GoabxFormItem label="Middle name" mb="l">
-            <GoabxInput
+          <GoabFormItem label="Middle name" mb="l">
+            <GoabInput
               name="middleName"
               value={formData.middleName}
               size="compact"
@@ -76,11 +77,11 @@ export function PrimaryApplicationForm({
                 handleInputChange("middleName", event.value);
               }}
             />
-          </GoabxFormItem>
+          </GoabFormItem>
         </div>
 
-        <GoabxFormItem label="Last name" mb="l">
-          <GoabxInput
+        <GoabFormItem label="Last name" mb="l">
+          <GoabInput
             name="lastName"
             value={formData.lastName}
             size="compact"
@@ -88,7 +89,7 @@ export function PrimaryApplicationForm({
               handleInputChange("lastName", event.value);
             }}
           />
-        </GoabxFormItem>
+        </GoabFormItem>
       </div>
 
       {/* Identifiers Section */}
@@ -98,8 +99,8 @@ export function PrimaryApplicationForm({
         </GoabText>
         <GoabDivider mb="xl" />
 
-        <GoabxFormItem label="Last name on birth certificate" mb="l">
-          <GoabxInput
+        <GoabFormItem label="Last name on birth certificate" mb="l">
+          <GoabInput
             name="lastNameOnBirthCertificate"
             value={formData.lastNameOnBirthCertificate}
             size="compact"
@@ -107,11 +108,11 @@ export function PrimaryApplicationForm({
               handleInputChange("lastNameOnBirthCertificate", event.value);
             }}
           />
-        </GoabxFormItem>
+        </GoabFormItem>
 
-        <GoabxFormItem label="Social Insurance Number (SIN)">
+        <GoabFormItem label="Social Insurance Number (SIN)">
           <div className="case-detail_form_double">
-            <GoabxInput
+            <GoabInput
               name="sin"
               value={formData.sin}
               size="compact"
@@ -125,15 +126,15 @@ export function PrimaryApplicationForm({
               name="verification"
               text="Verified"
               onChange={(event: GoabCheckboxOnChangeDetail) => {
-                handleInputChange("verification", event.value);
+                handleInputChange("verification", event.value || "");
               }}
             />
           </div>
-        </GoabxFormItem>
+        </GoabFormItem>
 
         <div className="case-detail_form_double">
-          <GoabxFormItem label="LISA file number (optional)" mb="l">
-            <GoabxInput
+          <GoabFormItem label="LISA file number (optional)" mb="l">
+            <GoabInput
               name="lisaFileNumber"
               value={formData.lisaFileNumber}
               size="compact"
@@ -141,9 +142,9 @@ export function PrimaryApplicationForm({
                 handleInputChange("lisaFileNumber", event.value);
               }}
             />
-          </GoabxFormItem>
+          </GoabFormItem>
 
-          <GoabxFormItem label="HS ID (Mobius ID)" mb="l">
+          <GoabFormItem label="HS ID (Mobius ID)" mb="l">
             <div style={{ display: "flex", alignItems: "center" }}>
               <GoabText mb="none" mt="none">
                 {formData.hsId}
@@ -158,11 +159,11 @@ export function PrimaryApplicationForm({
                 />
               </GoabTooltip>
             </div>
-          </GoabxFormItem>
+          </GoabFormItem>
         </div>
 
-        <GoabxFormItem label="PID" mb="l">
-          <GoabxInput
+        <GoabFormItem label="PID" mb="l">
+          <GoabInput
             name="pid"
             value={formData.pid}
             size="compact"
@@ -170,7 +171,7 @@ export function PrimaryApplicationForm({
               handleInputChange("pid", event.value);
             }}
           />
-        </GoabxFormItem>
+        </GoabFormItem>
       </div>
     </div>
   );

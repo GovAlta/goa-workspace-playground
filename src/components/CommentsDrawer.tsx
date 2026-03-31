@@ -5,14 +5,12 @@ import {
   GoabFormItem,
   GoabText,
   GoabTextArea,
+  GoabButton,
+  GoabDrawer,
+  GoabModal,
+  GoabMenuAction,
+  GoabMenuButton,
 } from "@abgov/react-components";
-import {
-  GoabxButton,
-  GoabxDrawer,
-  GoabxModal,
-  GoabxMenuAction,
-  GoabxMenuButton,
-} from "@abgov/react-components/experimental";
 import {
   GoabInputOnChangeDetail,
   GoabMenuButtonOnActionDetail,
@@ -106,7 +104,7 @@ export function CommentsDrawer({
 
   return (
     <>
-      <GoabxDrawer
+      <GoabDrawer
         maxSize={!isMobile ? "480px" : "288px"}
         position="right"
         open={isOpen}
@@ -129,15 +127,15 @@ export function CommentsDrawer({
                     Add comment
                   </GoabText>
                   <GoabButtonGroup alignment="end">
-                    <GoabxButton
+                    <GoabButton
                       type="tertiary"
                       size="compact"
                       disabled={commentText.trim().length === 0}
                       onClick={() => handleClearComment()}
                     >
                       Clear
-                    </GoabxButton>
-                    <GoabxButton
+                    </GoabButton>
+                    <GoabButton
                       type="primary"
                       size="compact"
                       disabled={commentText.trim().length === 0}
@@ -147,7 +145,7 @@ export function CommentsDrawer({
                       }}
                     >
                       Save
-                    </GoabxButton>
+                    </GoabButton>
                   </GoabButtonGroup>
                 </div>
                 <GoabFormItem helpText="Add a comment for updates related to the case.">
@@ -178,7 +176,7 @@ export function CommentsDrawer({
                   {!isCompletedCase &&
                     comment.isOwned &&
                     editingCommentId !== comment.id && (
-                      <GoabxMenuButton
+                      <GoabMenuButton
                         type="tertiary"
                         leadingIcon="ellipsis-vertical:filled"
                         text=""
@@ -192,9 +190,9 @@ export function CommentsDrawer({
                           }
                         }}
                       >
-                        <GoabxMenuAction icon="pencil" text="Edit" action="edit" />
-                        <GoabxMenuAction icon="trash" text="Delete" action="delete" />
-                      </GoabxMenuButton>
+                        <GoabMenuAction icon="pencil" text="Edit" action="edit" />
+                        <GoabMenuAction icon="trash" text="Delete" action="delete" />
+                      </GoabMenuButton>
                     )}
                 </div>
                 <div className="page__comments_single_content">
@@ -213,20 +211,20 @@ export function CommentsDrawer({
                         />
                       </GoabFormItem>
                       <GoabButtonGroup alignment="end">
-                        <GoabxButton
+                        <GoabButton
                           type="tertiary"
                           size="compact"
                           onClick={handleCancelEditComment}
                         >
                           Cancel
-                        </GoabxButton>
-                        <GoabxButton
+                        </GoabButton>
+                        <GoabButton
                           type="primary"
                           size="compact"
                           onClick={handleSaveEditComment}
                         >
                           Save
-                        </GoabxButton>
+                        </GoabButton>
                       </GoabButtonGroup>
                     </div>
                   ) : (
@@ -239,36 +237,36 @@ export function CommentsDrawer({
             ))}
           </div>
         </div>
-      </GoabxDrawer>
+      </GoabDrawer>
 
       {/* Delete Comment Modal */}
-      <GoabxModal
+      <GoabModal
         heading="Delete comment"
         open={showDeleteCommentModal}
         actions={
           <GoabButtonGroup alignment="end">
-            <GoabxButton
+            <GoabButton
               type="secondary"
               size="compact"
               onClick={() => setShowDeleteCommentModal(false)}
             >
               Cancel
-            </GoabxButton>
-            <GoabxButton
+            </GoabButton>
+            <GoabButton
               type="primary"
               size="compact"
               variant="destructive"
               onClick={confirmDeleteComment}
             >
               Delete comment
-            </GoabxButton>
+            </GoabButton>
           </GoabButtonGroup>
         }
       >
         <GoabText mt="none" mb="none">
           Are you sure you want to delete this comment? This action cannot be undone.
         </GoabText>
-      </GoabxModal>
+      </GoabModal>
     </>
   );
 }

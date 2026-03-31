@@ -1,5 +1,4 @@
-import { GoabIcon } from "@abgov/react-components";
-import { GoabxFilterChip, GoabxLink } from "@abgov/react-components/experimental";
+import { GoabIcon, GoabFilterChip, GoabLink } from "@abgov/react-components";
 import { SearchFilters } from "./types";
 
 interface SearchFilterChipsProps {
@@ -33,7 +32,7 @@ export function SearchFilterChips({
         mr="2xs"
       />
       {filters.entity !== "all" && (
-        <GoabxFilterChip
+        <GoabFilterChip
           content={
             filters.entity === "client"
               ? "Clients"
@@ -47,12 +46,12 @@ export function SearchFilterChips({
         />
       )}
       {filters.status !== "all" && (
-        <GoabxFilterChip content={filters.status} onClick={onStatusClear} />
+        <GoabFilterChip content={filters.status} onClick={onStatusClear} />
       )}
       {searchChips.map((chip) => (
-        <GoabxFilterChip key={chip} content={chip} onClick={() => onRemoveChip(chip)} />
+        <GoabFilterChip key={chip} content={chip} onClick={() => onRemoveChip(chip)} />
       ))}
-      <GoabxLink color="dark" size="small">
+      <GoabLink color="dark" size="small">
         <a
           href="#"
           onClick={(e) => {
@@ -62,7 +61,7 @@ export function SearchFilterChips({
         >
           Clear all
         </a>
-      </GoabxLink>
+      </GoabLink>
     </div>
   );
 }

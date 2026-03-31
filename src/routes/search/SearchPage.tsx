@@ -1,7 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { GoabText, GoabBlock } from "@abgov/react-components";
-import { GoabxBadge, GoabxLink } from "@abgov/react-components/experimental";
+import { GoabText, GoabBlock, GoabBadge, GoabLink } from "@abgov/react-components";
 import { SearchResult } from "../../types/SearchResult";
 import { TableColumn } from "../../types/TableColumn";
 import mockData from "../../data/mockSearchResults.json";
@@ -147,7 +146,7 @@ export function SearchPage() {
         type: "badge",
         sortable: true,
         render: (result) => (
-          <GoabxBadge
+          <GoabBadge
             type={result.status}
             content={result.statusText}
             emphasis="subtle"
@@ -180,16 +179,16 @@ export function SearchPage() {
         type: "badge",
         sortable: true,
         render: (result) => (
-          <GoabxBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" />
+          <GoabBadge {...getTypeBadgeProps(result.type)} emphasis="subtle" />
         ),
       },
       {
         key: "actions",
         type: "actions",
         render: (result) => (
-          <GoabxLink color="dark" mt="xs">
+          <GoabLink color="dark" mt="xs">
             <Link to={`/case/${result.id}`}>View</Link>
-          </GoabxLink>
+          </GoabLink>
         ),
       },
     ],

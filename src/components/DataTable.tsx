@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
-import { GoabDataGrid, GoabSkeleton } from "@abgov/react-components";
-import { GoabxTable, GoabxTableSortHeader } from "@abgov/react-components/experimental";
+import { GoabDataGrid, GoabSkeleton, GoabTable, GoabTableSortHeader } from "@abgov/react-components";
 import {
   GoabTableOnMultiSortDetail,
   GoabTableSortMode,
@@ -93,13 +92,13 @@ export function DataTable<T>({
     }
     if (column.sortable && column.header && onMultiSort && sortConfig) {
       return (
-        <GoabxTableSortHeader
+        <GoabTableSortHeader
           name={column.key}
           direction={getColumnSortDirection(column.key)}
           sortOrder={getColumnSortOrder(column.key)}
         >
           {column.header}
-        </GoabxTableSortHeader>
+        </GoabTableSortHeader>
       );
     }
     return column.header || null;
@@ -109,7 +108,7 @@ export function DataTable<T>({
     <ScrollContainer>
       <div className="table-wrapper">
         <GoabDataGrid keyboardNav="table" keyboardIconPosition="right">
-          <GoabxTable
+          <GoabTable
             width="100%"
             onMultiSort={onMultiSort}
             sortMode={sortMode}
@@ -192,7 +191,7 @@ export function DataTable<T>({
                 ))
               )}
             </tbody>
-          </GoabxTable>
+          </GoabTable>
         </GoabDataGrid>
       </div>
     </ScrollContainer>

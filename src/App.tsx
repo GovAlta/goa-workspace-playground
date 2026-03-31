@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import {
-  GoabxWorkSideMenu,
-  GoabxWorkSideMenuItem,
-  GoabxWorkSideNotificationPanel,
-  GoabxWorkSideNotificationItem,
-} from "@abgov/react-components/experimental";
+  GoabWorkSideMenu,
+  GoabWorkSideMenuItem,
+  GoabWorkSideNotificationPanel,
+  GoabWorkSideNotificationItem,
+} from "@abgov/react-components";
 
 import { MenuContext } from "./contexts/MenuContext";
 import { PageFooterProvider } from "./contexts/PageFooterContext";
@@ -34,7 +34,7 @@ function AppShell() {
       <PageFooterProvider>
         <ScrollStateProvider>
           <div className="app-layout">
-            <GoabxWorkSideMenu
+            <GoabWorkSideMenu
               url={`${base}/`}
               heading="Workspace Demo Application"
               userName="Edna Mode"
@@ -44,59 +44,59 @@ function AppShell() {
               onNavigate={handleNavigate}
               primaryContent={
                 <>
-                  <GoabxWorkSideMenuItem icon="grid" label="Dashboard" url={`${base}/`} />
+                  <GoabWorkSideMenuItem icon="grid" label="Dashboard" url={`${base}/`} />
 
-                  <GoabxWorkSideMenuItem
+                  <GoabWorkSideMenuItem
                     icon="search"
                     label="Search"
                     url={`${base}/search`}
                   />
 
-                  <GoabxWorkSideMenuItem
+                  <GoabWorkSideMenuItem
                     icon="list"
                     label="Cases"
                     url={`${base}/cases`}
                   />
 
-                  <GoabxWorkSideMenuItem
+                  <GoabWorkSideMenuItem
                     icon="document"
                     label="Documents"
                     type="success"
                     badge="New"
                     url={`${base}/documents`}
                   >
-                    <GoabxWorkSideMenuItem
+                    <GoabWorkSideMenuItem
                       label="Sub menu item 1"
                       url={`${base}/documents/sub1`}
                     />
-                    <GoabxWorkSideMenuItem
+                    <GoabWorkSideMenuItem
                       label="Sub menu item 2"
                       url={`${base}/documents/sub2`}
                     />
-                    <GoabxWorkSideMenuItem
+                    <GoabWorkSideMenuItem
                       label="Sub menu item 3"
                       url={`${base}/documents/sub3`}
                     />
-                  </GoabxWorkSideMenuItem>
+                  </GoabWorkSideMenuItem>
                 </>
               }
               secondaryContent={
                 <>
-                  <GoabxWorkSideMenuItem
+                  <GoabWorkSideMenuItem
                     icon="notifications"
                     label="Notifications"
                     url="#"
                     badge={unreadCount > 0 ? String(unreadCount) : undefined}
                     type={unreadCount > 0 ? "emergency" : undefined}
                     popoverContent={
-                      <GoabxWorkSideNotificationPanel
+                      <GoabWorkSideNotificationPanel
                         heading="Notifications"
                         activeTab="unread"
                         onMarkAllRead={markAllAsRead}
                         onViewAll={handleViewAll}
                       >
                         {notifications.map((notif) => (
-                          <GoabxWorkSideNotificationItem
+                          <GoabWorkSideNotificationItem
                             key={notif.id}
                             title={notif.title}
                             description={notif.description}
@@ -107,19 +107,19 @@ function AppShell() {
                             onClick={() => markAsRead(notif.id)}
                           />
                         ))}
-                      </GoabxWorkSideNotificationPanel>
+                      </GoabWorkSideNotificationPanel>
                     }
                   />
                 </>
               }
               accountContent={
                 <>
-                  <GoabxWorkSideMenuItem
+                  <GoabWorkSideMenuItem
                     icon="settings"
                     label="Settings"
                     url={`${base}/settings`}
                   />
-                  <GoabxWorkSideMenuItem
+                  <GoabWorkSideMenuItem
                     icon="log-out"
                     label="Log out"
                     url={`${base}/logout`}

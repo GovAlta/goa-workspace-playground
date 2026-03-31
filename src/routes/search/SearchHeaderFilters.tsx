@@ -1,11 +1,11 @@
 import React from "react";
 import {
-  GoabxInput,
-  GoabxDropdown,
-  GoabxDropdownItem,
-  GoabxMenuAction,
-  GoabxMenuButton,
-} from "@abgov/react-components/experimental";
+  GoabInput,
+  GoabDropdown,
+  GoabDropdownItem,
+  GoabMenuAction,
+  GoabMenuButton,
+} from "@abgov/react-components";
 import {
   GoabIconType,
   GoabInputOnChangeDetail,
@@ -60,7 +60,7 @@ export function SearchHeaderFilters({
   return (
     <div className="search-header-filters">
       <div className="search-header-filters__search">
-        <GoabxInput
+        <GoabInput
           name="searchText"
           value={filters.searchText}
           onChange={(e: GoabInputOnChangeDetail) =>
@@ -77,57 +77,57 @@ export function SearchHeaderFilters({
       </div>
 
       <div className="search-header-filters__dropdowns">
-        <GoabxDropdown
+        <GoabDropdown
           value={filters.entity}
-          onChange={(e) => setFilters((f) => ({ ...f, entity: e.value }))}
+          onChange={(e) => setFilters((f) => ({ ...f, entity: e.value ?? "" }))}
           placeholder="All types"
           size="compact"
           width="120px"
         >
-          <GoabxDropdownItem value="all" label="All types" />
-          <GoabxDropdownItem value="client" label="Clients" />
-          <GoabxDropdownItem value="case" label="Cases" />
-          <GoabxDropdownItem value="application" label="Applications" />
-          <GoabxDropdownItem value="document" label="Documents" />
-        </GoabxDropdown>
+          <GoabDropdownItem value="all" label="All types" />
+          <GoabDropdownItem value="client" label="Clients" />
+          <GoabDropdownItem value="case" label="Cases" />
+          <GoabDropdownItem value="application" label="Applications" />
+          <GoabDropdownItem value="document" label="Documents" />
+        </GoabDropdown>
 
-        <GoabxDropdown
+        <GoabDropdown
           value={filters.status}
-          onChange={(e) => setFilters((f) => ({ ...f, status: e.value }))}
+          onChange={(e) => setFilters((f) => ({ ...f, status: e.value ?? "" }))}
           placeholder="All statuses"
           size="compact"
           width="150px"
           maxHeight="70vh"
         >
-          <GoabxDropdownItem value="all" label="All statuses" />
+          <GoabDropdownItem value="all" label="All statuses" />
           {statusOptions.map((status) => (
-            <GoabxDropdownItem key={status} value={status} label={status} />
+            <GoabDropdownItem key={status} value={status} label={status} />
           ))}
-        </GoabxDropdown>
+        </GoabDropdown>
 
-        <GoabxMenuButton
+        <GoabMenuButton
           size="compact"
           type="tertiary"
           leadingIcon={getViewIcon(viewMode)}
           text={getViewLabel(viewMode)}
           onAction={(e: GoabMenuButtonOnActionDetail) => onViewChange(e.action)}
         >
-          <GoabxMenuAction
+          <GoabMenuAction
             text="Table"
             action="table"
             icon={selectedView === "table" ? "checkmark" : undefined}
           />
-          <GoabxMenuAction
+          <GoabMenuAction
             text="Card"
             action="card"
             icon={selectedView === "card" ? "checkmark" : undefined}
           />
-          <GoabxMenuAction
+          <GoabMenuAction
             text="List"
             action="list"
             icon={selectedView === "list" ? "checkmark" : undefined}
           />
-        </GoabxMenuButton>
+        </GoabMenuButton>
       </div>
     </div>
   );
