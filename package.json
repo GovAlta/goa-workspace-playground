@@ -13,10 +13,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@abgov/design-tokens": "2.2.0",
-    "@abgov/react-components": "/Users/thytran142/WebstormProjects/ui-components/dist/libs/react-components/abgov-react-components-0.0.1.tgz",
-    "@abgov/ui-components-common": "/Users/thytran142/WebstormProjects/ui-components/dist/libs/common/abgov-ui-components-common-0.0.0.tgz",
-    "@abgov/web-components": "/Users/thytran142/WebstormProjects/ui-components/dist/libs/web-components/abgov-web-components-0.0.0.tgz",
+    "@abgov/design-tokens": "2.2.1",
+    "@abgov/react-components": "7.0.0-dev.1",
+    "@abgov/ui-components-common": "2.0.0-dev.1",
+    "@abgov/web-components": "2.0.0-dev.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-error-boundary": "^4.1.2",
