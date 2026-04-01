@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "@abgov/design-tokens": "2.2.1",
-    "@abgov/react-components": "7.0.0-dev.1",
-    "@abgov/ui-components-common": "2.0.0-dev.1",
-    "@abgov/web-components": "2.0.0-dev.3",
+    "@abgov/react-components": "7.0.0",
+    "@abgov/ui-components-common": "2.0.0",
+    "@abgov/web-components": "2.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-error-boundary": "^4.1.2",
