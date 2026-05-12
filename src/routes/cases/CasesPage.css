@@ -61,9 +61,15 @@
 
 /* ============================================================================
    TOOLBAR
+   ============================================================================
+   Note on 1200px breakpoint (used below in both .cases-toolbar-row and
+   .cases-toolbar-tabs): below 1200px the Cases toolbar (search + tabs +
+   filter + actions) no longer fits horizontally and must wrap/stack. Higher
+   than the DS TABLET_BP (1024px) due to Cases-specific content density.
    ============================================================================ */
 
-/* Toolbar row - tabs on left, search on right */
+/* ---------- .cases-toolbar-row (parent layout) ---------- */
+
 .cases-toolbar-row {
   display: flex;
   align-items: flex-start;
@@ -71,7 +77,21 @@
   width: 100%;
 }
 
-/* Tabs wrapper for horizontal scrolling */
+.cases-toolbar-row .cases-search-row {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 1200px) {
+  .cases-toolbar-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--goa-space-m);
+  }
+}
+
+/* ---------- .cases-toolbar-tabs ---------- */
+
 .cases-toolbar-tabs {
   display: flex;
   flex-shrink: 1;
@@ -111,14 +131,6 @@
   }
 }
 
-/* Fix missing left border on segmented tabs on mobile */
-@media (max-width: 623px) {
-  .cases-toolbar-tabs goa-tabs[variant="segmented"] {
-    border-left: 1px solid var(--goa-color-greyscale-200);
-    border-radius: var(--goa-border-radius-m);
-  }
-}
-
 @media (min-width: 624px) and (max-width: 1200px) {
   .cases-toolbar-tabs {
     margin-left: -2rem;
@@ -131,17 +143,19 @@
   }
 }
 
-.cases-toolbar-row .cases-search-row {
-  flex: 1;
-  min-width: 0;
-}
+@media (max-width: 623px) {
+  /* Let segmented tabs shrink and wrap so they fit the viewport instead of
+     overflowing horizontally past the right edge. */
+  .cases-toolbar-tabs goa-tabs {
+    flex-shrink: 1;
+    width: 100%;
+    min-width: 0;
+  }
 
-/* Wrap to stacked layout when viewport is narrow */
-@media (max-width: 1200px) {
-  .cases-toolbar-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--goa-space-m);
+  /* Fix missing left border on segmented tabs on mobile */
+  .cases-toolbar-tabs goa-tabs[variant="segmented"] {
+    border-left: 1px solid var(--goa-color-greyscale-200);
+    border-radius: var(--goa-border-radius-m);
   }
 }
 

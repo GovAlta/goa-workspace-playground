@@ -7,7 +7,7 @@ import React, {
   ReactNode,
 } from "react";
 
-type VisibilityMode = "always" | "selection" | "scrolled" | boolean;
+type VisibilityMode = "always" | "selection" | "scrolled";
 
 interface PageFooterValuesType {
   content: ReactNode;

@@ -23,7 +23,7 @@ import { filterData, sortData } from "../../utils/searchUtils";
 import { getPriorityBadgeProps } from "../../utils/badgeUtils";
 import { PageHeader } from "../../components/PageHeader";
 import { usePageFooter } from "../../contexts/PageFooterContext";
-import { useMenu } from "../../contexts/MenuContext";
+import { useWorkspaceLayout } from "../../contexts/WorkspaceLayoutContext";
 import { useMultiColumnSort } from "../../hooks/useMultiColumnSort";
 import { useCompactToolbar } from "../../hooks/useViewport";
 import { useDisplaySettings } from "../../hooks/useDisplaySettings";
@@ -67,7 +67,7 @@ export function CasesPage() {
     string | null
   >(null);
 
-  const { isMobile } = useMenu();
+  const { isMobile } = useWorkspaceLayout();
   const isCompactToolbar = useCompactToolbar();
 
   const getDefaultLayout = useCallback((tab: string): LayoutType => {

@@ -7,7 +7,7 @@ import mockData from "../../data/mockSearchResults.json";
 import { filterData, sortData, getEventKey } from "../../utils/searchUtils";
 import { getTypeBadgeProps } from "../../utils/badgeUtils";
 import { PageHeader } from "../../components/PageHeader";
-import { useMenu } from "../../contexts/MenuContext";
+import { useWorkspaceLayout } from "../../contexts/WorkspaceLayoutContext";
 import { useMultiColumnSort } from "../../hooks/useMultiColumnSort";
 import { mockFetch } from "../../utils/mockApi";
 import { DataTable } from "../../components/DataTable";
@@ -25,7 +25,7 @@ export function SearchPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedView, setSelectedView] = useState<ViewMode>("table");
 
-  const { isMobile } = useMenu();
+  const { isMobile } = useWorkspaceLayout();
 
   const viewMode = useMemo((): ViewMode => {
     if (isMobile && selectedView === "table") return "card";
