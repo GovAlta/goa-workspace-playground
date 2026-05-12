@@ -1,5 +1,6 @@
+import { useGoabWorkspaceLayoutScrollState } from "@abgov/react-components";
+import { GoabWorkspaceLayoutScrollState } from "@abgov/ui-components-common";
 import { usePageFooterContext } from "../contexts/PageFooterContext";
-import { useScrollState } from "../contexts/ScrollStateContext";
 import "./PageFooter.css";
 
 /**
@@ -13,7 +14,7 @@ import "./PageFooter.css";
  */
 export function PageFooter() {
   const { content, visibleWhen, hasSelection } = usePageFooterContext();
-  const { scrollPosition, isScrollable } = useScrollState();
+  const { scrollPosition, isScrollable } = useGoabWorkspaceLayoutScrollState();
 
   if (!content) return null;
 
@@ -23,7 +24,9 @@ export function PageFooter() {
       : visibleWhen === "selection"
         ? hasSelection
         : visibleWhen === "scrolled"
-          ? isScrollable && scrollPosition !== "at-top" && scrollPosition !== "no-scroll"
+          ? isScrollable &&
+            scrollPosition !== GoabWorkspaceLayoutScrollState.AT_TOP &&
+            scrollPosition !== GoabWorkspaceLayoutScrollState.NO_SCROLL
           : true; // 'always', true, or default
 
   if (!isVisible) return null;

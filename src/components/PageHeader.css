@@ -15,7 +15,7 @@
 
 /* Desktop: Header states based on scroll position */
 @media (min-width: 624px) {
-  .desktop-card-container .page-header {
+  .page-header {
     position: sticky;
     top: 0;
     z-index: 100;
@@ -23,28 +23,28 @@
   }
 
   /* Expanded state - at top or no scroll */
-  .desktop-card-container .page-header--expanded {
+  .page-header--expanded {
     padding: var(--goa-space-l) var(--goa-space-xl) var(--goa-space-m) var(--goa-space-xl);
     border-bottom: none;
   }
 
   /* Collapsed state - middle or bottom scroll */
-  .desktop-card-container .page-header--collapsed {
+  .page-header--collapsed {
     padding: var(--goa-space-s) var(--goa-space-xl);
     border-bottom: var(--goa-border-width-s) solid var(--goa-color-greyscale-150);
   }
 
   /* With tabs - no bottom padding */
-  .desktop-card-container .page-header--with-tabs.page-header--expanded {
+  .page-header--with-tabs.page-header--expanded {
     padding-bottom: 0;
   }
 
-  .desktop-card-container .page-header--with-tabs.page-header--collapsed {
+  .page-header--with-tabs.page-header--collapsed {
     padding-bottom: 0;
   }
 
   /* With toolbar expanded - spacing below header */
-  .desktop-card-container .page-header--with-toolbar.page-header--expanded {
+  .page-header--with-toolbar.page-header--expanded {
     padding-bottom: var(--goa-space-m);
   }
 
@@ -395,9 +395,8 @@
   gap: var(--goa-space-m);
 }
 
-.desktop-card-container .page-header--collapsed.page-header--hide-title-on-scroll,
-.desktop-card-container
-  .page-header--with-tabs.page-header--collapsed.page-header--hide-title-on-scroll {
+.page-header--collapsed.page-header--hide-title-on-scroll,
+.page-header--with-tabs.page-header--collapsed.page-header--hide-title-on-scroll {
   padding-bottom: var(--goa-space-xs);
 }
 
