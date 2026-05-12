@@ -2,11 +2,7 @@ import { useState, useEffect } from "react";
 import { MOBILE_BREAKPOINT } from "../constants/breakpoints";
 
 const MENU_STATE_KEY = "workspace-menu-open";
-
-function getInitialMenuState(): boolean {
-  if (window.innerWidth < MOBILE_BREAKPOINT) {
-    return false;
-  }
+function getInitialDesktopMenuState(): boolean {
   const saved = localStorage.getItem(MENU_STATE_KEY);
   if (saved !== null) {
     return saved === "true";
@@ -15,23 +11,22 @@ function getInitialMenuState(): boolean {
 }
 
 export function useWorkspaceMenuState() {
-  const [menuOpen, setMenuOpen] = useState(getInitialMenuState);
+  const [desktopMenuOpen, setDesktopMenuOpen] = useState(getInitialDesktopMenuState);
   const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BREAKPOINT);
 
-  // Single resize handler - manages both isMobile state and menu visibility
-  // Closes menu when window shrinks to give more room for content
   useEffect(() => {
     let previousWidth = window.innerWidth;
 
     const handleResize = () => {
-      const width = window.innerWidth;
-      setIsMobile(width < MOBILE_BREAKPOINT);
+      const resizedWidth = window.innerWidth;
+      const isResizedWidthOnMobile = resizedWidth < MOBILE_BREAKPOINT;
+      setIsMobile(isResizedWidthOnMobile);
 
-      if (width < previousWidth) {
-        setMenuOpen(false);
+      if (resizedWidth < previousWidth && !isResizedWidthOnMobile) {
+        setDesktopMenuOpen(false);
       }
 
-      previousWidth = width;
+      previousWidth = resizedWidth;
     };
 
     window.addEventListener("resize", handleResize);
@@ -40,9 +35,15 @@ export function useWorkspaceMenuState() {
 
   useEffect(() => {
     if (!isMobile) {
-      localStorage.setItem(MENU_STATE_KEY, String(menuOpen));
+      localStorage.setItem(MENU_STATE_KEY, String(desktopMenuOpen));
     }
-  }, [menuOpen, isMobile]);
+  }, [desktopMenuOpen, isMobile]);
+
+  const menuOpen = isMobile ? true : desktopMenuOpen;
+  const setMenuOpen: typeof setDesktopMenuOpen = (value) => {
+    if (isMobile) return;
+    setDesktopMenuOpen(value);
+  };
 
   return { menuOpen, setMenuOpen, isMobile };
 }

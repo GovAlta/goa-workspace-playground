@@ -1,6 +1,16 @@
 @import "@abgov/web-components/index.css";
 @import "@abgov/design-tokens/dist/tokens.css";
 
+/* Mobile: override library default (24px) to align hamburger center with
+   the h1's vertical center.
+   h1 center = padding-top (16px) + h1 line-height (36px) / 2 = 34px.
+   Hamburger height = 32px → top = 34 - 16 = 18px. */
+@media (max-width: 623px) {
+  goa-workspace-layout {
+    --goa-workspace-layout-mobile-toggle-top: 18px;
+  }
+}
+
 /* ============================================================================
    APP LAYOUT
    ============================================================================ */

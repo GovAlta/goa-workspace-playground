@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useMenu } from "../contexts/MenuContext";
+import { useWorkspaceLayout } from "../contexts/WorkspaceLayoutContext";
 import {
   GoabButtonGroup,
   GoabFormItem,
@@ -48,7 +48,7 @@ export function CommentsDrawer({
   const [editingCommentText, setEditingCommentText] = useState("");
   const [deleteCommentId, setDeleteCommentId] = useState<number | null>(null);
   const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
-  const { isMobile } = useMenu();
+  const { isMobile } = useWorkspaceLayout();
   const isCompletedCase =
     caseStatus && ["Accepted", "Cancelled", "Denied"].includes(caseStatus);
 

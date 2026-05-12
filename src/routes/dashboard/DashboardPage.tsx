@@ -12,7 +12,7 @@ import {
   Legend,
 } from "recharts";
 import { PageHeader } from "../../components/PageHeader";
-import { useMenu } from "../../contexts/MenuContext";
+import { useWorkspaceLayout } from "../../contexts/WorkspaceLayoutContext";
 import { Case } from "../../types/Case";
 import {
   parseDate,
@@ -47,7 +47,7 @@ function getGreeting(): string {
 
 export function DashboardPage() {
   const navigate = useNavigate();
-  const { isMobile } = useMenu();
+  const { isMobile } = useWorkspaceLayout();
   const cases = mockCases as Case[];
   const activity = mockActivity as ActivityItem[];
 

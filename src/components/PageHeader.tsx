@@ -1,7 +1,10 @@
 import type { CSSProperties, ReactNode } from "react";
-import { GoabText, GoabIconButton } from "@abgov/react-components";
-import { useMenu } from "../contexts/MenuContext";
-import { useScrollState } from "../contexts/ScrollStateContext";
+import {
+  GoabText,
+  useGoabWorkspaceLayoutScrollState,
+} from "@abgov/react-components";
+import { GoabWorkspaceLayoutScrollState } from "@abgov/ui-components-common";
+import { useWorkspaceLayout } from "../contexts/WorkspaceLayoutContext";
 import "./PageHeader.css";
 
 interface PageHeaderProps {
@@ -19,10 +22,12 @@ export function PageHeader({
   toolbar,
   hideTitleOnScroll,
 }: PageHeaderProps) {
-  const { isMobile, setMenuOpen } = useMenu();
-  const { scrollPosition, isScrollable } = useScrollState();
+  const { isMobile } = useWorkspaceLayout();
+  const { scrollPosition, isScrollable } = useGoabWorkspaceLayoutScrollState();
 
-  const isCollapsed = scrollPosition === "middle" || scrollPosition === "at-bottom";
+  const isCollapsed =
+    scrollPosition === GoabWorkspaceLayoutScrollState.MIDDLE ||
+    scrollPosition === GoabWorkspaceLayoutScrollState.AT_BOTTOM;
 
   if (!title) return null;
 
@@ -44,15 +49,6 @@ export function PageHeader({
     <div className={headerClasses}>
       <div className="page-header__content">
         <div className="page-header__title-container">
-          {isMobile && (
-            <GoabIconButton
-              icon="menu"
-              size="medium"
-              variant="dark"
-              onClick={() => setMenuOpen(true)}
-              ariaLabel="Open menu"
-            />
-          )}
           {title && (
             <GoabText
               tag="h1"

@@ -11,7 +11,7 @@ import {
   GoabInputOnChangeDetail,
   GoabMenuButtonOnActionDetail,
 } from "@abgov/ui-components-common";
-import { useMenu } from "../../contexts/MenuContext";
+import { useWorkspaceLayout } from "../../contexts/WorkspaceLayoutContext";
 import { SearchFilters, ViewMode } from "./types";
 
 interface SearchHeaderFiltersProps {
@@ -55,7 +55,7 @@ export function SearchHeaderFilters({
   selectedView,
   onViewChange,
 }: SearchHeaderFiltersProps) {
-  const { isMobile } = useMenu();
+  const { isMobile } = useWorkspaceLayout();
 
   return (
     <div className="search-header-filters">
