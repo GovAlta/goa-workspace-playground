@@ -1,7 +1,11 @@
 import type { CSSProperties, ReactNode } from "react";
-import { GoabText, GoabIconButton } from "@abgov/react-components";
+import {
+  GoabText,
+  GoabIconButton,
+  useGoabWorkspaceLayoutScrollState,
+} from "@abgov/react-components";
+import { GoabWorkspaceLayoutScrollState } from "@abgov/ui-components-common";
 import { useMenu } from "../contexts/MenuContext";
-import { useScrollState } from "../contexts/ScrollStateContext";
 import "./PageHeader.css";
 
 interface PageHeaderProps {
@@ -20,9 +24,11 @@ export function PageHeader({
   hideTitleOnScroll,
 }: PageHeaderProps) {
   const { isMobile, setMenuOpen } = useMenu();
-  const { scrollPosition, isScrollable } = useScrollState();
+  const { scrollPosition, isScrollable } = useGoabWorkspaceLayoutScrollState();
 
-  const isCollapsed = scrollPosition === "middle" || scrollPosition === "at-bottom";
+  const isCollapsed =
+    scrollPosition === GoabWorkspaceLayoutScrollState.MIDDLE ||
+    scrollPosition === GoabWorkspaceLayoutScrollState.AT_BOTTOM;
 
   if (!title) return null;
 
