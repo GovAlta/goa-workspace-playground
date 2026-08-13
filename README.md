@@ -4,7 +4,7 @@ A template for building Alberta government **workspace applications** using the 
 
 ## Tech Stack
 
-- **React** 18.2 with TypeScript 5.3
+- **React** 19 with TypeScript 5.3
 - **Vite** 5.1 for fast development and builds
 - **React Router** 6.22 for routing
 - **GoA Design System 2.0** (`@abgov/react-components`, `@abgov/web-components`)
@@ -74,6 +74,10 @@ src/
 ```bash
 npm install
 ```
+
+### Keeping the design system current
+
+The `@abgov/*` packages use caret ranges, so `npm update` moves them to the latest stable release within their current major. A range never resolves a prerelease, so this cannot put you on a dev build. Moving to a new major is a deliberate upgrade you make yourself.
 
 ### Development
 
