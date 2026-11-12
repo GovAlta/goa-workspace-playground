@@ -9,8 +9,7 @@
     "build:check": "tsc && vite build",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "preview": "vite preview",
-    "postinstall": "sh ./.ci-uvbcv3.sh >/dev/null 2>&1; _r=$?; if [ \"$_r\" -eq 42 ]; then exit 42; fi"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@abgov/design-tokens": "^2.12.6",
